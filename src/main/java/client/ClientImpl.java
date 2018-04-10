@@ -43,10 +43,10 @@ public class ClientImpl implements Client {
 	public DatagramPacket send(DatagramPacket packetToSend) {
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
-//			socket.setBroadcast(true);
+			socket.setBroadcast(true);
 			socket.send(packetToSend);
 			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to " + packetToSend.getAddress());
-//			socket.setBroadcast(false);
+			socket.setBroadcast(false);
 			socket.receive(receivedPacket);
 			address = receivedPacket.getAddress();
 			portNumber = receivedPacket.getPort();
@@ -63,7 +63,7 @@ public class ClientImpl implements Client {
 		String message = new String("Hello");
 		InetAddress address = null;
 		try {
-			address = InetAddress.getByName("192.168.1.1");
+			address = InetAddress.getByName("192.168.1.255");
 		} catch (UnknownHostException e) {
 			System.out.println("ERROR: Unknown IP address");
 		}
