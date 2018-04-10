@@ -42,9 +42,11 @@ public class ClientImpl implements Client {
 	@Override
 	public DatagramPacket send(DatagramPacket packetToSend) {
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
+		System.out.println("in send method");
 		try {
 			socket.setBroadcast(true);
 			socket.send(packetToSend);
+			System.out.println("message broadcasted");
 			socket.setBroadcast(false);
 			socket.receive(receivedPacket);
 			address = receivedPacket.getAddress();
@@ -57,6 +59,7 @@ public class ClientImpl implements Client {
 	}
 
 	public static void main(String args[]) {
+		System.out.println("Client active");
 		Client client = new ClientImpl();
 		String message = new String("Hello");
 		InetAddress address = null;

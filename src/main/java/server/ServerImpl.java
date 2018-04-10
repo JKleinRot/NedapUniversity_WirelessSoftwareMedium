@@ -46,6 +46,7 @@ public class ServerImpl implements Server {
 	public void run() {
 		while (isRunning) {
 			DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
+			System.out.println("in run method");
 			try {
 				socket.receive(receivedPacket);
 				System.out.println(new String(receivedPacket.getData(), 0, receivedPacket.getLength()));
@@ -61,6 +62,7 @@ public class ServerImpl implements Server {
 	}
 
 	public static void main(String args[]) {
+		System.out.println("Server active");
 		int portNumber = 9876;
 		Server server = new ServerImpl(portNumber);
 		server.run();
