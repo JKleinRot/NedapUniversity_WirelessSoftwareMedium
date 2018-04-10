@@ -17,6 +17,12 @@ public class ClientImpl implements Client {
 
 	/** A byte buffer to hold the received data */
 	private byte[] receivedData;
+	
+	/** The address of the server */
+	private InetAddress address;
+	
+	/** The port number of the datagram socket */
+	private int portNumber;
 
 	/**
 	 * -----Constructor-----
@@ -39,7 +45,10 @@ public class ClientImpl implements Client {
 		try {
 			socket.setBroadcast(true);
 			socket.send(packetToSend);
+			socket.setBroadcast(false);
 			socket.receive(receivedPacket);
+			address = receivedPacket.getAddress();
+			portNumber = receivedPacket.getPort();
 			System.out.println(new String(receivedPacket.getData(), 0, receivedPacket.getLength()));
 		} catch (IOException e) {
 			System.out.println("ERROR: Connection lost");
