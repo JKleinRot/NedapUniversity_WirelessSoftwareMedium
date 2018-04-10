@@ -15,7 +15,7 @@ public interface Client {
 	 * 
 	 * @param packetToSend
 	 *            The packet to send
-	 * @return The packet received
+	 * @return the packet received
 	 */
 	public DatagramPacket send(DatagramPacket packetToSend);
 }

@@ -7,6 +7,17 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import client.actors.DataDownloader;
+import client.actors.DataDownloaderImpl;
+import client.actors.DataUploader;
+import client.actors.DataUploaderImpl;
+import client.actors.StatisticsManager;
+import client.actors.StatisticsManagerImpl;
+import client.actors.StorageRequester;
+import client.actors.StorageRequesterImpl;
+import client.tui.ClientTUI;
+import client.tui.ClientTUIImpl;
+
 public class ClientImpl implements Client {
 
 	/** The datagram socket */
@@ -17,17 +28,33 @@ public class ClientImpl implements Client {
 
 	/** A byte buffer to hold the received data */
 	private byte[] receivedData;
-	
+
 	/** The address of the server */
 	private InetAddress address;
-	
+
 	/** The port number of the datagram socket */
 	private int portNumber;
+	
+	/** The data downloader */
+	private DataDownloader dataDownloader;
+	
+	/** The data uploader */
+	private DataUploader dataUploader;
+	
+	/** The statistics manager */
+	private StatisticsManager statisticsManager;
+	
+	/** The storage requester */
+	private StorageRequester storageRequester;
+	
+	/** The TUI */
+	private ClientTUI clientTUI;
 
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a ClientImpl. Initializes a datagram socket.
+	 * Creates a ClientImpl. Initializes a datagram socket. Creates instances of the
+	 * client actors and passes those as arguments in the ClientTUI.
 	 */
 	public ClientImpl() {
 		try {
@@ -37,6 +64,13 @@ public class ClientImpl implements Client {
 		}
 		receivedData = new byte[256];
 		dataToSend = new byte[256];
+		dataDownloader = new DataDownloaderImpl(this);
+		dataUploader = new DataUploaderImpl(this);
+		statisticsManager = new StatisticsManagerImpl(this);
+		storageRequester = new StorageRequesterImpl(this);
+		clientTUI = new ClientTUIImpl(dataDownloader, dataUploader, statisticsManager, storageRequester);
+		Thread clientTUIThread = new Thread(clientTUI);
+		clientTUIThread.start();
 	}
 
 	@Override
@@ -45,12 +79,14 @@ public class ClientImpl implements Client {
 		try {
 			socket.setBroadcast(true);
 			socket.send(packetToSend);
-			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to " + packetToSend.getAddress());
+			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
+					+ packetToSend.getAddress());
 			socket.setBroadcast(false);
 			socket.receive(receivedPacket);
 			address = receivedPacket.getAddress();
 			portNumber = receivedPacket.getPort();
-			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength()) + " from " + receivedPacket.getAddress());
+			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
+					+ " from " + receivedPacket.getAddress());
 		} catch (IOException e) {
 			System.out.println("ERROR: Connection lost");
 		}
