@@ -46,15 +46,15 @@ public class ServerImpl implements Server {
 	public void run() {
 		while (isRunning) {
 			DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
-			System.out.println("in run method");
 			try {
 				socket.receive(receivedPacket);
-				System.out.println(new String(receivedPacket.getData(), 0, receivedPacket.getLength()));
+				System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength()) + " from " + receivedPacket.getAddress());
 				String message = "Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength());
 				dataToSend = message.getBytes();
 				DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
 						receivedPacket.getAddress(), receivedPacket.getPort());
 				socket.send(packetToSend);
+				System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to " + packetToSend.getAddress());
 			} catch (IOException e) {
 				System.out.println("ERROR: Connection lost");
 			}
