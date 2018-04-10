@@ -37,6 +37,7 @@ public class ClientImpl implements Client {
 	public DatagramPacket send(DatagramPacket packetToSend) {
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
+			socket.setBroadcast(true);
 			socket.send(packetToSend);
 			socket.receive(receivedPacket);
 			System.out.println(new String(receivedPacket.getData(), 0, receivedPacket.getLength()));
@@ -51,7 +52,7 @@ public class ClientImpl implements Client {
 		String message = new String("Hello");
 		InetAddress address = null;
 		try {
-			address = InetAddress.getByName("localhost");
+			address = InetAddress.getByName("255.255.255.255");
 		} catch (UnknownHostException e) {
 			System.out.println("ERROR: Unknown IP address");
 		}
