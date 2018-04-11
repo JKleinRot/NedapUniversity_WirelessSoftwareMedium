@@ -6,6 +6,9 @@ import client.Client;
 
 public class DataUploaderImpl extends Observable implements DataUploader {
 
+	/** The client */
+	private Client client;
+	
 	/**
 	 * -----Constructor-----
 	 * 
@@ -15,6 +18,11 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	 *            The client
 	 */
 	public DataUploaderImpl(Client client) {
+		this.client = client;
+	}
+	
+	@Override
+	public void upload(String filename) {
 		
 	}
 }

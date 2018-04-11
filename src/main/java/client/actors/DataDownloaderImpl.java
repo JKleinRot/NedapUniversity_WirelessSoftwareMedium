@@ -4,7 +4,7 @@ import java.util.Observable;
 
 import client.Client;
 
-public class DataDownloaderImpl extends Observable implements DataDownloader {
+public class DataDownloaderImpl implements DataDownloader {
 
 	/**
 	 * -----Constructor-----

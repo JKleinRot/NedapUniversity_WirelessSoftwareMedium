@@ -15,6 +15,8 @@ import client.actors.StatisticsManager;
 import client.actors.StatisticsManagerImpl;
 import client.actors.StorageRequester;
 import client.actors.StorageRequesterImpl;
+import client.processmanager.ProcessManager;
+import client.processmanager.ProcessManagerImpl;
 import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
 
@@ -47,6 +49,9 @@ public class ClientImpl implements Client {
 	/** The storage requester */
 	private StorageRequester storageRequester;
 	
+	/** The process manager */
+	private ProcessManager processManager;
+	
 	/** The TUI */
 	private ClientTUI clientTUI;
 
@@ -68,7 +73,8 @@ public class ClientImpl implements Client {
 		dataUploader = new DataUploaderImpl(this);
 		statisticsManager = new StatisticsManagerImpl(this);
 		storageRequester = new StorageRequesterImpl(this);
-		clientTUI = new ClientTUIImpl(dataDownloader, dataUploader, statisticsManager, storageRequester);
+		processManager = new ProcessManagerImpl(dataDownloader, dataUploader, statisticsManager, storageRequester);
+		clientTUI = new ClientTUIImpl(processManager);
 		Thread clientTUIThread = new Thread(clientTUI);
 		clientTUIThread.start();
 	}
