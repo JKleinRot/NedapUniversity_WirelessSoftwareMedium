@@ -37,18 +37,6 @@ public class ClientImpl implements Client {
 	/** The port number of the datagram socket */
 	private int portNumber;
 	
-	/** The data downloader */
-	private DataDownloader dataDownloader;
-	
-	/** The data uploader */
-	private DataUploader dataUploader;
-	
-	/** The statistics manager */
-	private StatisticsManager statisticsManager;
-	
-	/** The storage requester */
-	private StorageRequester storageRequester;
-	
 	/** The process manager */
 	private ProcessManager processManager;
 	
@@ -69,11 +57,7 @@ public class ClientImpl implements Client {
 		}
 		receivedData = new byte[256];
 		dataToSend = new byte[256];
-		dataDownloader = new DataDownloaderImpl(this);
-		dataUploader = new DataUploaderImpl(this);
-		statisticsManager = new StatisticsManagerImpl(this);
-		storageRequester = new StorageRequesterImpl(this);
-		processManager = new ProcessManagerImpl(dataDownloader, dataUploader, statisticsManager, storageRequester);
+		processManager = new ProcessManagerImpl(this);
 		clientTUI = new ClientTUIImpl(processManager);
 		Thread clientTUIThread = new Thread(clientTUI);
 		clientTUIThread.start();

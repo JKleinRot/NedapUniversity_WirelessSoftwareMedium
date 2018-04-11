@@ -19,6 +19,7 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	 */
 	public DataUploaderImpl(Client client) {
 		this.client = client;
+		
 	}
 	
 	@Override
