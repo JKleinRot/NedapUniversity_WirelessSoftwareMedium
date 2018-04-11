@@ -84,7 +84,6 @@ public class FileDisassemblerImpl implements FileDisassembler {
 			String line = bufferedReader.readLine();
 			while (line != null) {
 				stringBuilder.append(line);
-				stringBuilder.append(System.lineSeparator());
 				line = bufferedReader.readLine();
 			}
 			content = stringBuilder.toString().getBytes();
@@ -107,7 +106,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 			byte[] data;
 			Header header;
 			if (i == numberOfPackets - 1) {
-				data = Arrays.copyOfRange(content, i * dataSize, content.length + 1);
+				data = Arrays.copyOfRange(content, i * dataSize, content.length);
 				header = new HeaderImpl((i * 10) + 100, 0, Flags.UPLOAD_LAST, Types.DATA, downloadNumber);
 			} else {
 				data = Arrays.copyOfRange(content, i * dataSize, (i + 1) * dataSize);

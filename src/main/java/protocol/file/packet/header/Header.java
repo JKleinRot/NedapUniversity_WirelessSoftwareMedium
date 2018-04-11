@@ -1,5 +1,8 @@
 package protocol.file.packet.header;
 
+import protocol.file.packet.header.parts.Flags;
+import protocol.file.packet.header.parts.Types;
+
 /**
  * The header put at the start of the data in the UDP datagram to be able to
  * reliably transfer data over the UDP connection. It contains a sequence
@@ -16,4 +19,39 @@ public interface Header {
 	 * @return the header in byte array format
 	 */
 	public byte[] getHeader();
+
+	/**
+	 * Returns the sequence number of the header
+	 * 
+	 * @return the sequence number
+	 */
+	public int getSequenceNumber();
+
+	/**
+	 * Returns the acknowledgement number of the header
+	 * 
+	 * @return the acknowledgement number
+	 */
+	public int getAcknowledgementNumber();
+
+	/**
+	 * Returns the flags of the header
+	 * 
+	 * @return the flags
+	 */
+	public Flags getFlags();
+
+	/**
+	 * Returns the types of the header
+	 * 
+	 * @return the types
+	 */
+	public Types getTypes();
+
+	/**
+	 * Returns the download number of the header
+	 * 
+	 * @return the download number
+	 */
+	public int getDownloadNumber();
 }

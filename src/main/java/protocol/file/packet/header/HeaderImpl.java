@@ -81,4 +81,29 @@ public class HeaderImpl implements Header {
 		buffer.put(dowNum.array());
 		return buffer.array();
 	}
+	
+	@Override 
+	public int getSequenceNumber() {
+		return sequenceNumber;
+	}
+	
+	@Override
+	public int getAcknowledgementNumber() {
+		return acknowledgementNumber;
+	}
+	
+	@Override
+	public Flags getFlags() {
+		return flags;
+	}
+	
+	@Override
+	public Types getTypes() {
+		return types;
+	}
+	
+	@Override 
+	public int getDownloadNumber() {
+		return downloadNumber;
+	}
 }

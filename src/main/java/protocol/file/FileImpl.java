@@ -21,4 +21,9 @@ public class FileImpl implements File {
 	public void addPacket(Packet packet) {
 		packets.add(packet);
 	}
+	
+	@Override
+	public List<Packet> getPackets() {
+		return packets;
+	}
 }

@@ -22,5 +22,15 @@ public class PacketImpl implements Packet {
 		this.header = header;
 		this.data = data;
 	}
+	
+	@Override
+	public Header getHeader() {
+		return header;
+	}
+	
+	@Override
+	public byte[] getData() {
+		return data;
+	}
 
 }

@@ -1,5 +1,7 @@
 package protocol.file;
 
+import java.util.List;
+
 import protocol.file.packet.Packet;
 
 /**
@@ -17,4 +19,11 @@ public interface File {
 	 *            The packet to add
 	 */
 	public void addPacket(Packet packet);
+
+	/**
+	 * Returns the list of packets in the file.
+	 * 
+	 * @return the list of packets
+	 */
+	public List<Packet> getPackets();
 }
