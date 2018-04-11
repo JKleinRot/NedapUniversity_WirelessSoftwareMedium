@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import protocol.header.Header;
+import protocol.header.HeaderImpl;
+import protocol.header.parts.Flags;
+import protocol.header.parts.Types;
+
 /**
  * Test program for Header.
  * 
@@ -21,23 +26,23 @@ public class HeaderTest {
 	/** The acknowledgement number */
 	private int acknowledgementNumber;
 
-	/** The data integrity measure */
-	private DataIntegrityMeasure dataIntegrityMeasure;
-
 	/** The flags */
 	private Flags flags;
+	
+	/** The types */
+	private Types types;
 
 	/** The download number */
-	private short downloadNumber;
+	private int downloadNumber;
 	
 	@BeforeEach
 	public void setup() {
 		sequenceNumber = 10;
 		acknowledgementNumber = 2;
-		dataIntegrityMeasure = null;
 		flags = null;
+		types = null;
 		downloadNumber = 1;
-		header = new HeaderImpl(sequenceNumber, acknowledgementNumber, dataIntegrityMeasure, flags, downloadNumber);
+		header = new HeaderImpl(sequenceNumber, acknowledgementNumber, flags, types, downloadNumber);
 	}
 	
 	/** 
@@ -45,7 +50,7 @@ public class HeaderTest {
 	 */
 	@Test
 	public void testGetHeader() {
-		byte[] expectedHeaderBytes = new byte[] {0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0, 1};
+		byte[] expectedHeaderBytes = new byte[] {0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1};
 		byte[] headerBytes = header.getHeader();
 		assertArrayEquals(expectedHeaderBytes, headerBytes);
 	}
