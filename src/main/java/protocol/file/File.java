@@ -26,4 +26,11 @@ public interface File {
 	 * @return the list of packets
 	 */
 	public List<Packet> getPackets();
+
+	/**
+	 * Returns the size of the data.
+	 * 
+	 * @return the data size
+	 */
+	public int getDataSize();
 }

@@ -8,11 +8,16 @@ public enum Flags {
 							new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00001000 }), UPLOAD_MORETOCOME(
 									new byte[] { 0b00000000, 0b00000000, 0b00000001, 0b00000001 }), UPLOAD_LAST(
 											new byte[] { 0b00000000, 0b00000000, 0b00000010,
-													0b00000001 }), DOWNLOAD_MORETOCOME(
-															new byte[] { 0b00000000, 0b00000000, 0b00000001,
-																	0b00000010 }), DOWNLOAD_LAST(
+													0b00000001 }), UPLOAD_DATAINTEGRITY(
+															new byte[] { 0b00000000, 0b00000000, 0b00000100,
+																	0b00000001 }), DOWNLOAD_MORETOCOME(
 																			new byte[] { 0b00000000, 0b00000000,
-																					0b00000010, 0b00000010 });
+																					0b00000001,
+																					0b00000010 }), DOWNLOAD_LAST(
+																							new byte[] { 0b00000000,
+																									0b00000000,
+																									0b00000010,
+																									0b00000010 });
 
 	/** The bytes */
 	private byte[] bytes;

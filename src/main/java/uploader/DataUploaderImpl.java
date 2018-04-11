@@ -27,9 +27,15 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 
 	/** The download number */
 	private int downloadNumber;
-	
+
 	/** The request sequence number */
-	private static final int requestSequenceNumber = 50;
+	private static final int requestSequenceNumber = 10;
+	
+	/** The final message number */
+	private static final int finalNumber = 20;
+
+	/** The data size */
+	private int dataSize;
 
 	/**
 	 * -----Constructor-----
@@ -49,7 +55,9 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	@Override
 	public void upload(String fileName, String newDirectory, String newFileName) {
 		File file = getFileWithPacketsFromFile(fileName);
-		sendFileDestinationPacket(newDirectory, newFileName);
+		sendUploadCharacteristicsPacket(newDirectory, newFileName);
+		sendData(file);
+		sendDataIntegrityPacket();
 	}
 
 	/**
@@ -62,20 +70,45 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	private File getFileWithPacketsFromFile(String fileName) {
 		fileDisassembler = new FileDisassemblerImpl(fileName, this, downloadNumber);
 		File file = fileDisassembler.createFileWithPacketsFromFile();
+		dataSize = file.getDataSize();
 		return file;
 	}
 
 	/**
-	 * Sends a file destination packet to the server.
+	 * Sends the upload characteristics packet to the server.
 	 * 
 	 * @param newDirectory
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
 	 */
-	private void sendFileDestinationPacket(String newDirectory, String newFileName) {
-		Header header = new HeaderImpl(requestSequenceNumber, 0, Flags.UPLOAD, Types.DIRECTORYANDFILENAME, downloadNumber);
-		byte[] data = ("Directory " + newDirectory + " Filename " + newFileName).getBytes();
+	private void sendUploadCharacteristicsPacket(String newDirectory, String newFileName) {
+		Header header = new HeaderImpl(requestSequenceNumber, 0, Flags.UPLOAD, Types.UPLOADCHARACTERISTICS,
+				downloadNumber);
+		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber
+				+ " DataSize " + dataSize).getBytes();
+		Packet packet = new PacketImpl(header, data);
+		client.sendOnePacket(packet);
+	}
+
+	/**
+	 * Sends the packets to the server.
+	 * 
+	 * @param file
+	 *            The file to send
+	 */
+	private void sendData(File file) {
+		for (Packet packet : file.getPackets()) {
+			client.sendOnePacket(packet);
+		}
+	}
+
+	/**
+	 * Sends the data integrity packet to the server.
+	 */
+	private void sendDataIntegrityPacket() {
+		Header header = new HeaderImpl(finalNumber, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
+		byte[] data = ("DataSize " + dataSize).getBytes();
 		Packet packet = new PacketImpl(header, data);
 		client.sendOnePacket(packet);
 	}
