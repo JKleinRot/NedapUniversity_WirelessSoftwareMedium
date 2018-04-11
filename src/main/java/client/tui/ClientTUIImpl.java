@@ -68,6 +68,7 @@ public class ClientTUIImpl implements ClientTUI {
 			} else if (words.length == 3 && words[0].equals("upload") && words[1].equals("as")) {
 				newFileName = words[2];
 				processManager.handleRequest(words[0], fileName, newDirectory, newFileName);
+				input = readInput("hoi");
 			}
 		}
 	}

@@ -7,6 +7,12 @@ import client.processmanager.ProcessManager;
 import protocol.file.File;
 import protocol.file.FileDisassembler;
 import protocol.file.FileDisassemblerImpl;
+import protocol.file.packet.Packet;
+import protocol.file.packet.PacketImpl;
+import protocol.file.packet.header.Header;
+import protocol.file.packet.header.HeaderImpl;
+import protocol.file.packet.header.parts.Flags;
+import protocol.file.packet.header.parts.Types;
 
 public class DataUploaderImpl extends Observable implements DataUploader {
 
@@ -21,6 +27,9 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 
 	/** The download number */
 	private int downloadNumber;
+	
+	/** The request sequence number */
+	private static final int requestSequenceNumber = 50;
 
 	/**
 	 * -----Constructor-----
@@ -65,7 +74,10 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	 *            The new file name
 	 */
 	private void sendFileDestinationPacket(String newDirectory, String newFileName) {
-		
+		Header header = new HeaderImpl(requestSequenceNumber, 0, Flags.UPLOAD, Types.DIRECTORYANDFILENAME, downloadNumber);
+		byte[] data = ("Directory " + newDirectory + " Filename " + newFileName).getBytes();
+		Packet packet = new PacketImpl(header, data);
+		client.sendOnePacket(packet);
 	}
 
 	@Override

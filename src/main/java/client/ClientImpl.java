@@ -100,9 +100,13 @@ public class ClientImpl implements Client {
 			socket.send(packetToSend);
 			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 					+ packetToSend.getAddress());
+			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 					+ " from " + receivedPacket.getAddress());
+		} catch (SocketTimeoutException e) {
+			System.out.println("ERROR: No response within time");
+			sendOnePacket(thePacketToSend);
 		} catch (IOException e) {
 			System.out.println("ERROR: Connection lost");
 		}
