@@ -13,6 +13,7 @@ import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
 import downloader.DataDownloader;
 import downloader.DataDownloaderImpl;
+import protocol.file.packet.Packet;
 import statistics.StatisticsManager;
 import statistics.StatisticsManagerImpl;
 import storage.StorageRequester;
@@ -55,8 +56,8 @@ public class ClientImpl implements Client {
 		} catch (SocketException e) {
 			System.out.println("ERROR: Could not setup datagram socket");
 		}
-		receivedData = new byte[256];
-		dataToSend = new byte[256];
+		receivedData = new byte[2048];
+		dataToSend = new byte[2048];
 		processManager = new ProcessManagerImpl(this);
 		clientTUI = new ClientTUIImpl(processManager);
 		Thread clientTUIThread = new Thread(clientTUI);
@@ -64,7 +65,7 @@ public class ClientImpl implements Client {
 	}
 
 	@Override
-	public DatagramPacket send(DatagramPacket packetToSend) {
+	public DatagramPacket connect(DatagramPacket packetToSend) {
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.setBroadcast(true);
@@ -82,11 +83,28 @@ public class ClientImpl implements Client {
 		}
 		return receivedPacket;
 	}
+	
+	@Override 
+	public DatagramPacket sendOnePacket(Packet thePacketToSend) {
+		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
+		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
+		try {
+			socket.send(packetToSend);
+			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
+					+ packetToSend.getAddress());
+			socket.receive(receivedPacket);
+			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
+					+ " from " + receivedPacket.getAddress());
+		} catch (IOException e) {
+			System.out.println("ERROR: Connection lost");
+		}
+		return receivedPacket;
+	}
 
 	public static void main(String args[]) {
 		System.out.println("Client active");
 		Client client = new ClientImpl();
-		String message = new String("Hello");
+		String message = new String("Hello, I want to connect to a wireless storage medium");
 		InetAddress address = null;
 		try {
 			address = InetAddress.getByName("192.168.1.255");
@@ -94,6 +112,6 @@ public class ClientImpl implements Client {
 			System.out.println("ERROR: Unknown IP address");
 		}
 		DatagramPacket packetToSend = new DatagramPacket(message.getBytes(), message.length(), address, 9876);
-		client.send(packetToSend);
+		client.connect(packetToSend);
 	}
 }

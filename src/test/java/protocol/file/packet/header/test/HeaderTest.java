@@ -51,7 +51,7 @@ public class HeaderTest {
 	@Test
 	public void testGetHeader() {
 		byte[] expectedHeaderBytes = new byte[] { 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1 };
-		byte[] headerBytes = header.getHeader();
+		byte[] headerBytes = header.getBytes();
 		assertArrayEquals(expectedHeaderBytes, headerBytes);
 	}
 }

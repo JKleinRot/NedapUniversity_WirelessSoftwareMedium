@@ -18,7 +18,7 @@ public interface Header {
 	 * 
 	 * @return the header in byte array format
 	 */
-	public byte[] getHeader();
+	public byte[] getBytes();
 
 	/**
 	 * Returns the sequence number of the header
@@ -54,4 +54,12 @@ public interface Header {
 	 * @return the download number
 	 */
 	public int getDownloadNumber();
+
+	/**
+	 * Returns the length of the header
+	 * 
+	 * @return the length
+	 */
+	public int getLength();
+
 }

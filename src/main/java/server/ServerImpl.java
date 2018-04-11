@@ -38,8 +38,8 @@ public class ServerImpl implements Server {
 			System.out.println("ERROR: Could not setup datagram socket on port " + portNumber);
 		}
 		isRunning = true;
-		receivedData = new byte[256];
-		dataToSend = new byte[256];
+		receivedData = new byte[2048];
+		dataToSend = new byte[2048];
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class ServerImpl implements Server {
 				socket.receive(receivedPacket);
 				System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 						+ " from " + receivedPacket.getAddress());
-				String message = "Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength());
+				String message = "You have been connected to a wireless storage medium";
 				dataToSend = message.getBytes();
 				DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
 						receivedPacket.getAddress(), receivedPacket.getPort());

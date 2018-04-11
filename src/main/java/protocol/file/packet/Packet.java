@@ -22,4 +22,18 @@ public interface Packet {
 	 * @return the data
 	 */
 	public byte[] getData();
+
+	/**
+	 * Returns the length of the packet.
+	 * 
+	 * @return the length
+	 */
+	public int getLength();
+
+	/**
+	 * Returns the bytes in the packet.
+	 * 
+	 * @return the bytes
+	 */
+	public byte[] getBytes();
 }

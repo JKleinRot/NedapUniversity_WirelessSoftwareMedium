@@ -2,6 +2,8 @@ package client;
 
 import java.net.DatagramPacket;
 
+import protocol.file.packet.Packet;
+
 /**
  * The client application able to communicate with the wireless storage medium.
  * It can upload and download files from and to the server.
@@ -11,11 +13,20 @@ import java.net.DatagramPacket;
 public interface Client {
 
 	/**
-	 * Send packet to the server.
+	 * Sends first packet to get to know the server.
 	 * 
 	 * @param packetToSend
 	 *            The packet to send
 	 * @return the packet received
 	 */
-	public DatagramPacket send(DatagramPacket packetToSend);
+	public DatagramPacket connect(DatagramPacket packetToSend);
+
+	/**
+	 * Sends one packet and returns the response received
+	 * 
+	 * @param packetToSend
+	 *            The packet to send
+	 * @return the packet received
+	 */
+	public DatagramPacket sendOnePacket(Packet packetToSend);
 }

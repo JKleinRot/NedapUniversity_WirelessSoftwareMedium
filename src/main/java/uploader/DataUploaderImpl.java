@@ -65,7 +65,7 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	 *            The new file name
 	 */
 	private void sendFileDestinationPacket(String newDirectory, String newFileName) {
-
+		
 	}
 
 	@Override

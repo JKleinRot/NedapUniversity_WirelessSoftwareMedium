@@ -21,6 +21,9 @@ public class HeaderImpl implements Header {
 
 	/** The download number */
 	private int downloadNumber;
+	
+	/** The length of the header */
+	private static final int headerLength = 20;
 
 	/** The sequence number offset in the header */
 	private static final int sequenceNumberOffset = 0;
@@ -62,8 +65,8 @@ public class HeaderImpl implements Header {
 	}
 
 	@Override
-	public byte[] getHeader() {
-		ByteBuffer buffer = ByteBuffer.allocate(20);
+	public byte[] getBytes() {
+		ByteBuffer buffer = ByteBuffer.allocate(headerLength);
 		ByteBuffer seqNum = ByteBuffer.allocate(4).putInt(sequenceNumber);
 		ByteBuffer ackNum = ByteBuffer.allocate(4).putInt(acknowledgementNumber);
 		ByteBuffer flag = ByteBuffer.allocate(4).put(flags.getBytes());
@@ -105,5 +108,10 @@ public class HeaderImpl implements Header {
 	@Override
 	public int getDownloadNumber() {
 		return downloadNumber;
+	}
+	
+	@Override
+	public int getLength() {
+		return headerLength;
 	}
 }
