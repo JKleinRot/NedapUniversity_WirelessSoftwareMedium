@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import client.processmanager.ProcessManager;
@@ -43,6 +44,9 @@ public class ClientImpl implements Client {
 
 	/** The TUI */
 	private ClientTUI clientTUI;
+	
+	/** The timeout duration in milliseconds */
+	private static final int timeoutDuration = 1000;
 
 	/**
 	 * -----Constructor-----
@@ -73,11 +77,15 @@ public class ClientImpl implements Client {
 			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 					+ packetToSend.getAddress());
 			socket.setBroadcast(false);
+			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 			address = receivedPacket.getAddress();
 			portNumber = receivedPacket.getPort();
 			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 					+ " from " + receivedPacket.getAddress());
+		} catch (SocketTimeoutException e) {
+			System.out.println("ERROR: No response within time");
+			connect(packetToSend);
 		} catch (IOException e) {
 			System.out.println("ERROR: Connection lost");
 		}
