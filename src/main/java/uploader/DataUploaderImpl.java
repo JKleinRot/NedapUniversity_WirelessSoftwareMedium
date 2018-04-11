@@ -3,12 +3,25 @@ package uploader;
 import java.util.Observable;
 
 import client.Client;
+import client.processmanager.ProcessManager;
+import protocol.file.File;
+import protocol.file.FileDisassembler;
+import protocol.file.FileDisassemblerImpl;
 
 public class DataUploaderImpl extends Observable implements DataUploader {
 
 	/** The client */
 	private Client client;
+
+	/** The file disassembler */
+	private FileDisassembler fileDisassembler;
+
+	/** The process manager */
+	private ProcessManager processManager;
 	
+	/** The download number */
+	private int downloadNumber;
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -16,14 +29,26 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	 * 
 	 * @param client
 	 *            The client
+	 * @param processManager
+	 *            The process manager
 	 */
-	public DataUploaderImpl(Client client) {
+	public DataUploaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
 		this.client = client;
-		
+		this.downloadNumber = downloadNumber;
 	}
-	
+
 	@Override
-	public void upload(String filename) {
-		
+	public void upload(String fileName) {
+		File file = getFileWithPacketsFromFile(fileName);
+	}
+
+	private File getFileWithPacketsFromFile(String fileName) {
+		fileDisassembler = new FileDisassemblerImpl(fileName, this, downloadNumber);
+		File file = fileDisassembler.createFileWithPacketsFromFile();
+		return file;
+	}
+	@Override
+	public void notifyProcessManagerFileNotFound() {
+		processManager.fileNotFound();
 	}
 }

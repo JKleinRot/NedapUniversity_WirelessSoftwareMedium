@@ -7,5 +7,16 @@ package uploader;
  */
 public interface DataUploader {
 
-	public void upload(String filename);
+	/**
+	 * Uploads a file.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 */
+	public void upload(String fileName);
+	
+	/** 
+	 * Notifies the process manager that the file is not found.
+	 */
+	public void notifyProcessManagerFileNotFound();
 }

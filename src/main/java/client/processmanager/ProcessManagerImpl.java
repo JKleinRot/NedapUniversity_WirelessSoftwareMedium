@@ -13,6 +13,9 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 
 	/** The client */
 	private Client client;
+	
+	/** The download number */
+	private int downloadNumber;
 
 	/**
 	 * -----Constructor-----
@@ -30,6 +33,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	 */
 	public ProcessManagerImpl(Client client) {
 		this.client = client;
+		downloadNumber = 1;
 	}
 	
 	@Override
@@ -37,9 +41,16 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		if (words.length == 2 && words[0].equals("download")) {
 			
 		} else if (words.length == 2 && words[0].equals("upload")) {
-			DataUploader dataUploader = new DataUploaderImpl(client);
+			DataUploader dataUploader = new DataUploaderImpl(client, this, downloadNumber);
+			downloadNumber++;
 			dataUploader.upload(words[1]);
 		}
+	}
+	
+	@Override
+	public void fileNotFound() {
+		setChanged();
+		notifyObservers("File not found");
 	}
 
 }

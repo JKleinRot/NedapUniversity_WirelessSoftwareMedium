@@ -58,7 +58,9 @@ public class ClientTUIImpl implements ClientTUI {
 
 	@Override
 	public void update(Observable o, Object arg) {
-
+		if (arg.equals("File not found")) {
+			System.out.println("This file is not found. Please enter another file name");
+		}
 	}
 
 	/**

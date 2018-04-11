@@ -14,4 +14,9 @@ public interface ProcessManager {
 	 *            The input given by the user
 	 */
 	public void handleRequest(String[] words);
+	
+	/**
+	 * Notifies the client that the file is not found.
+	 */
+	public void fileNotFound();
 }
