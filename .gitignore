@@ -6,3 +6,5 @@
 /build/
 /gradle/
 .classpath
+*/.DS_Store
+*/main/.DS_Store
