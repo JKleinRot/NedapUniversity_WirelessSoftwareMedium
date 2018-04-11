@@ -1,4 +1,4 @@
-package protocol;
+package protocol.file.packet.header.test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
@@ -39,8 +39,8 @@ public class HeaderTest {
 	public void setup() {
 		sequenceNumber = 10;
 		acknowledgementNumber = 2;
-		flags = null;
-		types = null;
+		flags = Flags.UPLOAD_MORETOCOME;
+		types = Types.DATA;
 		downloadNumber = 1;
 		header = new HeaderImpl(sequenceNumber, acknowledgementNumber, flags, types, downloadNumber);
 	}
@@ -50,7 +50,7 @@ public class HeaderTest {
 	 */
 	@Test
 	public void testGetHeader() {
-		byte[] expectedHeaderBytes = new byte[] {0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1};
+		byte[] expectedHeaderBytes = new byte[] {0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1};
 		byte[] headerBytes = header.getHeader();
 		assertArrayEquals(expectedHeaderBytes, headerBytes);
 	}
