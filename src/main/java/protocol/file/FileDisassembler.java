@@ -7,7 +7,7 @@ package protocol.file;
  */
 public interface FileDisassembler {
 
-	/** 
+	/**
 	 * Creates ready to send packets of the file.
 	 */
 	public File createFileWithPacketsFromFile();

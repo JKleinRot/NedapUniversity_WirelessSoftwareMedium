@@ -24,7 +24,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 
 	/** The packet size */
 	private int packetSize;
-	
+
 	/** The download number */
 	private int downloadNumber;
 

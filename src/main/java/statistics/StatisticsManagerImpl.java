@@ -15,6 +15,6 @@ public class StatisticsManagerImpl extends Observable implements StatisticsManag
 	 *            The client
 	 */
 	public StatisticsManagerImpl(Client client) {
-		
+
 	}
 }

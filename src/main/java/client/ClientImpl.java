@@ -36,10 +36,10 @@ public class ClientImpl implements Client {
 
 	/** The port number of the datagram socket */
 	private int portNumber;
-	
+
 	/** The process manager */
 	private ProcessManager processManager;
-	
+
 	/** The TUI */
 	private ClientTUI clientTUI;
 

@@ -14,8 +14,8 @@ public interface DataUploader {
 	 *            The file name
 	 */
 	public void upload(String fileName);
-	
-	/** 
+
+	/**
 	 * Notifies the process manager that the file is not found.
 	 */
 	public void notifyProcessManagerFileNotFound();

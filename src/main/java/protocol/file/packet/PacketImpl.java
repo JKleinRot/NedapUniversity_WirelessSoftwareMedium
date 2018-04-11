@@ -6,10 +6,10 @@ public class PacketImpl implements Packet {
 
 	/** The header */
 	private Header header;
-	
+
 	/** The data */
 	private byte[] data;
-	
+
 	/**
 	 * Creates a PacketImpl with a header and data.
 	 * 
@@ -22,12 +22,12 @@ public class PacketImpl implements Packet {
 		this.header = header;
 		this.data = data;
 	}
-	
+
 	@Override
 	public Header getHeader() {
 		return header;
 	}
-	
+
 	@Override
 	public byte[] getData() {
 		return data;

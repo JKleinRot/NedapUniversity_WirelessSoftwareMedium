@@ -15,6 +15,6 @@ public class StorageRequesterImpl extends Observable implements StorageRequester
 	 *            The client
 	 */
 	public StorageRequesterImpl(Client client) {
-		
+
 	}
 }

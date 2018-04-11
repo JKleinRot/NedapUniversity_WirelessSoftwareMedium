@@ -15,6 +15,6 @@ public class DataDownloaderImpl implements DataDownloader {
 	 *            The client
 	 */
 	public DataDownloaderImpl(Client client) {
-		
+
 	}
 }

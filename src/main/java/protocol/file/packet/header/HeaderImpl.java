@@ -15,7 +15,7 @@ public class HeaderImpl implements Header {
 
 	/** The flags */
 	private Flags flags;
-	
+
 	/** The types */
 	private Types types;
 
@@ -81,28 +81,28 @@ public class HeaderImpl implements Header {
 		buffer.put(dowNum.array());
 		return buffer.array();
 	}
-	
-	@Override 
+
+	@Override
 	public int getSequenceNumber() {
 		return sequenceNumber;
 	}
-	
+
 	@Override
 	public int getAcknowledgementNumber() {
 		return acknowledgementNumber;
 	}
-	
+
 	@Override
 	public Flags getFlags() {
 		return flags;
 	}
-	
+
 	@Override
 	public Types getTypes() {
 		return types;
 	}
-	
-	@Override 
+
+	@Override
 	public int getDownloadNumber() {
 		return downloadNumber;
 	}

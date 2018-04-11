@@ -18,7 +18,7 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 
 	/** The process manager */
 	private ProcessManager processManager;
-	
+
 	/** The download number */
 	private int downloadNumber;
 
@@ -42,11 +42,19 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 		File file = getFileWithPacketsFromFile(fileName);
 	}
 
+	/**
+	 * Returns a file with packets from the file with the provided file name.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @return the file with packets
+	 */
 	private File getFileWithPacketsFromFile(String fileName) {
 		fileDisassembler = new FileDisassemblerImpl(fileName, this, downloadNumber);
 		File file = fileDisassembler.createFileWithPacketsFromFile();
 		return file;
 	}
+
 	@Override
 	public void notifyProcessManagerFileNotFound() {
 		processManager.fileNotFound();
