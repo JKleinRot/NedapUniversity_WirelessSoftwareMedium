@@ -1,4 +1,4 @@
-package server.actors;
+package storage;
 
 public interface StorageManager {
 

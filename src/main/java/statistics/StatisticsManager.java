@@ -1,4 +1,4 @@
-package client.actors;
+package statistics;
 
 public interface StatisticsManager {
 

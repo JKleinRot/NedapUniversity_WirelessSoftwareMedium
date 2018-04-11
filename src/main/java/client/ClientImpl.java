@@ -7,18 +7,18 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import client.actors.DataDownloader;
-import client.actors.DataDownloaderImpl;
-import client.actors.DataUploader;
-import client.actors.DataUploaderImpl;
-import client.actors.StatisticsManager;
-import client.actors.StatisticsManagerImpl;
-import client.actors.StorageRequester;
-import client.actors.StorageRequesterImpl;
 import client.processmanager.ProcessManager;
 import client.processmanager.ProcessManagerImpl;
 import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
+import downloader.DataDownloader;
+import downloader.DataDownloaderImpl;
+import statistics.StatisticsManager;
+import statistics.StatisticsManagerImpl;
+import storage.StorageRequester;
+import storage.StorageRequesterImpl;
+import uploader.DataUploader;
+import uploader.DataUploaderImpl;
 
 public class ClientImpl implements Client {
 

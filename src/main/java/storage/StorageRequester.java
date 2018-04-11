@@ -1,4 +1,4 @@
-package client.actors;
+package storage;
 
 public interface StorageRequester {
 

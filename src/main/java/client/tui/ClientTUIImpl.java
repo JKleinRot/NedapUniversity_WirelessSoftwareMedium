@@ -3,11 +3,11 @@ package client.tui;
 import java.util.Observable;
 import java.util.Scanner;
 
-import client.actors.DataDownloader;
-import client.actors.DataUploader;
-import client.actors.StatisticsManager;
-import client.actors.StorageRequester;
 import client.processmanager.ProcessManager;
+import downloader.DataDownloader;
+import statistics.StatisticsManager;
+import storage.StorageRequester;
+import uploader.DataUploader;
 
 public class ClientTUIImpl implements ClientTUI {
 

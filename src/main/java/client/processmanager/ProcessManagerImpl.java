@@ -3,11 +3,11 @@ package client.processmanager;
 import java.util.Observable;
 
 import client.Client;
-import client.actors.DataDownloader;
-import client.actors.DataUploader;
-import client.actors.DataUploaderImpl;
-import client.actors.StatisticsManager;
-import client.actors.StorageRequester;
+import downloader.DataDownloader;
+import statistics.StatisticsManager;
+import storage.StorageRequester;
+import uploader.DataUploader;
+import uploader.DataUploaderImpl;
 
 public class ProcessManagerImpl extends Observable implements ProcessManager {
 

@@ -1,4 +1,4 @@
-package client.actors;
+package downloader;
 
 import java.util.Observable;
 

@@ -1,4 +1,4 @@
-package client.actors;
+package statistics;
 
 import java.util.Observable;
 

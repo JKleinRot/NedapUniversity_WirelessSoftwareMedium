@@ -1,4 +1,4 @@
-package client.actors;
+package uploader;
 
 /**
  * Uploads the data onto the file system.

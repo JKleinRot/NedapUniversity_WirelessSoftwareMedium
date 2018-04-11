@@ -1,4 +1,4 @@
-package client.actors;
+package uploader;
 
 import java.util.Observable;
 
