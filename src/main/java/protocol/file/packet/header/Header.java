@@ -1,4 +1,4 @@
-package protocol.header;
+package protocol.file.packet.header;
 
 /**
  * The header put at the start of the data in the UDP datagram to be able to

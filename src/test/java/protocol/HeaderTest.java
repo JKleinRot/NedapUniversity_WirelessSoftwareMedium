@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import protocol.header.Header;
-import protocol.header.HeaderImpl;
-import protocol.header.parts.Flags;
-import protocol.header.parts.Types;
+import protocol.file.packet.header.Header;
+import protocol.file.packet.header.HeaderImpl;
+import protocol.file.packet.header.parts.Flags;
+import protocol.file.packet.header.parts.Types;
 
 /**
  * Test program for Header.
