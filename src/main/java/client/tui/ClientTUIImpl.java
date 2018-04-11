@@ -16,6 +16,15 @@ public class ClientTUIImpl implements ClientTUI {
 
 	/** The scanner that reads input */
 	private Scanner in;
+	
+	/** The file name */
+	private String fileName;
+	
+	/** The new directory */
+	private String newDirectory;
+	
+	/** The new file name */
+	private String newFileName;
 
 	/**
 	 * -----Constructor-----
@@ -49,9 +58,16 @@ public class ClientTUIImpl implements ClientTUI {
 			} else if (words.length == 1 && words[0].equals("statistics")) {
 
 			} else if (words.length == 2 && words[0].equals("download")) {
-				processManager.handleRequest(words);
+				
 			} else if (words.length == 2 && words[0].equals("upload")) {
-				processManager.handleRequest(words);
+				fileName = words[1];
+				input = readInput("To what directory do you want to upload your file? Please enter \"upload to\" followed by the directory");
+			} else if (words.length == 3 && words[0].equals("upload") && words[1].equals("to")) {
+				input = readInput("What would you like the file to be named? Please enter \"upload as\" followed by the file name");
+				newDirectory = words[2];
+			} else if (words.length == 3 && words[0].equals("upload") && words[1].equals("as")) {
+				newFileName = words[2];
+				processManager.handleRequest(words[0], fileName, newDirectory, newFileName);
 			}
 		}
 	}

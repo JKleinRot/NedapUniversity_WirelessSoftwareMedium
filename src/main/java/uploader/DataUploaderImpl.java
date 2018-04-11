@@ -38,8 +38,9 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	}
 
 	@Override
-	public void upload(String fileName) {
+	public void upload(String fileName, String newDirectory, String newFileName) {
 		File file = getFileWithPacketsFromFile(fileName);
+		sendFileDestinationPacket(newDirectory, newFileName);
 	}
 
 	/**
@@ -53,6 +54,18 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 		fileDisassembler = new FileDisassemblerImpl(fileName, this, downloadNumber);
 		File file = fileDisassembler.createFileWithPacketsFromFile();
 		return file;
+	}
+
+	/**
+	 * Sends a file destination packet to the server.
+	 * 
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	private void sendFileDestinationPacket(String newDirectory, String newFileName) {
+
 	}
 
 	@Override

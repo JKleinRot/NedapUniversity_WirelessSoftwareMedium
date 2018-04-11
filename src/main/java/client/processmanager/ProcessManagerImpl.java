@@ -37,13 +37,13 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	}
 
 	@Override
-	public void handleRequest(String[] words) {
-		if (words.length == 2 && words[0].equals("download")) {
+	public void handleRequest(String action, String fileName, String newDirectory, String newFileName) {
+		if (action.equals("download")) {
 
-		} else if (words.length == 2 && words[0].equals("upload")) {
+		} else if (action.equals("upload")) {
 			DataUploader dataUploader = new DataUploaderImpl(client, this, downloadNumber);
 			downloadNumber++;
-			dataUploader.upload(words[1]);
+			dataUploader.upload(fileName, newDirectory, newFileName);
 		}
 	}
 
