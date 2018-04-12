@@ -184,6 +184,39 @@ public class FileAssemblerTest {
 			// ?
 		}
 		assertEquals(firstPacket.getData().length + secondPacket.getData().length + thirdPacket.getData().length, content.length);
-//		assertArrayEquals(firstPacket.getData() + secondPacket.getData() + thirdPacket.getData(), content);
+	}
+	
+	/** 
+	 * Tests that the file consisting of multiple packets is correctly assembled and saved.
+	 * Packets arrived in incorrect order.
+	 */
+	@Test
+	public void testFileAssemblyMultiplePacketFileIncorrectOrder() {
+		fileAssemblerLong.addPacket(thirdPacket);
+		fileAssemblerLong.addPacket(firstPacket);
+		fileAssemblerLong.addPacket(secondPacket);
+		fileAssemblerLong.addPacket(lastPacketLong);
+		
+		byte[] content = null;
+		try {
+			FileReader fileReader = new FileReader(newFileNameLong);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			StringBuilder stringBuilder = new StringBuilder();
+			String line = bufferedReader.readLine();
+			while (line != null) {
+				stringBuilder.append(line);
+				stringBuilder.append(System.lineSeparator());
+				line = bufferedReader.readLine();
+			}
+			System.out.println(stringBuilder.toString());
+			stringBuilder.setLength(stringBuilder.length() - 1);
+			content = stringBuilder.toString().getBytes();
+			bufferedReader.close();
+		} catch (FileNotFoundException e) {
+			// ?
+		} catch (IOException e) {
+			// ?
+		}
+		assertEquals(firstPacket.getData().length + secondPacket.getData().length + thirdPacket.getData().length, content.length);
 	}
 }
