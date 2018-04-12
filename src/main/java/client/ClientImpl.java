@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import client.processmanager.ProcessManager;
 import client.processmanager.ProcessManagerImpl;
@@ -70,12 +71,15 @@ public class ClientImpl implements Client {
 
 	@Override
 	public DatagramPacket connect(DatagramPacket packetToSend) {
+		receivedData = new byte[2048];
+		dataToSend = new byte[2048];
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.setBroadcast(true);
 			socket.send(packetToSend);
 			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 					+ packetToSend.getAddress());
+			System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setBroadcast(false);
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
@@ -94,16 +98,20 @@ public class ClientImpl implements Client {
 	
 	@Override 
 	public DatagramPacket sendOnePacket(Packet thePacketToSend) {
+		receivedData = new byte[2048];
+		dataToSend = new byte[2048];
 		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.send(packetToSend);
 			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 					+ packetToSend.getAddress());
+			System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 					+ " from " + receivedPacket.getAddress());
+			System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			sendOnePacket(thePacketToSend);

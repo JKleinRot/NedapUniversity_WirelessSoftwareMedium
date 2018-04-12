@@ -4,6 +4,14 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import downloader.DataDownloader;
+import downloader.DataDownloaderImpl;
+import protocol.file.packet.Packet;
 
 public class ServerImpl implements Server {
 
@@ -21,6 +29,9 @@ public class ServerImpl implements Server {
 
 	/** A byte buffer to hold the data to send */
 	private byte[] dataToSend;
+	
+	/** The data downloaders */
+	private Map<Integer, DataDownloader> dataDownloaders;
 
 	/**
 	 * -----Constructor-----
@@ -40,23 +51,52 @@ public class ServerImpl implements Server {
 		isRunning = true;
 		receivedData = new byte[2048];
 		dataToSend = new byte[2048];
+		dataDownloaders = new HashMap<>();
 	}
 
 	@Override
 	public void run() {
 		while (isRunning) {
-			DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
+			receivedData = new byte[2048];
+			dataToSend = new byte[2048];
+			final DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 			try {
 				socket.receive(receivedPacket);
 				System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 						+ " from " + receivedPacket.getAddress());
-				String message = "You have been connected to a wireless storage medium";
-				dataToSend = message.getBytes();
-				DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
-						receivedPacket.getAddress(), receivedPacket.getPort());
-				socket.send(packetToSend);
-				System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-						+ packetToSend.getAddress());
+				System.out.flush();
+				System.out.println(Arrays.toString(receivedPacket.getData()));
+				System.out.println("DataSize: " + receivedPacket.getLength());
+				System.out.println("Flag: " + ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 8, 12)).getInt());
+				if (new String (receivedPacket.getData(), 0, 5).equals("Hello")) {
+					String message = "You have been connected to a wireless storage medium";
+					dataToSend = message.getBytes();
+					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
+							receivedPacket.getAddress(), receivedPacket.getPort());
+					socket.send(packetToSend);
+					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
+							+ packetToSend.getAddress());
+				} else if (receivedPacket.getData()[11] == 1) {
+					if (ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 4) {
+						dataDownloaders.put(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new DataDownloaderImpl(this, receivedPacket.getData()));
+					}
+					Packet thePacketToSend = dataDownloaders.get(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData());
+					System.out.println("Upload");
+					dataToSend = thePacketToSend.getBytes();
+					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
+							receivedPacket.getAddress(), receivedPacket.getPort());
+					socket.send(packetToSend);
+					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
+							+ packetToSend.getAddress());
+				} else {
+					dataToSend = ("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
+							+ " from " + receivedPacket.getAddress()).getBytes();
+					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
+							receivedPacket.getAddress(), receivedPacket.getPort());
+					socket.send(packetToSend);
+					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
+							+ packetToSend.getAddress());
+				}
 			} catch (IOException e) {
 				System.out.println("ERROR: Connection lost");
 			}

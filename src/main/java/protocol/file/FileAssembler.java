@@ -1,5 +1,7 @@
 package protocol.file;
 
+import protocol.file.packet.Packet;
+
 /**
  * Assembles the received packets into a file with the provided name saved in
  * the provided directory.
@@ -21,5 +23,5 @@ public interface FileAssembler {
 	 * @param packet
 	 *            The packet received
 	 */
-	public void addPacket(byte[] packet);
+	public void addPacket(Packet packet);
 }
