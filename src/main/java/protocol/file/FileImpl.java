@@ -24,7 +24,7 @@ public class FileImpl implements File {
 	@Override
 	public void addPacket(Packet packet) {
 		packets.add(packet);
-		dataSize = dataSize + packet.getHeader().getLength();
+		dataSize = dataSize + packet.getData().length;
 	}
 
 	@Override

@@ -104,7 +104,7 @@ public class FileAssemblerImpl implements FileAssembler {
 			bufferedReader.write(data);
 			bufferedReader.close();
 		} catch (IOException e) {
-			//?
+			throw new RuntimeException(e);
 		}
 	}
 
