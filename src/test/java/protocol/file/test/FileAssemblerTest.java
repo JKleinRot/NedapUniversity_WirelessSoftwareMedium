@@ -116,8 +116,9 @@ public class FileAssemblerTest {
 		firstPacket = fileLong.getPackets().get(0);
 		secondPacket = fileLong.getPackets().get(1);
 		thirdPacket = fileLong.getPackets().get(2);
+		System.out.println("ThirdPacketSize: " + thirdPacket.getData().length);
 		header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
-		byte[] dataLong = ("DataSize " + 2573).getBytes();
+		byte[] dataLong = ("DataSize " + 2588).getBytes();
 		lastPacketLong = new PacketImpl(header, dataLong);
 		fileAssembler = new FileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
 		fileAssemblerLong = new FileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
@@ -170,15 +171,18 @@ public class FileAssemblerTest {
 			String line = bufferedReader.readLine();
 			while (line != null) {
 				stringBuilder.append(line);
+				stringBuilder.append(System.lineSeparator());
 				line = bufferedReader.readLine();
 			}
+			System.out.println(stringBuilder.toString());
+			stringBuilder.setLength(stringBuilder.length() - 1);
 			content = stringBuilder.toString().getBytes();
 			bufferedReader.close();
 		} catch (FileNotFoundException e) {
 			// ?
 		} catch (IOException e) {
 			// ?
-		}	
+		}
 		assertEquals(firstPacket.getData().length + secondPacket.getData().length + thirdPacket.getData().length, content.length);
 //		assertArrayEquals(firstPacket.getData() + secondPacket.getData() + thirdPacket.getData(), content);
 	}

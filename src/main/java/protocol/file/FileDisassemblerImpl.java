@@ -84,11 +84,11 @@ public class FileDisassemblerImpl implements FileDisassembler {
 			String line = bufferedReader.readLine();
 			while (line != null) {
 				stringBuilder.append(line);
-//				stringBuilder.append(System.lineSeparator());
+				stringBuilder.append(System.lineSeparator());
 				line = bufferedReader.readLine();
 			}
 			System.out.println(stringBuilder.toString());
-//			stringBuilder.setLength(stringBuilder.length() - 1);
+			stringBuilder.setLength(stringBuilder.length() - 1);
 			content = stringBuilder.toString().getBytes();
 			bufferedReader.close();
 		} catch (FileNotFoundException e) {
