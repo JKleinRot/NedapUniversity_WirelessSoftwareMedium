@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import protocol.file.packet.Packet;
 import protocol.file.packet.header.parts.Flags;
@@ -40,7 +41,7 @@ public class FileAssemblerImpl implements FileAssembler {
 		this.fileName = fileName;
 		this.fileDirectory = fileDirectory;
 		this.downloadNumber = downloadNumber;
-		packets = new HashMap<>();
+		packets = new TreeMap<>();
 
 	}
 

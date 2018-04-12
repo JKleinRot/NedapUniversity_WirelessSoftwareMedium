@@ -1,6 +1,7 @@
 package protocol.file.test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -99,6 +100,7 @@ public class FileAssemblerTest {
 		mocks = new EasyMockSupport();
 		dataUploader = mocks.createMock(DataUploader.class);		
 		newFileName = "TestResult.txt";
+		newFileNameLong = "TestLongResult.txt";
 		fileDirectory = "/Users/janine.kleinrot/Documents/NedapUniversity/Module1_SoftwareSystems/Software/Eclipse_Workspace/NedapUniversity_WirelessStorageMedium/";
 		downloadNumber = 1;
 		oldFileName = "Test.txt";
@@ -115,12 +117,15 @@ public class FileAssemblerTest {
 		secondPacket = fileLong.getPackets().get(1);
 		thirdPacket = fileLong.getPackets().get(2);
 		header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
-		byte[] dataLong = ("DataSize " + 2571).getBytes();
+		byte[] dataLong = ("DataSize " + 2573).getBytes();
 		lastPacketLong = new PacketImpl(header, dataLong);
 		fileAssembler = new FileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
 		fileAssemblerLong = new FileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
 	}
 	
+	/** 
+	 * Tests that the file consisting of one packet is correctly assembled and saved.
+	 */
 	@Test
 	public void testFileAssemblyOnePacketFile() {
 		fileAssembler.addPacket(packet);
@@ -142,9 +147,39 @@ public class FileAssemblerTest {
 			// ?
 		} catch (IOException e) {
 			// ?
-		}
-				
+		}	
 		assertArrayEquals(packet.getData(), content);
+	}
+	
+	/** 
+	 * Tests that the file consisting of multiple packets is correctly assembled and saved.
+	 * Packets arrived in correct order.
+	 */
+	@Test
+	public void testFileAssemblyMultiplePacketFile() {
+		fileAssemblerLong.addPacket(firstPacket);
+		fileAssemblerLong.addPacket(secondPacket);
+		fileAssemblerLong.addPacket(thirdPacket);
+		fileAssemblerLong.addPacket(lastPacketLong);
 		
+		byte[] content = null;
+		try {
+			FileReader fileReader = new FileReader(newFileNameLong);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			StringBuilder stringBuilder = new StringBuilder();
+			String line = bufferedReader.readLine();
+			while (line != null) {
+				stringBuilder.append(line);
+				line = bufferedReader.readLine();
+			}
+			content = stringBuilder.toString().getBytes();
+			bufferedReader.close();
+		} catch (FileNotFoundException e) {
+			// ?
+		} catch (IOException e) {
+			// ?
+		}	
+		assertEquals(firstPacket.getData().length + secondPacket.getData().length + thirdPacket.getData().length, content.length);
+//		assertArrayEquals(firstPacket.getData() + secondPacket.getData() + thirdPacket.getData(), content);
 	}
 }
