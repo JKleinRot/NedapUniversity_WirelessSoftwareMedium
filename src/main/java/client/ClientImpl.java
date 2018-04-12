@@ -28,9 +28,6 @@ public class ClientImpl implements Client {
 	/** The datagram socket */
 	private DatagramSocket socket;
 
-	/** A byte buffer to hold the data to send */
-	private byte[] dataToSend;
-
 	/** A byte buffer to hold the received data */
 	private byte[] receivedData;
 
@@ -62,7 +59,6 @@ public class ClientImpl implements Client {
 			System.out.println("ERROR: Could not setup datagram socket");
 		}
 		receivedData = new byte[2048];
-		dataToSend = new byte[2048];
 		processManager = new ProcessManagerImpl(this);
 		clientTUI = new ClientTUIImpl(processManager);
 		Thread clientTUIThread = new Thread(clientTUI);
@@ -72,7 +68,6 @@ public class ClientImpl implements Client {
 	@Override
 	public DatagramPacket connect(DatagramPacket packetToSend) {
 		receivedData = new byte[2048];
-		dataToSend = new byte[2048];
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.setBroadcast(true);
@@ -99,7 +94,6 @@ public class ClientImpl implements Client {
 	@Override 
 	public DatagramPacket sendOnePacket(Packet thePacketToSend) {
 		receivedData = new byte[2048];
-		dataToSend = new byte[2048];
 		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
@@ -109,6 +103,7 @@ public class ClientImpl implements Client {
 			System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
+			System.out.println("Length: " + receivedPacket.getLength());
 			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 					+ " from " + receivedPacket.getAddress());
 			System.out.println(Arrays.toString(receivedPacket.getData()));

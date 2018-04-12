@@ -50,7 +50,6 @@ public class ServerImpl implements Server {
 		}
 		isRunning = true;
 		receivedData = new byte[2048];
-		dataToSend = new byte[2048];
 		dataDownloaders = new HashMap<>();
 	}
 
@@ -58,7 +57,6 @@ public class ServerImpl implements Server {
 	public void run() {
 		while (isRunning) {
 			receivedData = new byte[2048];
-			dataToSend = new byte[2048];
 			final DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 			try {
 				socket.receive(receivedPacket);
@@ -70,6 +68,7 @@ public class ServerImpl implements Server {
 				System.out.println("Flag: " + ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 8, 12)).getInt());
 				if (new String (receivedPacket.getData(), 0, 5).equals("Hello")) {
 					String message = "You have been connected to a wireless storage medium";
+					dataToSend = new byte[message.length()];
 					dataToSend = message.getBytes();
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
 							receivedPacket.getAddress(), receivedPacket.getPort());
@@ -80,8 +79,9 @@ public class ServerImpl implements Server {
 					if (ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 4) {
 						dataDownloaders.put(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new DataDownloaderImpl(this, receivedPacket.getData()));
 					}
-					Packet thePacketToSend = dataDownloaders.get(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData());
+					Packet thePacketToSend = dataDownloaders.get(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData(), receivedPacket.getLength());
 					System.out.println("Upload");
+					dataToSend = new byte[thePacketToSend.getLength()];
 					dataToSend = thePacketToSend.getBytes();
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
 							receivedPacket.getAddress(), receivedPacket.getPort());
@@ -89,6 +89,7 @@ public class ServerImpl implements Server {
 					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 							+ packetToSend.getAddress());
 				} else {
+					dataToSend = new byte[2048];
 					dataToSend = ("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 							+ " from " + receivedPacket.getAddress()).getBytes();
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,

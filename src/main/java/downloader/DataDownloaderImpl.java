@@ -58,9 +58,9 @@ public class DataDownloaderImpl implements DataDownloader {
 	}
 
 	@Override
-	public Packet processPacket(byte[] packet) {
+	public Packet processPacket(byte[] packet, int length) {
 		System.out.println("In data downloader");
-		Packet receivedPacket = recreatePacket(packet);
+		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
 		if (receivedPacket.getHeader().getTypes().equals(Types.UPLOADCHARACTERISTICS)) {
 			createFileAssembler(receivedPacket);
 		} else {
@@ -90,7 +90,7 @@ public class DataDownloaderImpl implements DataDownloader {
 				.getInt();
 		Header header = new HeaderImpl(sequenceNumber, acknowledgementNumber, flags, types, downloadNumber);
 		int dataSize = packet.length - headerLength;
-		byte[] data = ByteBuffer.allocate(dataSize).wrap(Arrays.copyOfRange(packet, headerLength, packet.length + 1))
+		byte[] data = ByteBuffer.allocate(dataSize).wrap(Arrays.copyOfRange(packet, headerLength, packet.length))
 				.array();
 		Packet thePacket = new PacketImpl(header, data);
 		return thePacket;
