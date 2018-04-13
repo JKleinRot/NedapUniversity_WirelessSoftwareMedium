@@ -1,4 +1,4 @@
-package uploader;
+package client.uploader;
 
 import java.util.Observable;
 
@@ -14,7 +14,7 @@ import protocol.file.packet.header.HeaderImpl;
 import protocol.file.packet.header.parts.Flags;
 import protocol.file.packet.header.parts.Types;
 
-public class DataUploaderImpl extends Observable implements DataUploader {
+public class ClientDataUploaderImpl extends Observable implements ClientDataUploader {
 
 	/** The client */
 	private Client client;
@@ -53,7 +53,7 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	 * @param processManager
 	 *            The process manager
 	 */
-	public DataUploaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
+	public ClientDataUploaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
 		this.client = client;
 		this.downloadNumber = downloadNumber;
 		this.processManager = processManager;

@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import client.uploader.ClientDataUploader;
 import protocol.file.packet.Packet;
 import protocol.file.packet.PacketImpl;
 import protocol.file.packet.header.Header;
 import protocol.file.packet.header.HeaderImpl;
 import protocol.file.packet.header.parts.Flags;
 import protocol.file.packet.header.parts.Types;
-import uploader.DataUploader;
 
 public class FileDisassemblerImpl implements FileDisassembler {
 
@@ -22,7 +22,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 	private String fileName;
 
 	/** The data uplader */
-	private DataUploader dataUploader;
+	private ClientDataUploader dataUploader;
 
 	/** The packet size */
 	private int packetSize;
@@ -62,7 +62,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 	 * @param filename
 	 *            The file name
 	 */
-	public FileDisassemblerImpl(String fileName, DataUploader dataUploader, int downloadNumber) {
+	public FileDisassemblerImpl(String fileName, ClientDataUploader dataUploader, int downloadNumber) {
 		this.fileName = fileName;
 		this.dataUploader = dataUploader;
 		this.downloadNumber = downloadNumber;

@@ -1,11 +1,11 @@
-package uploader;
+package client.uploader;
 
 /**
  * Uploads the data onto the file system.
  * 
  * @author janine.kleinrot
  */
-public interface DataUploader {
+public interface ClientDataUploader {
 
 	/**
 	 * Uploads a file.

@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import downloader.DataDownloader;
-import downloader.DataDownloaderImpl;
 import protocol.file.packet.Packet;
+import server.downloader.ServerDataDownloader;
+import server.downloader.ServerDataDownloaderImpl;
 
 public class ServerImpl implements Server {
 
@@ -31,7 +31,7 @@ public class ServerImpl implements Server {
 	private byte[] dataToSend;
 	
 	/** The data downloaders */
-	private Map<Integer, DataDownloader> dataDownloaders;
+	private Map<Integer, ServerDataDownloader> dataDownloaders;
 
 	/**
 	 * -----Constructor-----
@@ -77,7 +77,7 @@ public class ServerImpl implements Server {
 							+ packetToSend.getAddress());
 				} else if (receivedPacket.getData()[11] == 1) {
 					if (ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 4) {
-						dataDownloaders.put(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new DataDownloaderImpl(this, receivedPacket.getData()));
+						dataDownloaders.put(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new ServerDataDownloaderImpl(this, receivedPacket.getData()));
 					}
 					Packet thePacketToSend = dataDownloaders.get(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData(), receivedPacket.getLength());
 					System.out.println("Upload");

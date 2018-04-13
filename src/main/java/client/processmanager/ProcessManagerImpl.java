@@ -3,11 +3,11 @@ package client.processmanager;
 import java.util.Observable;
 
 import client.Client;
-import downloader.DataDownloader;
+import client.uploader.ClientDataUploader;
+import client.uploader.ClientDataUploaderImpl;
+import server.downloader.ServerDataDownloader;
 import statistics.StatisticsManager;
 import storage.StorageRequester;
-import uploader.DataUploader;
-import uploader.DataUploaderImpl;
 
 public class ProcessManagerImpl extends Observable implements ProcessManager {
 
@@ -38,7 +38,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 
 	@Override
 	public void handleUploadRequest(String fileName, String newDirectory, String newFileName) {
-		DataUploader dataUploader = new DataUploaderImpl(client, this, downloadNumber);
+		ClientDataUploader dataUploader = new ClientDataUploaderImpl(client, this, downloadNumber);
 		downloadNumber++;
 		dataUploader.upload(fileName, newDirectory, newFileName);
 	}

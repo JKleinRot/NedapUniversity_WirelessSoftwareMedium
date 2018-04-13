@@ -15,6 +15,7 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import client.uploader.ClientDataUploader;
 import protocol.file.File;
 import protocol.file.FileAssembler;
 import protocol.file.FileAssemblerImpl;
@@ -26,7 +27,6 @@ import protocol.file.packet.header.Header;
 import protocol.file.packet.header.HeaderImpl;
 import protocol.file.packet.header.parts.Flags;
 import protocol.file.packet.header.parts.Types;
-import uploader.DataUploader;
 
 /**
  * Test program for FileAssembler.
@@ -57,7 +57,7 @@ public class FileAssemblerTest {
 	private EasyMockSupport mocks;
 	
 	/** The data uploader */
-	private DataUploader dataUploader;
+	private ClientDataUploader dataUploader;
 	
 	/** The old file name of the short file*/
 	private String oldFileName;
@@ -101,7 +101,7 @@ public class FileAssemblerTest {
 	@BeforeEach
 	public void setup() {
 		mocks = new EasyMockSupport();
-		dataUploader = mocks.createMock(DataUploader.class);		
+		dataUploader = mocks.createMock(ClientDataUploader.class);		
 		newFileName = "TestResult.txt";
 		newFileNameLong = "TestLongResult.txt";
 		fileDirectory = "/Users/janine.kleinrot/Documents/NedapUniversity/Module1_SoftwareSystems/Software/Eclipse_Workspace/NedapUniversity_WirelessStorageMedium/";

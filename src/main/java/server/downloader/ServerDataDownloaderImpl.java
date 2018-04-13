@@ -1,4 +1,4 @@
-package downloader;
+package server.downloader;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import protocol.file.packet.header.parts.Flags;
 import protocol.file.packet.header.parts.Types;
 import server.Server;
 
-public class DataDownloaderImpl implements DataDownloader {
+public class ServerDataDownloaderImpl implements ServerDataDownloader {
 
 	/** The server */
 	private Server server;
@@ -52,7 +52,7 @@ public class DataDownloaderImpl implements DataDownloader {
 	 * @param firstPacket
 	 *            The first packet
 	 */
-	public DataDownloaderImpl(Server server, byte[] firstPacket) {
+	public ServerDataDownloaderImpl(Server server, byte[] firstPacket) {
 		this.server = server;
 		this.firstPacket = firstPacket;
 	}

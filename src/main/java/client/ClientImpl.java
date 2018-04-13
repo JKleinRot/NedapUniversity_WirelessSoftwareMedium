@@ -13,15 +13,15 @@ import client.processmanager.ProcessManager;
 import client.processmanager.ProcessManagerImpl;
 import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
-import downloader.DataDownloader;
-import downloader.DataDownloaderImpl;
+import client.uploader.ClientDataUploader;
+import client.uploader.ClientDataUploaderImpl;
 import protocol.file.packet.Packet;
+import server.downloader.ServerDataDownloader;
+import server.downloader.ServerDataDownloaderImpl;
 import statistics.StatisticsManager;
 import statistics.StatisticsManagerImpl;
 import storage.StorageRequester;
 import storage.StorageRequesterImpl;
-import uploader.DataUploader;
-import uploader.DataUploaderImpl;
 
 public class ClientImpl implements Client {
 

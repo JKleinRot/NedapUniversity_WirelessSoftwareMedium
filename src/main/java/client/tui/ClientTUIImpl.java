@@ -4,10 +4,10 @@ import java.util.Observable;
 import java.util.Scanner;
 
 import client.processmanager.ProcessManager;
-import downloader.DataDownloader;
+import client.uploader.ClientDataUploader;
+import server.downloader.ServerDataDownloader;
 import statistics.StatisticsManager;
 import storage.StorageRequester;
-import uploader.DataUploader;
 
 public class ClientTUIImpl implements ClientTUI {
 
