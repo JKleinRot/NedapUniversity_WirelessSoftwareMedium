@@ -8,10 +8,8 @@ package client.processmanager;
 public interface ProcessManager {
 
 	/**
-	 * Handles the request of the user.
+	 * Handles the upload request of the user.
 	 * 
-	 * @param action
-	 *            The action requested
 	 * @param fileName
 	 *            The file name
 	 * @param newDirectory
@@ -19,10 +17,22 @@ public interface ProcessManager {
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void handleRequest(String action, String fileName, String newDirectory, String newFileName);
+	public void handleUploadRequest(String fileName, String newDirectory, String newFileName);
 
 	/**
 	 * Notifies the client that the file is not found.
 	 */
 	public void fileNotFound();
+
+	/**
+	 * Notifies the client that the upload is complete.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	public void uploadComplete(String fileName, String newDirectory, String newFileName);
 }

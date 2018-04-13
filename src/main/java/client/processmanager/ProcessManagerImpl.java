@@ -37,20 +37,22 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	}
 
 	@Override
-	public void handleRequest(String action, String fileName, String newDirectory, String newFileName) {
-		if (action.equals("download")) {
-
-		} else if (action.equals("upload")) {
-			DataUploader dataUploader = new DataUploaderImpl(client, this, downloadNumber);
-			downloadNumber++;
-			dataUploader.upload(fileName, newDirectory, newFileName);
-		}
+	public void handleUploadRequest(String fileName, String newDirectory, String newFileName) {
+		DataUploader dataUploader = new DataUploaderImpl(client, this, downloadNumber);
+		downloadNumber++;
+		dataUploader.upload(fileName, newDirectory, newFileName);
 	}
 
 	@Override
 	public void fileNotFound() {
 		setChanged();
 		notifyObservers("File not found");
+	}
+
+	@Override
+	public void uploadComplete(String fileName, String newDirectory, String newFileName) {
+		setChanged();
+		notifyObservers("The file " + fileName + " is uploaded to the server into " + newDirectory + " as " + newFileName);
 	}
 
 }

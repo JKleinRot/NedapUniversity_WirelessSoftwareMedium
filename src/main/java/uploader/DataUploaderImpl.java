@@ -36,10 +36,10 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 
 	/** The data size */
 	private int dataSize;
-	
+
 	/** The previous send packet */
 	private Packet previousPacket;
-	
+
 	/** The current packet */
 	private Packet currentPacket;
 
@@ -65,6 +65,7 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		sendData();
 		sendDataIntegrityPacket();
+		notifyProcessManagerDownloadComplete(fileName, newDirectory, newFileName);
 	}
 
 	/**
@@ -121,4 +122,19 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	public void notifyProcessManagerFileNotFound() {
 		processManager.fileNotFound();
 	}
+
+	/**
+	 * Notifies the process manager that the current upload is complete.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	private void notifyProcessManagerDownloadComplete(String fileName, String newDirectory, String newFileName) {
+		processManager.uploadComplete(fileName, newDirectory, newFileName);
+	}
+
 }
