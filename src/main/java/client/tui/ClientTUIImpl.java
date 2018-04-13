@@ -20,6 +20,9 @@ public class ClientTUIImpl implements ClientTUI {
 	/** The file name */
 	private String fileName;
 	
+	/** The file directory */
+	private String fileDirectory;
+	
 	/** The new directory */
 	private String newDirectory;
 	
@@ -32,6 +35,9 @@ public class ClientTUIImpl implements ClientTUI {
 	/** Whether the user has set the file to upload */
 	private boolean isUploadFileSet;
 	
+	/** Whether the user has set the location of the file to upload */
+	private boolean isUploadDirectorySet;
+	
 	/** Whether the user has set the upload location */
 	private boolean isUploadLocationSet;
 	
@@ -40,6 +46,9 @@ public class ClientTUIImpl implements ClientTUI {
 	
 	/** Whether the user has set the file to upload */
 	private boolean isDownloadFileSet;
+	
+	/** Whether the user has set the location of the file to download */
+	private boolean isDownloadDirectorySet;
 	
 	/** Whether the user has set the upload location */
 	private boolean isDownloadLocationSet;
@@ -79,13 +88,20 @@ public class ClientTUIImpl implements ClientTUI {
 			} else if (words.length == 2 && words[0].equals("download")) {
 				if (isDownloadRequest && !isDownloadFileSet) {
 					fileName = words[1];
+					input = readInput("In what directory is this file located? Please enter \"upload from\" followed by the complete directory of the file followed by a /");
 					input = readInput("To what directory do you want to download your file? Please enter \"upload to\" followed by the directory");
 					isDownloadFileSet = true;
 				} else {
 					input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 				}
+			} else if (words.length == 3 && words[0].equals("download") && words[1].equals("from")) {
+				if(isDownloadFileSet && !isDownloadDirectorySet) {
+					fileDirectory = words[2];
+					input = readInput("To what directory do you want to download your file? Please enter \"upload to\" followed by the directory");
+					isDownloadDirectorySet = true;
+				}
 			} else if (words.length == 3 && words[0].equals("download") && words[1].equals("to")) {
-				if (isDownloadFileSet && !isDownloadLocationSet) {
+				if (isDownloadDirectorySet && !isDownloadLocationSet) {
 					newDirectory = words[2];
 					input = readInput("What would you like the file to be named? Please enter \"upload as\" followed by the file name");
 					isDownloadLocationSet = true;
@@ -111,21 +127,24 @@ public class ClientTUIImpl implements ClientTUI {
 					input = readInput("Already requesting an upload. Please enter the desired parameters or enter \"abort\" to stop the current action");
 				} else {
 					input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
-				}
-			} else if (words.length == 1 && words[0].equals("files")) {
-
-			} else if (words.length == 1 && words[0].equals("statistics")) {
-				
+				}				
 			} else if (words.length == 2 && words[0].equals("upload")) {
 				if (isUploadRequest && !isUploadFileSet) {
 					fileName = words[1];
-					input = readInput("To what directory do you want to upload your file? Please enter \"upload to\" followed by the directory");
+					input = readInput("In what directory is this file located? Please enter \"upload from\" followed by the complete directory of the file followed by a /");
 					isUploadFileSet = true;
 				} else {
 					input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 				}
-			} else if (words.length == 3 && words[0].equals("upload") && words[1].equals("to")) {
-				if (isUploadFileSet && !isUploadLocationSet) {
+			} else if (words.length == 3 && words[0].equals("upload") && words[1].equals("from")) {
+				if (isUploadFileSet && !isUploadDirectorySet) {
+					fileDirectory = words[2];
+					input = readInput("To what directory do you want to upload your file? Please enter \"upload to\" followed by the directory");
+					isUploadDirectorySet = true;
+				}
+			}
+			else if (words.length == 3 && words[0].equals("upload") && words[1].equals("to")) {
+				if (isUploadDirectorySet && !isUploadLocationSet) {
 					newDirectory = words[2];
 					input = readInput("What would you like the file to be named? Please enter \"upload as\" followed by the file name");
 					isUploadLocationSet = true;
