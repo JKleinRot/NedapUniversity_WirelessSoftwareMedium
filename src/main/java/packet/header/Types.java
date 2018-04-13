@@ -8,8 +8,12 @@ public enum Types {
 							new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000100 }), STATISTICS(
 									new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00001000 }), DATAINTEGRITY(
 											new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00010000 }), ACK(
-													new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00100000 }), DOWNLOADCHARACTERISTICS(
-															new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b01000000 });
+													new byte[] { 0b00000000, 0b00000000, 0b00000000,
+															0b00100000 }), DOWNLOADCHARACTERISTICS(
+																	new byte[] { 0b00000000, 0b00000000, 0b00000000,
+																			0b01000000 }), LASTACK(
+																					new byte[] { 0b00000000, 0b00000000,
+																							0b00000000, (byte) 0b10000000 });
 
 	/** The bytes */
 	private byte[] bytes;

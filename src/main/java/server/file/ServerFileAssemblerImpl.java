@@ -1,4 +1,4 @@
-package file;
+package server.file;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import packet.Packet;
 import packet.header.Flags;
 
-public class FileAssemblerImpl implements FileAssembler {
+public class ServerFileAssemblerImpl implements ServerFileAssembler {
 
 	/** The download number */
 	private int downloadNumber;
@@ -28,7 +28,7 @@ public class FileAssemblerImpl implements FileAssembler {
 	 * @param downloadNumber
 	 *            The download number
 	 */
-	public FileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
+	public ServerFileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
 		this.downloadNumber = downloadNumber;
 		createFileOutputStream(fileDirectory, fileName);
 	}

@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import client.processmanager.ProcessManager;
@@ -14,6 +15,7 @@ import client.processmanager.ProcessManagerImpl;
 import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
 import packet.Packet;
+import packet.header.Flags;
 
 
 public class ClientImpl implements Client {
@@ -60,7 +62,7 @@ public class ClientImpl implements Client {
 
 	@Override
 	public DatagramPacket connect(DatagramPacket packetToSend) {
-		receivedData = new byte[2048];
+		byte[] receivedData = new byte[2048];
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.setBroadcast(true);
@@ -86,7 +88,7 @@ public class ClientImpl implements Client {
 	
 	@Override 
 	public DatagramPacket sendOnePacket(Packet thePacketToSend) {
-		receivedData = new byte[2048];
+		byte[] receivedData = new byte[2048];
 		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {

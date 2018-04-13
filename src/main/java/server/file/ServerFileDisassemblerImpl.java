@@ -1,4 +1,4 @@
-package file;
+package server.file;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -6,18 +6,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import client.uploader.ClientUploader;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
+import server.Server;
+import server.file.ServerFileDisassembler;
+import server.uploader.ServerUploader;
 
-public class FileDisassemblerImpl implements FileDisassembler {
+public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 
-	/** The data uplader */
-	private ClientUploader dataUploader;
+	/** The data uploader */
+	private ServerUploader dataUploader;
 
 	/** The packet size */
 	private int packetSize;
@@ -45,7 +47,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 
 	/** The first sequence number */
 	private int firstSequenceNumber;
-	
+
 	/** The total data size */
 	private int totalDataSize;
 
@@ -57,7 +59,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 	 * @param filename
 	 *            The file name
 	 */
-	public FileDisassemblerImpl(String fileName, ClientUploader dataUploader, int downloadNumber) {
+	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber) {
 		this.dataUploader = dataUploader;
 		this.downloadNumber = downloadNumber;
 		this.packetSize = defaultPacketSize;
@@ -73,7 +75,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 	private void setDataSize() {
 		dataSize = packetSize - headerSize;
 	}
-	
+
 	/**
 	 * Creates the buffered reader for the file.
 	 * 
@@ -87,12 +89,12 @@ public class FileDisassemblerImpl implements FileDisassembler {
 			notifyDataUploaderFileNotFound();
 		}
 	}
-	
+
 	/**
 	 * Notifies the data uploader that the file is not found.
 	 */
 	private void notifyDataUploaderFileNotFound() {
-		dataUploader.notifyProcessManagerFileNotFound();
+		dataUploader.notifyServerFileNotFound();
 	}
 
 	@Override
@@ -137,19 +139,21 @@ public class FileDisassemblerImpl implements FileDisassembler {
 	private Header getNextHeader(byte[] data) {
 		Header header;
 		if (previousPacket == null && data.length == dataSize) {
-			header = new HeaderImpl(firstSequenceNumber, 0, Flags.UPLOAD_MORETOCOME, Types.DATA, downloadNumber);
+			header = new HeaderImpl(firstSequenceNumber, 0, Flags.DOWNLOAD_MORETOCOME, Types.DATA, downloadNumber);
 		} else if (previousPacket == null && data.length != dataSize) {
-			header = new HeaderImpl(firstSequenceNumber, 0, Flags.UPLOAD_LAST, Types.DATA, downloadNumber);
+			header = new HeaderImpl(firstSequenceNumber, 0, Flags.DOWNLOAD_LAST, Types.DATA, downloadNumber);
 		} else if (previousPacket != null && data.length == dataSize) {
-			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_MORETOCOME, Types.DATA, downloadNumber);
+			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.DOWNLOAD_MORETOCOME,
+					Types.DATA, downloadNumber);
 		} else if (previousPacket != null && data.length != dataSize) {
-			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_LAST, Types.DATA, downloadNumber);
+			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.DOWNLOAD_LAST,
+					Types.DATA, downloadNumber);
 		} else {
 			header = new HeaderImpl(0, 0, Flags.UNDEFINED, Types.UNDEFINED, 0);
 		}
 		return header;
 	}
-	
+
 	@Override
 	public int getTotalDataSize() {
 		return totalDataSize;

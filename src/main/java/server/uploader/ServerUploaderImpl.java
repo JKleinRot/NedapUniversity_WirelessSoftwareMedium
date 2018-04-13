@@ -1,4 +1,4 @@
-package server.downloader;
+package server.uploader;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -9,14 +9,15 @@ import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
-import server.file.ServerFileAssembler;
 import server.file.ServerFileAssemblerImpl;
+import server.file.ServerFileDisassembler;
+import server.file.ServerFileDisassemblerImpl;
 
-public class ServerDownloaderImpl implements ServerDownloader {
+public class ServerUploaderImpl implements ServerUploader {
 
-	/** The file assembler */
-	private ServerFileAssembler fileAssembler;
-
+	/** The file disassembler */
+	private ServerFileDisassembler fileDisassembler;
+	
 	/** The length of the header */
 	private static final int headerLength = 20;
 
@@ -34,26 +35,37 @@ public class ServerDownloaderImpl implements ServerDownloader {
 
 	/** The download number offset in the header */
 	private static final int downloadNumberOffset = 16;
-
+	
+	/** The final message number */
+	private static final int finalNumber = 20;
+	
+	/** The download number */
+	private int downloadNumber;
+	
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a server downloader.
+	 * Creates a server uploader.
 	 */
-	public ServerDownloaderImpl() {
+	public ServerUploaderImpl() {
 
 	}
 
 	@Override
 	public Packet processPacket(byte[] packet, int length) {
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
-		if (receivedPacket.getHeader().getTypes().equals(Types.UPLOADCHARACTERISTICS)) {
-			createFileAssembler(receivedPacket);
+		Packet packetToSend;
+		if (receivedPacket.getHeader().getTypes().equals(Types.DOWNLOADCHARACTERISTICS)) {
+			createFileDisassembler(receivedPacket);
+			packetToSend = fileDisassembler.getNextPacket();
+			System.out.println("DownloadCharacteristics");
+		} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)){
+			packetToSend = fileDisassembler.getNextPacket();
+			System.out.println("Ack");
 		} else {
-			fileAssembler.addPacket(receivedPacket);
+			packetToSend = createDataIntegrityPacket();
 		}
-		Packet ack = createAck(receivedPacket);
-		return ack;
+		return packetToSend;
 	}
 
 	/**
@@ -80,7 +92,7 @@ public class ServerDownloaderImpl implements ServerDownloader {
 		Packet thePacket = new PacketImpl(header, data);
 		return thePacket;
 	}
-
+	
 	/**
 	 * Reconstructs the flags from the bytes
 	 * 
@@ -113,7 +125,7 @@ public class ServerDownloaderImpl implements ServerDownloader {
 		}
 		return flags;
 	}
-
+	
 	/**
 	 * Reconstructs the types from the bytes
 	 * 
@@ -142,34 +154,25 @@ public class ServerDownloaderImpl implements ServerDownloader {
 		}
 		return types;
 	}
-
-	/**
-	 * Creates a new file assembler.
-	 * 
-	 * @param packet
-	 *            The packet
-	 */
-	private void createFileAssembler(Packet packet) {
+	
+	private void createFileDisassembler(Packet packet) {
 		String data = new String(packet.getData());
 		String[] words = data.split(" ");
 		String fileDirectory = words[1];
 		String fileName = words[3];
-		int downloadNumber = Integer.parseInt(words[5]);
-		fileAssembler = new ServerFileAssemblerImpl(fileName, fileDirectory, downloadNumber);
+		downloadNumber = Integer.parseInt(words[5]);
+		fileDisassembler = new ServerFileDisassemblerImpl(fileDirectory + fileName, this, downloadNumber);
 	}
-
-	/**
-	 * Creates the ack packet to send back to the server.
-	 * 
-	 * @param packet
-	 *            The packet
-	 * @return the ack packet
-	 */
-	private Packet createAck(Packet packet) {
-		Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.UPLOAD, Types.ACK,
-				packet.getHeader().getDownloadNumber());
-		Packet ack = new PacketImpl(header, new byte[0]);
-		return ack;
+	
+	private Packet createDataIntegrityPacket() {
+		Header header = new HeaderImpl(finalNumber, 0, Flags.DOWNLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
+		byte[] data = ("DataSize " + fileDisassembler.getTotalDataSize()).getBytes();
+		Packet packet = new PacketImpl(header, data);
+		return packet;
 	}
-
+	
+	@Override
+	public void notifyServerFileNotFound() {
+		System.out.println("ERROR: File not found");
+	}
 }

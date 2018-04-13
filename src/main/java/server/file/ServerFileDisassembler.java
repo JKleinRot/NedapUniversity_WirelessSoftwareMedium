@@ -1,4 +1,4 @@
-package file;
+package server.file;
 
 import packet.Packet;
 
@@ -7,7 +7,7 @@ import packet.Packet;
  * 
  * @author janine.kleinrot
  */
-public interface FileDisassembler {
+public interface ServerFileDisassembler {
 
 	/**
 	 * Returns the next packet to send.

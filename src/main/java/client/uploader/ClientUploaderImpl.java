@@ -3,9 +3,9 @@ package client.uploader;
 import java.util.Observable;
 
 import client.Client;
+import client.file.ClientFileDisassembler;
+import client.file.ClientFileDisassemblerImpl;
 import client.processmanager.ProcessManager;
-import file.FileDisassembler;
-import file.FileDisassemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
@@ -19,7 +19,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private Client client;
 
 	/** The file disassembler */
-	private FileDisassembler fileDisassembler;
+	private ClientFileDisassembler fileDisassembler;
 
 	/** The process manager */
 	private ProcessManager processManager;
@@ -67,7 +67,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 * @param fileName
 	 */
 	private void createFileDisassembler(String fileName) {
-		fileDisassembler = new FileDisassemblerImpl(fileName, this, downloadNumber);
+		fileDisassembler = new ClientFileDisassemblerImpl(fileName, this, downloadNumber);
 	}
 
 	/**

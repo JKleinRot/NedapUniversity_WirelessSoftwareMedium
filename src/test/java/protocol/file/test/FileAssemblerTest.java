@@ -15,17 +15,17 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import client.file.ClientFileDisassembler;
+import client.file.ClientFileDisassemblerImpl;
 import client.uploader.ClientUploader;
-import file.FileAssembler;
-import file.FileAssemblerImpl;
-import file.FileDisassembler;
-import file.FileDisassemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
+import server.file.ServerFileAssembler;
+import server.file.ServerFileAssemblerImpl;
 
 /**
  * Test program for FileAssembler.
@@ -35,10 +35,10 @@ import packet.header.Types;
 public class FileAssemblerTest {
 
 	/** The file assembler for the short file */
-	private FileAssembler fileAssembler;
+	private ServerFileAssembler fileAssembler;
 	
 	/** The file assembler for the long file */
-	private FileAssembler fileAssemblerLong;
+	private ServerFileAssembler fileAssemblerLong;
 	
 	/** The new file name of the short file */
 	private String newFileName;
@@ -65,10 +65,10 @@ public class FileAssemblerTest {
 	private String oldFileNameLong;
 	
 	/** The file disassembler for the short file*/
-	private FileDisassembler fileDisassembler;
+	private ClientFileDisassembler fileDisassembler;
 	
 	/** The file disassembler for the long file*/
-	private FileDisassembler fileDisassemblerLong;
+	private ClientFileDisassembler fileDisassemblerLong;
 
 	/** The file input stream */
 	private InputStream inputStream;
@@ -107,8 +107,8 @@ public class FileAssemblerTest {
 		downloadNumber = 1;
 		oldFileName = "Test.txt";
 		oldFileNameLong = "TestLong.txt";
-		fileDisassembler = new FileDisassemblerImpl(oldFileName, dataUploader, downloadNumber);
-		fileDisassemblerLong = new FileDisassemblerImpl(oldFileNameLong, dataUploader, downloadNumber);
+		fileDisassembler = new ClientFileDisassemblerImpl(oldFileName, dataUploader, downloadNumber);
+		fileDisassemblerLong = new ClientFileDisassemblerImpl(oldFileNameLong, dataUploader, downloadNumber);
 		packet = fileDisassembler.getNextPacket();
 		totalDataSize = fileDisassembler.getTotalDataSize();
 		firstPacket = fileDisassemblerLong.getNextPacket();
@@ -121,8 +121,8 @@ public class FileAssemblerTest {
 		header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] dataLong = ("DataSize " + 2588).getBytes();
 		lastPacketLong = new PacketImpl(header, dataLong);
-		fileAssembler = new FileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
-		fileAssemblerLong = new FileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
+		fileAssembler = new ServerFileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
+		fileAssemblerLong = new ServerFileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
 	}
 	
 	/** 

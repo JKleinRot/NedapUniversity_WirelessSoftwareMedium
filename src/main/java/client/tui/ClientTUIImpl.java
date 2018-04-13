@@ -174,7 +174,12 @@ public class ClientTUIImpl implements ClientTUI {
 	private void setAllBooleansFalse() {
 		isUploadRequest = false;
 		isUploadFileSet = false;
+		isUploadDirectorySet = false;
 		isUploadLocationSet = false;
+		isDownloadRequest = false;
+		isDownloadFileSet = false;
+		isDownloadDirectorySet = false;
+		isDownloadLocationSet = false;
 	}
 
 	@Override
