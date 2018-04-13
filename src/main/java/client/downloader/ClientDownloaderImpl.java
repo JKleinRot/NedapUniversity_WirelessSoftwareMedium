@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import client.Client;
-import client.processmanager.ProcessManager;
 import fileassembler.FileAssembler;
 import fileassembler.FileAssemblerImpl;
 import packet.Packet;
@@ -20,9 +19,6 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	/** The client */
 	private Client client;
 
-	/** The process manager */
-	private ProcessManager processManager;
-
 	/** The download number */
 	private int downloadNumber;
 
@@ -31,9 +27,6 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
-
-	/** The final message number */
-	private static final int finalNumber = 20;
 
 	/** The length of the header */
 	private static final int headerLength = 20;
@@ -60,14 +53,11 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 * 
 	 * @param client
 	 *            The client
-	 * @param processManager
-	 *            The process manager
 	 * @param downloadNumber
 	 *            The download number
 	 */
-	public ClientDownloaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
+	public ClientDownloaderImpl(Client client, int downloadNumber) {
 		this.client = client;
-		this.processManager = processManager;
 		this.downloadNumber = downloadNumber;
 	}
 

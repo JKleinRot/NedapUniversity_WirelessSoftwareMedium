@@ -3,14 +3,14 @@ package server.uploader;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import filedisassembler.ServerFileDisassembler;
+import filedisassembler.ServerFileDisassemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
-import server.file.ServerFileDisassembler;
-import server.file.ServerFileDisassemblerImpl;
 
 public class ServerUploaderImpl implements ServerUploader {
 

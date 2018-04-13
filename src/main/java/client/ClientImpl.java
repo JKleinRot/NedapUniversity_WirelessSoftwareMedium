@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import client.processmanager.ProcessManager;
@@ -15,16 +14,11 @@ import client.processmanager.ProcessManagerImpl;
 import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
 import packet.Packet;
-import packet.header.Flags;
-
 
 public class ClientImpl implements Client {
 
 	/** The datagram socket */
 	private DatagramSocket socket;
-
-	/** A byte buffer to hold the received data */
-	private byte[] receivedData;
 
 	/** The address of the server */
 	private InetAddress address;
@@ -53,7 +47,6 @@ public class ClientImpl implements Client {
 		} catch (SocketException e) {
 			System.out.println("ERROR: Could not setup datagram socket");
 		}
-		receivedData = new byte[2048];
 		processManager = new ProcessManagerImpl(this);
 		clientTUI = new ClientTUIImpl(processManager);
 		Thread clientTUIThread = new Thread(clientTUI);

@@ -7,9 +7,9 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import client.file.ClientFileDisassembler;
-import client.file.ClientFileDisassemblerImpl;
 import client.uploader.ClientUploader;
+import filedisassembler.ClientFileDisassembler;
+import filedisassembler.ClientFileDisassemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;

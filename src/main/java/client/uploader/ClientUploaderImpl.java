@@ -3,9 +3,9 @@ package client.uploader;
 import java.util.Observable;
 
 import client.Client;
-import client.file.ClientFileDisassembler;
-import client.file.ClientFileDisassemblerImpl;
 import client.processmanager.ProcessManager;
+import filedisassembler.ClientFileDisassembler;
+import filedisassembler.ClientFileDisassemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;

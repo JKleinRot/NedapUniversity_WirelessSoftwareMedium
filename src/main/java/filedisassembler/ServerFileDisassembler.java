@@ -1,4 +1,4 @@
-package server.file;
+package filedisassembler;
 
 import packet.Packet;
 

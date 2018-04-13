@@ -44,7 +44,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	
 	@Override
 	public void handleDownloadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName) {
-		ClientDownloader dataDownloader = new ClientDownloaderImpl(client, this, downloadNumber);
+		ClientDownloader dataDownloader = new ClientDownloaderImpl(client, downloadNumber);
 		downloadNumber++;
 		dataDownloader.download(fileName, fileDirectory, newDirectory, newFileName);
 	}

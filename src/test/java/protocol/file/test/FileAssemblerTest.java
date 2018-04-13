@@ -3,10 +3,7 @@ package protocol.file.test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -15,11 +12,11 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import client.file.ClientFileDisassembler;
-import client.file.ClientFileDisassemblerImpl;
 import client.uploader.ClientUploader;
 import fileassembler.FileAssembler;
 import fileassembler.FileAssemblerImpl;
+import filedisassembler.ClientFileDisassembler;
+import filedisassembler.ClientFileDisassemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;

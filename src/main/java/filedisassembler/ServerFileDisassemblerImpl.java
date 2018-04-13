@@ -1,4 +1,4 @@
-package server.file;
+package filedisassembler;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -6,14 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import filedisassembler.ServerFileDisassembler;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
-import server.Server;
-import server.file.ServerFileDisassembler;
 import server.uploader.ServerUploader;
 
 public class ServerFileDisassemblerImpl implements ServerFileDisassembler {

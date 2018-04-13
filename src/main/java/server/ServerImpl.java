@@ -23,9 +23,6 @@ public class ServerImpl implements Server {
 	/** Whether the server is running or not */
 	private boolean isRunning;
 
-	/** A byte buffer to hold the received data */
-	private byte[] receivedData;
-
 	/** A byte buffer to hold the data to send */
 	private byte[] dataToSend;
 	
@@ -50,7 +47,6 @@ public class ServerImpl implements Server {
 			System.out.println("ERROR: Could not setup datagram socket on port " + portNumber);
 		}
 		isRunning = true;
-		receivedData = new byte[2048];
 		dataDownloaders = new HashMap<>();
 		dataUploaders = new HashMap<>();
 	}
