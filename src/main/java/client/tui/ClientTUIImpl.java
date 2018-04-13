@@ -34,6 +34,15 @@ public class ClientTUIImpl implements ClientTUI {
 	
 	/** Whether the user has set the upload location */
 	private boolean isUploadLocationSet;
+	
+	/** Whether the user is requesting an upload */
+	private boolean isDownloadRequest;
+	
+	/** Whether the user has set the file to upload */
+	private boolean isDownloadFileSet;
+	
+	/** Whether the user has set the upload location */
+	private boolean isDownloadLocationSet;
 
 	/**
 	 * -----Constructor-----
@@ -58,14 +67,23 @@ public class ClientTUIImpl implements ClientTUI {
 		while (isRunning) {
 			String[] words = input.split(" ");
 			if (words.length == 1 && words[0].equals("download")) {
-				input = readInput(
-						"What file do you want to download? Please enter \"download\" followed by the file name");
+				if (!isDownloadRequest && !isUploadRequest) {
+					input = readInput(
+							"What file do you want to download? Please enter \"download\" followed by the file name");
+				} else if (isDownloadRequest){
+					input = readInput("Already requesting a download. Please enter the desired parameters or enter \"abort\" to stop the current action");
+				} else {
+					input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
+				}
+				
 			} else if (words.length == 1 && words[0].equals("upload")) {
-				if (!isUploadRequest) {
+				if (!isUploadRequest && !isDownloadRequest) {
 					input = readInput("What file do you want to upload? Please enter \"upload\" followed by the file name");
 					isUploadRequest = true;
-				} else {
+				} else if (isUploadRequest) {
 					input = readInput("Already requesting an upload. Please enter the desired parameters or enter \"abort\" to stop the current action");
+				} else {
+					input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 				}
 			} else if (words.length == 1 && words[0].equals("files")) {
 
@@ -74,7 +92,7 @@ public class ClientTUIImpl implements ClientTUI {
 			} else if (words.length == 2 && words[0].equals("download")) {
 				
 			} else if (words.length == 2 && words[0].equals("upload")) {
-				if (isUploadRequest) {
+				if (isUploadRequest && !isUploadFileSet) {
 					fileName = words[1];
 					input = readInput("To what directory do you want to upload your file? Please enter \"upload to\" followed by the directory");
 					isUploadFileSet = true;
@@ -82,7 +100,7 @@ public class ClientTUIImpl implements ClientTUI {
 					input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 				}
 			} else if (words.length == 3 && words[0].equals("upload") && words[1].equals("to")) {
-				if (isUploadFileSet) {
+				if (isUploadFileSet && !isUploadLocationSet) {
 					newDirectory = words[2];
 					input = readInput("What would you like the file to be named? Please enter \"upload as\" followed by the file name");
 					isUploadLocationSet = true;
