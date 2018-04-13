@@ -12,12 +12,14 @@ public interface ClientDataUploader {
 	 * 
 	 * @param fileName
 	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
 	 * @param newDirectory
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void upload(String fileName, String newDirectory, String newFileName);
+	public void upload(String fileName, String fileDirectory, String newDirectory, String newFileName);
 
 	/**
 	 * Notifies the process manager that the file is not found.

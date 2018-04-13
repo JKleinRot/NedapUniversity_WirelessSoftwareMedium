@@ -89,7 +89,6 @@ public class ClientTUIImpl implements ClientTUI {
 				if (isDownloadRequest && !isDownloadFileSet) {
 					fileName = words[1];
 					input = readInput("In what directory is this file located? Please enter \"upload from\" followed by the complete directory of the file followed by a /");
-					input = readInput("To what directory do you want to download your file? Please enter \"upload to\" followed by the directory");
 					isDownloadFileSet = true;
 				} else {
 					input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
@@ -111,7 +110,7 @@ public class ClientTUIImpl implements ClientTUI {
 			} else if (words.length == 3 && words[0].equals("download") && words[1].equals("as")) {
 				if (isDownloadLocationSet) {
 					newFileName = words[2];
-					processManager.handleDownloadRequest(fileName, newDirectory, newFileName);
+					processManager.handleDownloadRequest(fileName, fileDirectory, newDirectory, newFileName);
 					setAllBooleansFalse();
 					input = readInput(
 							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
@@ -154,7 +153,7 @@ public class ClientTUIImpl implements ClientTUI {
 			} else if (words.length == 3 && words[0].equals("upload") && words[1].equals("as")) {
 				if (isUploadLocationSet) {
 					newFileName = words[2];
-					processManager.handleUploadRequest(fileName, newDirectory, newFileName);
+					processManager.handleUploadRequest(fileName, fileDirectory, newDirectory, newFileName);
 					setAllBooleansFalse();
 					input = readInput(
 							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "

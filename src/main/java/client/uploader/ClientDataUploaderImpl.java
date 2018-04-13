@@ -60,8 +60,8 @@ public class ClientDataUploaderImpl extends Observable implements ClientDataUplo
 	}
 
 	@Override
-	public void upload(String fileName, String newDirectory, String newFileName) {
-		createFileDisassembler(fileName);
+	public void upload(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+		createFileDisassembler(fileDirectory + fileName);
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		sendData();
 		sendDataIntegrityPacket();

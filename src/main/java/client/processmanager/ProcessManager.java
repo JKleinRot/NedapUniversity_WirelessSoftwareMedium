@@ -12,24 +12,28 @@ public interface ProcessManager {
 	 * 
 	 * @param fileName
 	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
 	 * @param newDirectory
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void handleUploadRequest(String fileName, String newDirectory, String newFileName);
+	public void handleUploadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName);
 
 	/**
 	 * Handles the download request of the user.
 	 * 
 	 * @param fileName
 	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
 	 * @param newDirectory
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void handleDownloadRequest(String fileName, String newDirectory, String newFileName);
+	public void handleDownloadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName);
 
 	/**
 	 * Notifies the client that the file is not found.
