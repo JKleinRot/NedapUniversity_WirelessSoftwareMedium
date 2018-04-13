@@ -42,7 +42,12 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		downloadNumber++;
 		dataUploader.upload(fileName, newDirectory, newFileName);
 	}
-
+	
+	@Override
+	public void handleDownloadRequest(String fileName, String newDirectory, String newFileName) {
+		
+	}
+ 
 	@Override
 	public void fileNotFound() {
 		setChanged();

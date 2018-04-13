@@ -20,6 +20,18 @@ public interface ProcessManager {
 	public void handleUploadRequest(String fileName, String newDirectory, String newFileName);
 
 	/**
+	 * Handles the download request of the user.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	public void handleDownloadRequest(String fileName, String newDirectory, String newFileName);
+
+	/**
 	 * Notifies the client that the file is not found.
 	 */
 	public void fileNotFound();
