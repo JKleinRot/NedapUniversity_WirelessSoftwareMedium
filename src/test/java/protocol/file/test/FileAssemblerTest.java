@@ -4,9 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,18 +70,18 @@ public class FileAssemblerTest {
 	
 	/** The file disassembler for the long file*/
 	private FileDisassembler fileDisassemblerLong;
-	
-	/** The short file with packets */
-	private File file;
-	
-	/** The long file with packets */
-	private File fileLong;
-	
+
+	/** The file input stream */
+	private InputStream inputStream;
+
 	/** The packet */
 	private Packet packet;
 	
 	/** The last packet */
 	private Packet lastPacket;
+	
+	/** The total data size of the short file */
+	private int totalDataSize;
 	
 	/** The first packet */
 	private Packet firstPacket;
@@ -92,8 +95,8 @@ public class FileAssemblerTest {
 	/** The last packet for the long file */
 	private Packet lastPacketLong;
 	
-	/** The data uploader */
-	private DataUploader readDataUploader;
+	/** The total data size of the long file */
+	private int totalDataSizeLong;
 	
 	@BeforeEach
 	public void setup() {
@@ -107,16 +110,15 @@ public class FileAssemblerTest {
 		oldFileNameLong = "TestLong.txt";
 		fileDisassembler = new FileDisassemblerImpl(oldFileName, dataUploader, downloadNumber);
 		fileDisassemblerLong = new FileDisassemblerImpl(oldFileNameLong, dataUploader, downloadNumber);
-		file = fileDisassembler.createFileWithPacketsFromFile();
-		fileLong = fileDisassemblerLong.createFileWithPacketsFromFile();
-		packet = file.getPackets().get(0);
+		packet = fileDisassembler.getNextPacket();
+		totalDataSize = fileDisassembler.getTotalDataSize();
+		firstPacket = fileDisassemblerLong.getNextPacket();
+		secondPacket = fileDisassemblerLong.getNextPacket();
+		thirdPacket = fileDisassemblerLong.getNextPacket();
+		totalDataSizeLong = fileDisassemblerLong.getTotalDataSize();
 		Header header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] data = ("DataSize " + 6).getBytes();
 		lastPacket = new PacketImpl(header, data);
-		firstPacket = fileLong.getPackets().get(0);
-		secondPacket = fileLong.getPackets().get(1);
-		thirdPacket = fileLong.getPackets().get(2);
-		System.out.println("ThirdPacketSize: " + thirdPacket.getData().length);
 		header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] dataLong = ("DataSize " + 2588).getBytes();
 		lastPacketLong = new PacketImpl(header, dataLong);
@@ -132,24 +134,22 @@ public class FileAssemblerTest {
 		fileAssembler.addPacket(packet);
 		fileAssembler.addPacket(lastPacket);
 		
-		byte[] content = null;
+		byte[] dataBuffer = new byte[totalDataSize];
+		int readDataSize = 0;
 		try {
-			FileReader fileReader = new FileReader(newFileName);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			StringBuilder stringBuilder = new StringBuilder();
-			String line = bufferedReader.readLine();
-			while (line != null) {
-				stringBuilder.append(line);
-				line = bufferedReader.readLine();
-			}
-			content = stringBuilder.toString().getBytes();
-			bufferedReader.close();
-		} catch (FileNotFoundException e) {
-			// ?
+			inputStream = new FileInputStream(newFileName);
+			readDataSize = inputStream.read(dataBuffer);
 		} catch (IOException e) {
-			// ?
-		}	
-		assertArrayEquals(packet.getData(), content);
+			System.out.println("ERROR: File could not be read");
+		}
+		byte[] data;
+		if (readDataSize != -1) {
+			data = Arrays.copyOfRange(dataBuffer, 0, readDataSize);
+		} else {
+			data = new byte[0];
+		}
+		
+		assertArrayEquals(packet.getData(), data);
 	}
 	
 	/** 
@@ -163,60 +163,20 @@ public class FileAssemblerTest {
 		fileAssemblerLong.addPacket(thirdPacket);
 		fileAssemblerLong.addPacket(lastPacketLong);
 		
-		byte[] content = null;
+		byte[] dataBuffer = new byte[totalDataSizeLong];
+		int readDataSize = 0;
 		try {
-			FileReader fileReader = new FileReader(newFileNameLong);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			StringBuilder stringBuilder = new StringBuilder();
-			String line = bufferedReader.readLine();
-			while (line != null) {
-				stringBuilder.append(line);
-				stringBuilder.append(System.lineSeparator());
-				line = bufferedReader.readLine();
-			}
-			System.out.println(stringBuilder.toString());
-			stringBuilder.setLength(stringBuilder.length() - 1);
-			content = stringBuilder.toString().getBytes();
-			bufferedReader.close();
-		} catch (FileNotFoundException e) {
-			// ?
+			inputStream = new FileInputStream(newFileNameLong);
+			readDataSize = inputStream.read(dataBuffer);
 		} catch (IOException e) {
-			// ?
+			System.out.println("ERROR: File could not be read");
 		}
-		assertEquals(firstPacket.getData().length + secondPacket.getData().length + thirdPacket.getData().length, content.length);
-	}
-	
-	/** 
-	 * Tests that the file consisting of multiple packets is correctly assembled and saved.
-	 * Packets arrived in incorrect order.
-	 */
-	@Test
-	public void testFileAssemblyMultiplePacketFileIncorrectOrder() {
-		fileAssemblerLong.addPacket(thirdPacket);
-		fileAssemblerLong.addPacket(firstPacket);
-		fileAssemblerLong.addPacket(secondPacket);
-		fileAssemblerLong.addPacket(lastPacketLong);
-		
-		byte[] content = null;
-		try {
-			FileReader fileReader = new FileReader(newFileNameLong);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			StringBuilder stringBuilder = new StringBuilder();
-			String line = bufferedReader.readLine();
-			while (line != null) {
-				stringBuilder.append(line);
-				stringBuilder.append(System.lineSeparator());
-				line = bufferedReader.readLine();
-			}
-			System.out.println(stringBuilder.toString());
-			stringBuilder.setLength(stringBuilder.length() - 1);
-			content = stringBuilder.toString().getBytes();
-			bufferedReader.close();
-		} catch (FileNotFoundException e) {
-			// ?
-		} catch (IOException e) {
-			// ?
+		byte[] data;
+		if (readDataSize != -1) {
+			data = Arrays.copyOfRange(dataBuffer, 0, readDataSize);
+		} else {
+			data = new byte[0];
 		}
-		assertEquals(firstPacket.getData().length + secondPacket.getData().length + thirdPacket.getData().length, content.length);
+		assertEquals(firstPacket.getData().length + secondPacket.getData().length + thirdPacket.getData().length, data.length);
 	}
 }

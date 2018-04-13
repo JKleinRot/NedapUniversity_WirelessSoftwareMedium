@@ -1,8 +1,11 @@
 package protocol.file;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +24,9 @@ public class FileAssemblerImpl implements FileAssembler {
 
 	/** The download number */
 	private int downloadNumber;
+
+	/** The file output stream */
+	private OutputStream outputStream;
 
 	/** The packets */
 	private Map<Integer, Packet> packets;
@@ -41,8 +47,23 @@ public class FileAssemblerImpl implements FileAssembler {
 		this.fileName = fileName;
 		this.fileDirectory = fileDirectory;
 		this.downloadNumber = downloadNumber;
-		packets = new TreeMap<>();
+		createFileOutputStream(fileDirectory, fileName);
+	}
 
+	/**
+	 * Creates a file output stream to write the data to the file.
+	 * 
+	 * @param fileDirectory
+	 *            The file directory
+	 * @param fileName
+	 *            The file name
+	 */
+	private void createFileOutputStream(String fileDirectory, String fileName) {
+		try {
+			outputStream = new FileOutputStream(fileDirectory + fileName);
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR: No such directory");
+		}
 	}
 
 	@Override
@@ -53,60 +74,23 @@ public class FileAssemblerImpl implements FileAssembler {
 	@Override
 	public void addPacket(Packet packet) {
 		if (packet.getHeader().getFlags() != Flags.UPLOAD_DATAINTEGRITY) {
-			packets.put(packet.getHeader().getSequenceNumber(), packet);
+			try {
+				outputStream.write(packet.getData());
+			} catch (IOException e) {
+				System.out.println("ERROR: File could not be written");
+			}
 		} else {
-			assembleFile(packet);
+			checkForDataIntegrity(packet);
 		}
 	}
 
 	/**
-	 * Assembles the data from the packets into the file.
-	 */
-	private void assembleFile(Packet lastPacket) {
-		int dataLength = findDataLength(lastPacket);
-		ByteBuffer byteBuffer = ByteBuffer.allocate(dataLength);
-		int position = 0;
-		for (Integer sequenceNumber : packets.keySet()) {
-			Packet packet = packets.get(sequenceNumber);
-			byte[] data = packet.getData();
-			byteBuffer.position(position);
-			byteBuffer.put(data);
-			position = position + data.length;
-		}
-		byte[] dataBytes = byteBuffer.array();
-		String data = new String(dataBytes, 0, dataBytes.length);
-		writeFile(data);
-	}
-
-	/**
-	 * Finds the data length of the original file.
+	 * Checks for data integrity of the file.
 	 * 
 	 * @param packet
-	 *            The packet
-	 * @return the data length
+	 *            The data integrity packet
 	 */
-	private int findDataLength(Packet packet) {
-		String dataIntegrity = new String(packet.getData());
-		String[] words = dataIntegrity.split(" ");
-		int dataLength = Integer.parseInt(words[1]);
-		return dataLength;
+	private void checkForDataIntegrity(Packet packet) {
+		
 	}
-
-	/**
-	 * Writes the data to the file with the correct name and in the correct directory.
-	 * 
-	 * @param data
-	 *            The data
-	 */
-	private void writeFile(String data) {
-		try {
-			FileWriter fileWriter = new FileWriter(fileDirectory + fileName);
-			BufferedWriter bufferedReader = new BufferedWriter(fileWriter);
-			bufferedReader.write(data);
-			bufferedReader.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 }

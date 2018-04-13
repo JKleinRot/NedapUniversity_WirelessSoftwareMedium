@@ -39,9 +39,6 @@ public class FileDisassemblerImpl implements FileDisassembler {
 	/** The data size */
 	private int dataSize;
 
-	/** The data offset */
-	private int offSet;
-
 	/** The default packet size */
 	private static final int defaultPacketSize = 1024;
 
@@ -71,7 +68,6 @@ public class FileDisassemblerImpl implements FileDisassembler {
 		this.downloadNumber = downloadNumber;
 		this.packetSize = defaultPacketSize;
 		firstSequenceNumber = 100;
-		offSet = 0;
 		totalDataSize = 0;
 		setDataSize();
 		createFileInputStream(fileName);
@@ -124,7 +120,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 		byte[] dataBuffer = new byte[dataSize];
 		int readDataSize = 0;
 		try {
-			readDataSize = inputStream.read(dataBuffer, offSet, dataBuffer.length);
+			readDataSize = inputStream.read(dataBuffer);
 		} catch (IOException e) {
 			System.out.println("ERROR: File could not be read");
 		}
