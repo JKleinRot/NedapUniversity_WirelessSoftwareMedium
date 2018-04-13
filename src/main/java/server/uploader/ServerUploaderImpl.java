@@ -9,7 +9,6 @@ import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
-import server.file.ServerFileAssemblerImpl;
 import server.file.ServerFileDisassembler;
 import server.file.ServerFileDisassemblerImpl;
 

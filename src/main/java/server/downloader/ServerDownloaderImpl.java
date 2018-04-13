@@ -3,19 +3,19 @@ package server.downloader;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import fileassembler.FileAssembler;
+import fileassembler.FileAssemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
-import server.file.ServerFileAssembler;
-import server.file.ServerFileAssemblerImpl;
 
 public class ServerDownloaderImpl implements ServerDownloader {
 
 	/** The file assembler */
-	private ServerFileAssembler fileAssembler;
+	private FileAssembler fileAssembler;
 
 	/** The length of the header */
 	private static final int headerLength = 20;
@@ -155,7 +155,7 @@ public class ServerDownloaderImpl implements ServerDownloader {
 		String fileDirectory = words[1];
 		String fileName = words[3];
 		int downloadNumber = Integer.parseInt(words[5]);
-		fileAssembler = new ServerFileAssemblerImpl(fileName, fileDirectory, downloadNumber);
+		fileAssembler = new FileAssemblerImpl(fileName, fileDirectory, downloadNumber);
 	}
 
 	/**

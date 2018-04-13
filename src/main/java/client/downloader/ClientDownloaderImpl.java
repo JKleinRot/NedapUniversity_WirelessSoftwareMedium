@@ -5,17 +5,15 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import client.Client;
-import client.file.ClientFileAssembler;
-import client.file.ClientFileAssemblerImpl;
 import client.processmanager.ProcessManager;
+import fileassembler.FileAssembler;
+import fileassembler.FileAssemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
-import server.file.ServerFileAssembler;
-import server.file.ServerFileAssemblerImpl;
 
 public class ClientDownloaderImpl implements ClientDownloader {
 
@@ -29,7 +27,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	private int downloadNumber;
 
 	/** The file assembler */
-	private ClientFileAssembler fileAssembler;
+	private FileAssembler fileAssembler;
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
@@ -95,7 +93,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 *            The file directory
 	 */
 	private void createFileAssembler(String fileName, String fileDirectory) {
-		fileAssembler = new ClientFileAssemblerImpl(fileName, fileDirectory, downloadNumber);
+		fileAssembler = new FileAssemblerImpl(fileName, fileDirectory, downloadNumber);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package server.file;
+package fileassembler;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -6,13 +6,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import packet.Packet;
-import packet.header.Flags;
+import packet.header.Types;
 
-public class ServerFileAssemblerImpl implements ServerFileAssembler {
-
-	/** The download number */
-	private int downloadNumber;
-
+public class FileAssemblerImpl implements FileAssembler {
+	
 	/** The file output stream */
 	private OutputStream outputStream;
 
@@ -28,8 +25,7 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 	 * @param downloadNumber
 	 *            The download number
 	 */
-	public ServerFileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
-		this.downloadNumber = downloadNumber;
+	public FileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
 		createFileOutputStream(fileDirectory, fileName);
 	}
 
@@ -50,13 +46,8 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 	}
 
 	@Override
-	public int getDownloadNumber() {
-		return downloadNumber;
-	}
-
-	@Override
 	public void addPacket(Packet packet) {
-		if (packet.getHeader().getFlags() != Flags.UPLOAD_DATAINTEGRITY) {
+		if (packet.getHeader().getTypes() != Types.DATAINTEGRITY) {
 			try {
 				outputStream.write(packet.getData());
 			} catch (IOException e) {

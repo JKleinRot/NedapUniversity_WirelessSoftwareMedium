@@ -1,4 +1,4 @@
-package client.file;
+package fileassembler;
 
 import packet.Packet;
 
@@ -8,14 +8,7 @@ import packet.Packet;
  * 
  * @author janine.kleinrot
  */
-public interface ClientFileAssembler {
-
-	/**
-	 * Returns the download number.
-	 * 
-	 * @return the download number
-	 */
-	public int getDownloadNumber();
+public interface FileAssembler {
 
 	/**
 	 * Adds packet to file.

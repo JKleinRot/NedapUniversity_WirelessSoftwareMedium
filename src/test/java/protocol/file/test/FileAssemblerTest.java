@@ -18,14 +18,14 @@ import org.junit.jupiter.api.Test;
 import client.file.ClientFileDisassembler;
 import client.file.ClientFileDisassemblerImpl;
 import client.uploader.ClientUploader;
+import fileassembler.FileAssembler;
+import fileassembler.FileAssemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
-import server.file.ServerFileAssembler;
-import server.file.ServerFileAssemblerImpl;
 
 /**
  * Test program for FileAssembler.
@@ -35,10 +35,10 @@ import server.file.ServerFileAssemblerImpl;
 public class FileAssemblerTest {
 
 	/** The file assembler for the short file */
-	private ServerFileAssembler fileAssembler;
+	private FileAssembler fileAssembler;
 	
 	/** The file assembler for the long file */
-	private ServerFileAssembler fileAssemblerLong;
+	private FileAssembler fileAssemblerLong;
 	
 	/** The new file name of the short file */
 	private String newFileName;
@@ -121,8 +121,8 @@ public class FileAssemblerTest {
 		header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] dataLong = ("DataSize " + 2588).getBytes();
 		lastPacketLong = new PacketImpl(header, dataLong);
-		fileAssembler = new ServerFileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
-		fileAssemblerLong = new ServerFileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
+		fileAssembler = new FileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
+		fileAssemblerLong = new FileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
 	}
 	
 	/** 
