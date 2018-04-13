@@ -1,5 +1,7 @@
 package protocol.file;
 
+import protocol.file.packet.Packet;
+
 /**
  * Disassembles file into packets with headers ready to send.
  * 
@@ -8,7 +10,16 @@ package protocol.file;
 public interface FileDisassembler {
 
 	/**
-	 * Creates ready to send packets of the file.
+	 * Returns the next packet to send.
+	 * 
+	 * @return the next packet
 	 */
-	public File createFileWithPacketsFromFile();
+	public Packet getNextPacket();
+
+	/**
+	 * Returns the total data size of the file.
+	 * 
+	 * @return the total data size
+	 */
+	public int getTotalDataSize();
 }

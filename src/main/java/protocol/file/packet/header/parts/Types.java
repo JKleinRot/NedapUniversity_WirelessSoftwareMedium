@@ -2,12 +2,13 @@ package protocol.file.packet.header.parts;
 
 public enum Types {
 
-	DATA(new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000001 }), FILENAME(
-			new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000010 }), UPLOADCHARACTERISTICS(
-					new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000100 }), STATISTICS(
-							new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00001000 }), DATAINTEGRITY(
-									new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00010000 }), ACK(
-											new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00100000 });
+	UNDEFINED(new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000000 }), DATA(
+			new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000001 }), FILENAME(
+					new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000010 }), UPLOADCHARACTERISTICS(
+							new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000100 }), STATISTICS(
+									new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00001000 }), DATAINTEGRITY(
+											new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00010000 }), ACK(
+													new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00100000 });
 
 	/** The bytes */
 	private byte[] bytes;

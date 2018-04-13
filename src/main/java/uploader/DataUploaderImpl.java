@@ -30,12 +30,18 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
-	
+
 	/** The final message number */
 	private static final int finalNumber = 20;
 
 	/** The data size */
 	private int dataSize;
+	
+	/** The previous send packet */
+	private Packet previousPacket;
+	
+	/** The current packet */
+	private Packet currentPacket;
 
 	/**
 	 * -----Constructor-----
@@ -50,28 +56,24 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	public DataUploaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
 		this.client = client;
 		this.downloadNumber = downloadNumber;
+		this.processManager = processManager;
 	}
 
 	@Override
 	public void upload(String fileName, String newDirectory, String newFileName) {
-		File file = getFileWithPacketsFromFile(fileName);
+		createFileDisassembler(fileName);
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
-		sendData(file);
+		sendData();
 		sendDataIntegrityPacket();
 	}
 
 	/**
-	 * Returns a file with packets from the file with the provided file name.
+	 * Creates a file disassembler
 	 * 
 	 * @param fileName
-	 *            The file name
-	 * @return the file with packets
 	 */
-	private File getFileWithPacketsFromFile(String fileName) {
+	private void createFileDisassembler(String fileName) {
 		fileDisassembler = new FileDisassemblerImpl(fileName, this, downloadNumber);
-		File file = fileDisassembler.createFileWithPacketsFromFile();
-		dataSize = file.getDataSize();
-		return file;
 	}
 
 	/**
@@ -92,14 +94,16 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	}
 
 	/**
-	 * Sends the packets to the server.
+	 * Sends the packets to the server via the client.
 	 * 
 	 * @param file
 	 *            The file to send
 	 */
-	private void sendData(File file) {
-		for (Packet packet : file.getPackets()) {
+	private void sendData() {
+		while (previousPacket == null || !previousPacket.getHeader().getFlags().equals(Flags.UPLOAD_LAST)) {
+			Packet packet = fileDisassembler.getNextPacket();
 			client.sendOnePacket(packet);
+			previousPacket = packet;
 		}
 	}
 
@@ -108,7 +112,7 @@ public class DataUploaderImpl extends Observable implements DataUploader {
 	 */
 	private void sendDataIntegrityPacket() {
 		Header header = new HeaderImpl(finalNumber, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
-		byte[] data = ("DataSize " + dataSize).getBytes();
+		byte[] data = ("DataSize " + fileDisassembler.getTotalDataSize()).getBytes();
 		Packet packet = new PacketImpl(header, data);
 		client.sendOnePacket(packet);
 	}
