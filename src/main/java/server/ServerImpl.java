@@ -9,14 +9,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import protocol.file.packet.Packet;
-import server.downloader.ServerDataDownloader;
-import server.downloader.ServerDataDownloaderImpl;
+import packet.Packet;
+import server.downloader.ServerDownloader;
+import server.downloader.ServerDownloaderImpl;
 
 public class ServerImpl implements Server {
-
-	/** The port number of the datagram socket */
-	private int portNumber;
 
 	/** The datagram socket */
 	private DatagramSocket socket;
@@ -31,7 +28,7 @@ public class ServerImpl implements Server {
 	private byte[] dataToSend;
 	
 	/** The data downloaders */
-	private Map<Integer, ServerDataDownloader> dataDownloaders;
+	private Map<Integer, ServerDownloader> dataDownloaders;
 
 	/**
 	 * -----Constructor-----
@@ -42,7 +39,6 @@ public class ServerImpl implements Server {
 	 *            The port number of the UDP connection
 	 */
 	public ServerImpl(int portNumber) {
-		this.portNumber = 9876;
 		try {
 			socket = new DatagramSocket(portNumber);
 		} catch (SocketException e) {
@@ -65,7 +61,7 @@ public class ServerImpl implements Server {
 				System.out.flush();
 				System.out.println(Arrays.toString(receivedPacket.getData()));
 				System.out.println("DataSize: " + receivedPacket.getLength());
-				System.out.println("Flag: " + ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 8, 12)).getInt());
+				System.out.println("Flag: " + ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 8, 12)).getInt());
 				if (new String (receivedPacket.getData(), 0, 5).equals("Hello")) {
 					String message = "You have been connected to a wireless storage medium";
 					dataToSend = new byte[message.length()];
@@ -76,10 +72,10 @@ public class ServerImpl implements Server {
 					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 							+ packetToSend.getAddress());
 				} else if (receivedPacket.getData()[11] == 1) {
-					if (ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 4) {
-						dataDownloaders.put(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new ServerDataDownloaderImpl(this, receivedPacket.getData()));
+					if (ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 4) {
+						dataDownloaders.put(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new ServerDownloaderImpl());
 					}
-					Packet thePacketToSend = dataDownloaders.get(ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData(), receivedPacket.getLength());
+					Packet thePacketToSend = dataDownloaders.get(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData(), receivedPacket.getLength());
 					System.out.println("Upload");
 					dataToSend = new byte[thePacketToSend.getLength()];
 					dataToSend = thePacketToSend.getBytes();

@@ -1,6 +1,6 @@
-package protocol.file.packet;
+package packet;
 
-import protocol.file.packet.header.Header;
+import packet.header.Header;
 
 /**
  * A packet contains data from a file and a header.

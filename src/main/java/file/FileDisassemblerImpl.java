@@ -1,28 +1,23 @@
-package protocol.file;
+package file;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import client.uploader.ClientDataUploader;
-import protocol.file.packet.Packet;
-import protocol.file.packet.PacketImpl;
-import protocol.file.packet.header.Header;
-import protocol.file.packet.header.HeaderImpl;
-import protocol.file.packet.header.parts.Flags;
-import protocol.file.packet.header.parts.Types;
+import client.uploader.ClientUploader;
+import packet.Packet;
+import packet.PacketImpl;
+import packet.header.Flags;
+import packet.header.Header;
+import packet.header.HeaderImpl;
+import packet.header.Types;
 
 public class FileDisassemblerImpl implements FileDisassembler {
 
-	/** The file name */
-	private String fileName;
-
 	/** The data uplader */
-	private ClientDataUploader dataUploader;
+	private ClientUploader dataUploader;
 
 	/** The packet size */
 	private int packetSize;
@@ -62,8 +57,7 @@ public class FileDisassemblerImpl implements FileDisassembler {
 	 * @param filename
 	 *            The file name
 	 */
-	public FileDisassemblerImpl(String fileName, ClientDataUploader dataUploader, int downloadNumber) {
-		this.fileName = fileName;
+	public FileDisassemblerImpl(String fileName, ClientUploader dataUploader, int downloadNumber) {
 		this.dataUploader = dataUploader;
 		this.downloadNumber = downloadNumber;
 		this.packetSize = defaultPacketSize;

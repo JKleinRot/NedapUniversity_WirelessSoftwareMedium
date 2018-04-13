@@ -3,23 +3,16 @@ package server.downloader;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import protocol.file.FileAssembler;
-import protocol.file.FileAssemblerImpl;
-import protocol.file.packet.Packet;
-import protocol.file.packet.PacketImpl;
-import protocol.file.packet.header.Header;
-import protocol.file.packet.header.HeaderImpl;
-import protocol.file.packet.header.parts.Flags;
-import protocol.file.packet.header.parts.Types;
-import server.Server;
+import file.FileAssembler;
+import file.FileAssemblerImpl;
+import packet.Packet;
+import packet.PacketImpl;
+import packet.header.Flags;
+import packet.header.Header;
+import packet.header.HeaderImpl;
+import packet.header.Types;
 
-public class ServerDataDownloaderImpl implements ServerDataDownloader {
-
-	/** The server */
-	private Server server;
-
-	/** The packet */
-	private byte[] firstPacket;
+public class ServerDownloaderImpl implements ServerDownloader {
 
 	/** The file assembler */
 	private FileAssembler fileAssembler;
@@ -46,15 +39,9 @@ public class ServerDataDownloaderImpl implements ServerDataDownloader {
 	 * -----Constructor-----
 	 * 
 	 * Creates a DataDownloaderImpl.
-	 * 
-	 * @param server
-	 *            The server
-	 * @param firstPacket
-	 *            The first packet
 	 */
-	public ServerDataDownloaderImpl(Server server, byte[] firstPacket) {
-		this.server = server;
-		this.firstPacket = firstPacket;
+	public ServerDownloaderImpl() {
+
 	}
 
 	@Override
@@ -78,19 +65,18 @@ public class ServerDataDownloaderImpl implements ServerDataDownloader {
 	 * @return the recreated packet
 	 */
 	private Packet recreatePacket(byte[] packet) {
-		int sequenceNumber = ByteBuffer.allocate(4)
+		int sequenceNumber = ByteBuffer
 				.wrap(Arrays.copyOfRange(packet, sequenceNumberOffset, acknowledgementNumberOffset)).getInt();
-		int acknowledgementNumber = ByteBuffer.allocate(4)
+		int acknowledgementNumber = ByteBuffer
 				.wrap(Arrays.copyOfRange(packet, acknowledgementNumberOffset, flagsOffset)).getInt();
 		Flags flags = reconstructFlags(
-				ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(packet, flagsOffset, typesOffset)).getInt());
+				ByteBuffer.wrap(Arrays.copyOfRange(packet, flagsOffset, typesOffset)).getInt());
 		Types types = reconstructTypes(
-				ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(packet, typesOffset, downloadNumberOffset)).getInt());
-		int downloadNumber = ByteBuffer.allocate(4).wrap(Arrays.copyOfRange(packet, downloadNumberOffset, headerLength))
+				ByteBuffer.wrap(Arrays.copyOfRange(packet, typesOffset, downloadNumberOffset)).getInt());
+		int downloadNumber = ByteBuffer.wrap(Arrays.copyOfRange(packet, downloadNumberOffset, headerLength))
 				.getInt();
 		Header header = new HeaderImpl(sequenceNumber, acknowledgementNumber, flags, types, downloadNumber);
-		int dataSize = packet.length - headerLength;
-		byte[] data = ByteBuffer.allocate(dataSize).wrap(Arrays.copyOfRange(packet, headerLength, packet.length))
+		byte[] data = ByteBuffer.wrap(Arrays.copyOfRange(packet, headerLength, packet.length))
 				.array();
 		Packet thePacket = new PacketImpl(header, data);
 		return thePacket;

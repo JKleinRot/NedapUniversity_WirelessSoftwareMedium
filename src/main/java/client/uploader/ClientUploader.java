@@ -5,7 +5,7 @@ package client.uploader;
  * 
  * @author janine.kleinrot
  */
-public interface ClientDataUploader {
+public interface ClientUploader {
 
 	/**
 	 * Uploads a file.

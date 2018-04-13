@@ -1,4 +1,4 @@
-package protocol.file.packet.header.parts;
+package packet.header;
 
 public enum Flags {
 

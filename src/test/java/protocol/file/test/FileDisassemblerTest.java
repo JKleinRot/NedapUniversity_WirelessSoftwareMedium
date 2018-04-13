@@ -7,17 +7,15 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import client.uploader.ClientDataUploader;
-import protocol.file.File;
-import protocol.file.FileDisassembler;
-import protocol.file.FileDisassemblerImpl;
-import protocol.file.FileImpl;
-import protocol.file.packet.Packet;
-import protocol.file.packet.PacketImpl;
-import protocol.file.packet.header.Header;
-import protocol.file.packet.header.HeaderImpl;
-import protocol.file.packet.header.parts.Flags;
-import protocol.file.packet.header.parts.Types;
+import client.uploader.ClientUploader;
+import file.FileDisassembler;
+import file.FileDisassemblerImpl;
+import packet.Packet;
+import packet.PacketImpl;
+import packet.header.Flags;
+import packet.header.Header;
+import packet.header.HeaderImpl;
+import packet.header.Types;
 
 /**
  * Test program for FileDisassembler.
@@ -36,7 +34,7 @@ public class FileDisassemblerTest {
 	private EasyMockSupport mocks;
 
 	/** The data uploader */
-	private ClientDataUploader dataUploader;
+	private ClientUploader dataUploader;
 
 	/** The download number */
 	private int downloadNumber;
@@ -44,7 +42,7 @@ public class FileDisassemblerTest {
 	@BeforeEach
 	public void setup() {
 		mocks = new EasyMockSupport();
-		dataUploader = mocks.createMock(ClientDataUploader.class);
+		dataUploader = mocks.createMock(ClientUploader.class);
 		downloadNumber = 1;
 		fileDisassembler = new FileDisassemblerImpl("Test.txt", dataUploader, downloadNumber);
 		fileDisassemblerLong = new FileDisassemblerImpl("TestLong.txt", dataUploader, downloadNumber);

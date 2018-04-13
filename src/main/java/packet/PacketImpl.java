@@ -1,8 +1,8 @@
-package protocol.file.packet;
+package packet;
 
 import java.nio.ByteBuffer;
 
-import protocol.file.packet.header.Header;
+import packet.header.Header;
 
 public class PacketImpl implements Packet {
 

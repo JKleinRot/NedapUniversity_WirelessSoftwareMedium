@@ -2,7 +2,7 @@ package client;
 
 import java.net.DatagramPacket;
 
-import protocol.file.packet.Packet;
+import packet.Packet;
 
 /**
  * The client application able to communicate with the wireless storage medium.

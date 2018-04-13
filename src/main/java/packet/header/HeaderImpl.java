@@ -1,9 +1,6 @@
-package protocol.file.packet.header;
+package packet.header;
 
 import java.nio.ByteBuffer;
-
-import protocol.file.packet.header.parts.Flags;
-import protocol.file.packet.header.parts.Types;
 
 public class HeaderImpl implements Header {
 

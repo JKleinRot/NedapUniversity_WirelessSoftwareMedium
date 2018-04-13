@@ -1,35 +1,20 @@
-package protocol.file;
+package file;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
-import protocol.file.packet.Packet;
-import protocol.file.packet.header.parts.Flags;
+import packet.Packet;
+import packet.header.Flags;
 
 public class FileAssemblerImpl implements FileAssembler {
-
-	/** The file name */
-	private String fileName;
-
-	/** The file directory */
-	private String fileDirectory;
 
 	/** The download number */
 	private int downloadNumber;
 
 	/** The file output stream */
 	private OutputStream outputStream;
-
-	/** The packets */
-	private Map<Integer, Packet> packets;
 
 	/**
 	 * -----Constructor-----
@@ -44,8 +29,6 @@ public class FileAssemblerImpl implements FileAssembler {
 	 *            The download number
 	 */
 	public FileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
-		this.fileName = fileName;
-		this.fileDirectory = fileDirectory;
 		this.downloadNumber = downloadNumber;
 		createFileOutputStream(fileDirectory, fileName);
 	}

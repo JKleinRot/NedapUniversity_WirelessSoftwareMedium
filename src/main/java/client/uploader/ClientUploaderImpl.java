@@ -4,17 +4,16 @@ import java.util.Observable;
 
 import client.Client;
 import client.processmanager.ProcessManager;
-import protocol.file.File;
-import protocol.file.FileDisassembler;
-import protocol.file.FileDisassemblerImpl;
-import protocol.file.packet.Packet;
-import protocol.file.packet.PacketImpl;
-import protocol.file.packet.header.Header;
-import protocol.file.packet.header.HeaderImpl;
-import protocol.file.packet.header.parts.Flags;
-import protocol.file.packet.header.parts.Types;
+import file.FileDisassembler;
+import file.FileDisassemblerImpl;
+import packet.Packet;
+import packet.PacketImpl;
+import packet.header.Flags;
+import packet.header.Header;
+import packet.header.HeaderImpl;
+import packet.header.Types;
 
-public class ClientDataUploaderImpl extends Observable implements ClientDataUploader {
+public class ClientUploaderImpl extends Observable implements ClientUploader {
 
 	/** The client */
 	private Client client;
@@ -34,14 +33,8 @@ public class ClientDataUploaderImpl extends Observable implements ClientDataUplo
 	/** The final message number */
 	private static final int finalNumber = 20;
 
-	/** The data size */
-	private int dataSize;
-
 	/** The previous send packet */
 	private Packet previousPacket;
-
-	/** The current packet */
-	private Packet currentPacket;
 
 	/**
 	 * -----Constructor-----
@@ -53,7 +46,7 @@ public class ClientDataUploaderImpl extends Observable implements ClientDataUplo
 	 * @param processManager
 	 *            The process manager
 	 */
-	public ClientDataUploaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
+	public ClientUploaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
 		this.client = client;
 		this.downloadNumber = downloadNumber;
 		this.processManager = processManager;
@@ -88,8 +81,7 @@ public class ClientDataUploaderImpl extends Observable implements ClientDataUplo
 	private void sendUploadCharacteristicsPacket(String newDirectory, String newFileName) {
 		Header header = new HeaderImpl(requestSequenceNumber, 0, Flags.UPLOAD, Types.UPLOADCHARACTERISTICS,
 				downloadNumber);
-		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber
-				+ " DataSize " + dataSize).getBytes();
+		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber).getBytes();
 		Packet packet = new PacketImpl(header, data);
 		client.sendOnePacket(packet);
 	}

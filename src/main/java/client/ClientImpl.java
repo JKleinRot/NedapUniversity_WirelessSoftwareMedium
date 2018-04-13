@@ -13,15 +13,8 @@ import client.processmanager.ProcessManager;
 import client.processmanager.ProcessManagerImpl;
 import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
-import client.uploader.ClientDataUploader;
-import client.uploader.ClientDataUploaderImpl;
-import protocol.file.packet.Packet;
-import server.downloader.ServerDataDownloader;
-import server.downloader.ServerDataDownloaderImpl;
-import statistics.StatisticsManager;
-import statistics.StatisticsManagerImpl;
-import storage.StorageRequester;
-import storage.StorageRequesterImpl;
+import packet.Packet;
+
 
 public class ClientImpl implements Client {
 
@@ -44,7 +37,7 @@ public class ClientImpl implements Client {
 	private ClientTUI clientTUI;
 	
 	/** The timeout duration in milliseconds */
-	private static final int timeoutDuration = 1000;
+	private static final int timeoutDuration = 2000;
 
 	/**
 	 * -----Constructor-----

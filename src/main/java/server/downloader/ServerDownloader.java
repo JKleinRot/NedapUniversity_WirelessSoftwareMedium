@@ -1,8 +1,8 @@
 package server.downloader;
 
-import protocol.file.packet.Packet;
+import packet.Packet;
 
-public interface ServerDataDownloader {
+public interface ServerDownloader {
 
 	/**
 	 * Forwards the received packet from the server to the data downloader and

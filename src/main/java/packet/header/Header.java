@@ -1,7 +1,4 @@
-package protocol.file.packet.header;
-
-import protocol.file.packet.header.parts.Flags;
-import protocol.file.packet.header.parts.Types;
+package packet.header;
 
 /**
  * The header put at the start of the data in the UDP datagram to be able to

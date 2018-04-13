@@ -1,6 +1,6 @@
-package protocol.file;
+package file;
 
-import protocol.file.packet.Packet;
+import packet.Packet;
 
 /**
  * Assembles the received packets into a file with the provided name saved in

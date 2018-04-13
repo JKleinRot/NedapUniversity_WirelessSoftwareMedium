@@ -1,6 +1,6 @@
-package protocol.file;
+package file;
 
-import protocol.file.packet.Packet;
+import packet.Packet;
 
 /**
  * Disassembles file into packets with headers ready to send.
