@@ -120,8 +120,8 @@ public class ServerUploaderImpl implements ServerUploader {
 			flags = Flags.DOWNLOAD_MORETOCOME;
 		} else if (value == 514) {
 			flags = Flags.DOWNLOAD_LAST;
-//		} else if (value == 1026) {
-//			flags = Flags.DOWNLOAD_DATAINTEGRITY;
+		} else if (value == 1026) {
+			flags = Flags.DOWNLOAD_DATAINTEGRITY;
 		}
 		return flags;
 	}
