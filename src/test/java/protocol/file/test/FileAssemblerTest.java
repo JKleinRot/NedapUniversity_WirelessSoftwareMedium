@@ -112,10 +112,10 @@ public class FileAssemblerTest {
 		secondPacket = fileDisassemblerLong.getNextPacket();
 		thirdPacket = fileDisassemblerLong.getNextPacket();
 		totalDataSizeLong = fileDisassemblerLong.getTotalDataSize();
-		Header header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
+		Header header = new HeaderImpl(20, 0, Flags.DOWNLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] data = ("DataSize " + 6).getBytes();
 		lastPacket = new PacketImpl(header, data);
-		header = new HeaderImpl(20, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
+		header = new HeaderImpl(20, 0, Flags.DOWNLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] dataLong = ("DataSize " + 2588).getBytes();
 		lastPacketLong = new PacketImpl(header, dataLong);
 		fileAssembler = new FileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
@@ -155,6 +155,7 @@ public class FileAssemblerTest {
 	@Test
 	public void testFileAssemblyMultiplePacketFile() {
 		fileAssemblerLong.addPacket(firstPacket);
+		fileAssemblerLong.addPacket(secondPacket);
 		fileAssemblerLong.addPacket(secondPacket);
 		fileAssemblerLong.addPacket(thirdPacket);
 		fileAssemblerLong.addPacket(lastPacketLong);

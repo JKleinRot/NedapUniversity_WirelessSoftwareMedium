@@ -12,6 +12,9 @@ public class FileAssemblerImpl implements FileAssembler {
 	
 	/** The file output stream */
 	private OutputStream outputStream;
+	
+	/** The last sequence number */
+	private int lastSequenceNumber;
 
 	/**
 	 * -----Constructor-----
@@ -27,6 +30,7 @@ public class FileAssemblerImpl implements FileAssembler {
 	 */
 	public FileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
 		createFileOutputStream(fileDirectory, fileName);
+		lastSequenceNumber = 0;
 	}
 
 	/**
@@ -48,10 +52,13 @@ public class FileAssemblerImpl implements FileAssembler {
 	@Override
 	public void addPacket(Packet packet) {
 		if (packet.getHeader().getTypes() != Types.DATAINTEGRITY) {
-			try {
-				outputStream.write(packet.getData());
-			} catch (IOException e) {
-				System.out.println("ERROR: File could not be written");
+			if (packet.getHeader().getSequenceNumber() != lastSequenceNumber) {
+				try {
+					outputStream.write(packet.getData());
+				} catch (IOException e) {
+					System.out.println("ERROR: File could not be written");
+				}
+				lastSequenceNumber = packet.getHeader().getSequenceNumber();
 			}
 		} else {
 			checkForDataIntegrity(packet);
