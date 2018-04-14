@@ -39,8 +39,11 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	/** The default packet size */
 	private static final int defaultPacketSize = 1024;
 	
-	/** The minimum dataSize */
+	/** The minimum packet size */
 	private static final int minimalPacketSize = 64;
+	
+	/** The maximum packet size */
+	private static final int maximalPacketSize = 32768;
 
 	/** The previous send packet */
 	private Packet previousPacket;
@@ -180,6 +183,8 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	public void increasePacketSize() {
 		if (packetSize < defaultPacketSize) {
 			packetSize = packetSize * 2;
+		} else if (packetSize >= maximalPacketSize) {
+			packetSize = maximalPacketSize;
 		} else {
 			packetSize = (int) (packetSize * 1.5);
 		} 
