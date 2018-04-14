@@ -31,6 +31,9 @@ public class ServerImpl implements Server {
 	
 	/** The data uploaders */
 	private Map<Integer, ServerUploader> dataUploaders;
+	
+	/** The more than enough byte buffer space number */
+	private static final int enoughSpace = 65000;
 
 	/**
 	 * -----Constructor-----
@@ -54,7 +57,7 @@ public class ServerImpl implements Server {
 	@Override
 	public void run() {
 		while (isRunning) {
-			final byte[] receivedData = new byte[65000];
+			final byte[] receivedData = new byte[enoughSpace];
 			final DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 			try {
 				socket.receive(receivedPacket);
@@ -100,7 +103,7 @@ public class ServerImpl implements Server {
 							+ packetToSend.getAddress());
 //					System.out.println(Arrays.toString(packetToSend.getData()));
 				} else {
-					dataToSend = new byte[65000];
+					dataToSend = new byte[enoughSpace];
 					dataToSend = ("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 							+ " from " + receivedPacket.getAddress()).getBytes();
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,

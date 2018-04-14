@@ -42,6 +42,15 @@ public class ClientImpl implements Client {
 	/** The successful transmission in one try count */
 	private int successfulTransmissionCount;
 	
+	/** The more than enough byte buffer space number */
+	private static final int enoughSpace = 65000;
+	
+	/** The amount of retransmissions needed before the packet size is reset to the minimum packet size */
+	private static final int decreasePacketSizeThreshold = 5;
+	
+	/** The amount of adjacent successful retransmissions needed before the packet size is increased */
+	private static final int increasePacketSizeThreshold = 5;
+	
 	/**
 	 * -----Constructor-----
 	 * 
@@ -65,7 +74,7 @@ public class ClientImpl implements Client {
 
 	@Override
 	public DatagramPacket connect(DatagramPacket packetToSend) {
-		byte[] receivedData = new byte[65000];
+		byte[] receivedData = new byte[enoughSpace];
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.setBroadcast(true);
@@ -91,7 +100,7 @@ public class ClientImpl implements Client {
 	
 	@Override 
 	public DatagramPacket sendOnePacket(Packet thePacketToSend) {
-		byte[] receivedData = new byte[65000];
+		byte[] receivedData = new byte[enoughSpace];
 		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
@@ -117,7 +126,7 @@ public class ClientImpl implements Client {
 	
 	@Override
 	public DatagramPacket sendOnePacket(Packet thePacketToSend, ClientUploader uploader ) {
-		byte[] receivedData = new byte[65000];
+		byte[] receivedData = new byte[enoughSpace];
 		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
@@ -138,7 +147,7 @@ public class ClientImpl implements Client {
 //			System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
-			if (retransmissionCount < 5) {
+			if (retransmissionCount < decreasePacketSizeThreshold) {
 				retransmissionCount++;
 				successfulTransmissionCount = 0;
 				System.out.println("Retransmission count = " + retransmissionCount);
@@ -151,7 +160,7 @@ public class ClientImpl implements Client {
 			System.out.println("ERROR: Connection lost");
 		}
 		retransmissionCount = 0;
-		if (successfulTransmissionCount >= 5) {
+		if (successfulTransmissionCount >= increasePacketSizeThreshold) {
 			uploader.increasePacketSize();
 			System.out.println("Increase packet size. Successful transmission count = " + successfulTransmissionCount);
 			successfulTransmissionCount = 0;
