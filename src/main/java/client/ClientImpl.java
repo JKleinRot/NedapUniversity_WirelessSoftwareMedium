@@ -13,6 +13,7 @@ import client.processmanager.ProcessManager;
 import client.processmanager.ProcessManagerImpl;
 import client.tui.ClientTUI;
 import client.tui.ClientTUIImpl;
+import client.uploader.ClientUploader;
 import packet.Packet;
 
 public class ClientImpl implements Client {
@@ -34,7 +35,13 @@ public class ClientImpl implements Client {
 	
 	/** The timeout duration in milliseconds */
 	private static final int timeoutDuration = 2000;
-
+	
+	/** The retransmission count */
+	private int retransmissionCount;
+	
+	/** The successful transmission in one try count */
+	private int successfulTransmissionCount;
+	
 	/**
 	 * -----Constructor-----
 	 * 
@@ -47,15 +54,18 @@ public class ClientImpl implements Client {
 		} catch (SocketException e) {
 			System.out.println("ERROR: Could not setup datagram socket");
 		}
+		retransmissionCount = 0;
+		successfulTransmissionCount = 0;
 		processManager = new ProcessManagerImpl(this);
 		clientTUI = new ClientTUIImpl(processManager);
 		Thread clientTUIThread = new Thread(clientTUI);
 		clientTUIThread.start();
+
 	}
 
 	@Override
 	public DatagramPacket connect(DatagramPacket packetToSend) {
-		byte[] receivedData = new byte[2048];
+		byte[] receivedData = new byte[65000];
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.setBroadcast(true);
@@ -81,25 +91,70 @@ public class ClientImpl implements Client {
 	
 	@Override 
 	public DatagramPacket sendOnePacket(Packet thePacketToSend) {
-		byte[] receivedData = new byte[2048];
+		byte[] receivedData = new byte[65000];
 		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.send(packetToSend);
-			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-					+ packetToSend.getAddress());
-			System.out.println(Arrays.toString(packetToSend.getData()));
+			System.out.println("PacketSize = " + thePacketToSend.getLength() + " SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
+//			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
+//					+ packetToSend.getAddress());
+//			System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
-			System.out.println("Length: " + receivedPacket.getLength());
-			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
-					+ " from " + receivedPacket.getAddress());
-			System.out.println(Arrays.toString(receivedPacket.getData()));
+//			System.out.println("Length: " + receivedPacket.getLength());
+//			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
+//					+ " from " + receivedPacket.getAddress());
+//			System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			sendOnePacket(thePacketToSend);
 		} catch (IOException e) {
 			System.out.println("ERROR: Connection lost");
+		}
+		return receivedPacket;
+	}
+	
+	@Override
+	public DatagramPacket sendOnePacket(Packet thePacketToSend, ClientUploader uploader ) {
+		byte[] receivedData = new byte[65000];
+		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
+		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
+		try {
+			socket.send(packetToSend);
+			System.out.println("PacketSize = " + thePacketToSend.getLength() + " SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
+//			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
+//					+ packetToSend.getAddress());
+//			System.out.println(Arrays.toString(packetToSend.getData()));
+			socket.setSoTimeout(timeoutDuration);
+			socket.receive(receivedPacket);
+			if (retransmissionCount == 0) {
+				successfulTransmissionCount++;
+				System.out.println("Successful transmission count = " + successfulTransmissionCount);
+			}
+//			System.out.println("Length: " + receivedPacket.getLength());
+//			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
+//					+ " from " + receivedPacket.getAddress());
+//			System.out.println(Arrays.toString(receivedPacket.getData()));
+		} catch (SocketTimeoutException e) {
+			System.out.println("ERROR: No response within time");
+			if (retransmissionCount < 5) {
+				retransmissionCount++;
+				successfulTransmissionCount = 0;
+				System.out.println("Retransmission count = " + retransmissionCount);
+				sendOnePacket(thePacketToSend, uploader);
+			} else {
+				System.out.println("Decrease packet size");
+				uploader.decreasePacketSize(thePacketToSend);
+			}
+		} catch (IOException e) {
+			System.out.println("ERROR: Connection lost");
+		}
+		retransmissionCount = 0;
+		if (successfulTransmissionCount >= 5) {
+			uploader.increasePacketSize();
+			System.out.println("Increase packet size. Successful transmission count = " + successfulTransmissionCount);
+			successfulTransmissionCount = 0;
 		}
 		return receivedPacket;
 	}

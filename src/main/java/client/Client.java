@@ -2,6 +2,7 @@ package client;
 
 import java.net.DatagramPacket;
 
+import client.uploader.ClientUploader;
 import packet.Packet;
 
 /**
@@ -29,4 +30,17 @@ public interface Client {
 	 * @return the packet received
 	 */
 	public DatagramPacket sendOnePacket(Packet packetToSend);
+
+	/**
+	 * Sends one packet and returns the response received. Is able to tell the
+	 * uploader to change the size of the packets according to the amount of
+	 * retransmissions.
+	 * 
+	 * @param packetToSend
+	 *            The packet to send
+	 * @param uploader
+	 *            The client uploader
+	 * @return the packet received
+	 */
+	public DatagramPacket sendOnePacket(Packet packetToSend, ClientUploader uploader);
 }

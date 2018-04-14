@@ -1,5 +1,6 @@
 package client.uploader;
 
+import java.util.List;
 import java.util.Observable;
 
 import client.Client;
@@ -84,7 +85,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber)
 				.getBytes();
 		Packet packet = new PacketImpl(header, data);
-		client.sendOnePacket(packet);
+		client.sendOnePacket(packet, this);
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private void sendData() {
 		while (previousPacket == null || !previousPacket.getHeader().getFlags().equals(Flags.UPLOAD_LAST)) {
 			Packet packet = fileDisassembler.getNextPacket();
-			client.sendOnePacket(packet);
+			client.sendOnePacket(packet, this);
 			previousPacket = packet;
 		}
 	}
@@ -108,7 +109,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		Header header = new HeaderImpl(finalNumber, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] data = ("DataSize " + fileDisassembler.getTotalDataSize()).getBytes();
 		Packet packet = new PacketImpl(header, data);
-		client.sendOnePacket(packet);
+		client.sendOnePacket(packet, this);
 	}
 
 	@Override
@@ -130,6 +131,19 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 */
 	private void notifyProcessManagerUploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		processManager.uploadComplete(fileName, fileDirectory, newDirectory, newFileName);
+	}
+	
+	@Override
+	public void decreasePacketSize(Packet packet) {
+		List<Packet> packets = fileDisassembler.splitPacket(packet);
+		for (Packet packetToSend : packets) {
+			client.sendOnePacket(packetToSend);
+		}
+	}
+	
+	@Override
+	public void increasePacketSize() {
+		fileDisassembler.increasePacketSize();
 	}
 
 }

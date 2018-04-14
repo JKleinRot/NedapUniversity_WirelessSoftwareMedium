@@ -4,7 +4,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import client.uploader.ClientUploader;
 import packet.Packet;
@@ -36,6 +38,9 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 
 	/** The default packet size */
 	private static final int defaultPacketSize = 1024;
+	
+	/** The minimum dataSize */
+	private static final int minimalPacketSize = 64;
 
 	/** The previous send packet */
 	private Packet previousPacket;
@@ -153,5 +158,31 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	@Override
 	public int getTotalDataSize() {
 		return totalDataSize;
+	}
+	
+	@Override
+	public List<Packet> splitPacket(Packet packet) {
+		List<Packet> packets = new ArrayList<>();
+		packetSize = minimalPacketSize;
+		setDataSize();
+		byte[] data = packet.getData();
+		for (int i = 0; i < data.length / dataSize; i++) {
+			byte[] dataPart = Arrays.copyOfRange(data, i*dataSize, (i+1)*dataSize);
+			Header header = getNextHeader(dataPart);
+			Packet packetPart = new PacketImpl(header, dataPart);
+			packets.add(packetPart);
+			previousPacket = packetPart;
+		}
+		return packets;
+	}
+	
+	@Override
+	public void increasePacketSize() {
+		if (packetSize < defaultPacketSize) {
+			packetSize = packetSize * 2;
+		} else {
+			packetSize = (int) (packetSize * 1.5);
+		} 
+		setDataSize();
 	}
 }

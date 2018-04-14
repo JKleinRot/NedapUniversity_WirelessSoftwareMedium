@@ -54,15 +54,15 @@ public class ServerImpl implements Server {
 	@Override
 	public void run() {
 		while (isRunning) {
-			final byte[] receivedData = new byte[2048];
+			final byte[] receivedData = new byte[65000];
 			final DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 			try {
 				socket.receive(receivedPacket);
 				System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 						+ " from " + receivedPacket.getAddress());
-				System.out.println(Arrays.toString(receivedPacket.getData()));
-				System.out.println("DataSize: " + receivedPacket.getLength());
-				System.out.println("Flag: " + ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 8, 12)).getInt());
+//				System.out.println(Arrays.toString(receivedPacket.getData()));
+//				System.out.println("DataSize: " + receivedPacket.getLength());
+//				System.out.println("Flag: " + ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 8, 12)).getInt());
 				if (new String (receivedPacket.getData(), 0, 5).equals("Hello")) {
 					String message = "You have been connected to a wireless storage medium";
 					dataToSend = new byte[message.length()];
@@ -98,9 +98,9 @@ public class ServerImpl implements Server {
 					socket.send(packetToSend);
 					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 							+ packetToSend.getAddress());
-					System.out.println(Arrays.toString(packetToSend.getData()));
+//					System.out.println(Arrays.toString(packetToSend.getData()));
 				} else {
-					dataToSend = new byte[2048];
+					dataToSend = new byte[65000];
 					dataToSend = ("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
 							+ " from " + receivedPacket.getAddress()).getBytes();
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
