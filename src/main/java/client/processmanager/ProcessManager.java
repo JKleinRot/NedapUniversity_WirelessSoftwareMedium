@@ -45,10 +45,26 @@ public interface ProcessManager {
 	 * 
 	 * @param fileName
 	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
 	 * @param newDirectory
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void uploadComplete(String fileName, String newDirectory, String newFileName);
+	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName);
+
+	/**
+	 * Notifies the client that the download is complete.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName);
 }

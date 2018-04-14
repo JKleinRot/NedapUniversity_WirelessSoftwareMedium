@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import client.Client;
+import client.processmanager.ProcessManager;
 import fileassembler.FileAssembler;
 import fileassembler.FileAssemblerImpl;
 import packet.Packet;
@@ -18,6 +19,9 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The client */
 	private Client client;
+	
+	/** The process manager */
+	private ProcessManager processManager;
 
 	/** The download number */
 	private int downloadNumber;
@@ -53,11 +57,14 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 * 
 	 * @param client
 	 *            The client
+	 * @param processManager
+	 *            The process manager
 	 * @param downloadNumber
 	 *            The download number
 	 */
-	public ClientDownloaderImpl(Client client, int downloadNumber) {
+	public ClientDownloaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
 		this.client = client;
+		this.processManager = processManager;
 		this.downloadNumber = downloadNumber;
 	}
 
@@ -71,6 +78,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 			Packet ack = createAck(packet);
 			packet = sendAck(ack);
 		}
+		notifyProcessManagerDownloadComplete(fileName, fileDirectory, newDirectory, newFileName);
 		
 	}
 
@@ -203,8 +211,8 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	private Packet createAck(Packet packet) {
 		Packet ack;
 		if (!packet.getHeader().getFlags().equals(Flags.DOWNLOAD_LAST)) {
-			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.DOWNLOAD,
-					Types.ACK, downloadNumber);
+			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.DOWNLOAD, Types.ACK,
+					downloadNumber);
 			byte[] data = new byte[0];
 			ack = new PacketImpl(header, data);
 		} else {
@@ -215,7 +223,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		}
 		return ack;
 	}
-	
+
 	/**
 	 * Sends the ack to the received packet and returns the received packet.
 	 * 
@@ -229,5 +237,21 @@ public class ClientDownloaderImpl implements ClientDownloader {
 				Arrays.copyOfRange(receivedPacketDatagram.getData(), 0, receivedPacketDatagram.getLength()));
 		fileAssembler.addPacket(receivedPacket);
 		return receivedPacket;
+	}
+	
+	/**
+	 * Notifies the process manager that the current download is complete.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	private void notifyProcessManagerDownloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+		processManager.downloadComplete(fileName, fileDirectory, newDirectory, newFileName);
 	}
 }

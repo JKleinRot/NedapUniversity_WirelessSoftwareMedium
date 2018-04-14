@@ -58,7 +58,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		sendData();
 		sendDataIntegrityPacket();
-		notifyProcessManagerDownloadComplete(fileName, newDirectory, newFileName);
+		notifyProcessManagerUploadComplete(fileName, fileDirectory, newDirectory, newFileName);
 	}
 
 	/**
@@ -81,7 +81,8 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private void sendUploadCharacteristicsPacket(String newDirectory, String newFileName) {
 		Header header = new HeaderImpl(requestSequenceNumber, 0, Flags.UPLOAD, Types.UPLOADCHARACTERISTICS,
 				downloadNumber);
-		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber).getBytes();
+		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber)
+				.getBytes();
 		Packet packet = new PacketImpl(header, data);
 		client.sendOnePacket(packet);
 	}
@@ -120,13 +121,15 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 * 
 	 * @param fileName
 	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
 	 * @param newDirectory
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
 	 */
-	private void notifyProcessManagerDownloadComplete(String fileName, String newDirectory, String newFileName) {
-		processManager.uploadComplete(fileName, newDirectory, newFileName);
+	private void notifyProcessManagerUploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+		processManager.uploadComplete(fileName, fileDirectory, newDirectory, newFileName);
 	}
 
 }

@@ -188,6 +188,8 @@ public class ClientTUIImpl implements ClientTUI {
 			System.out.println("This file is not found. Please enter another file name");
 		} else if (((String) arg).contains("uploaded to the server")) {
 			System.out.println(arg); 
+		} else if (((String) arg).contains("downloaded from the server")) {
+			System.out.println(arg);
 		}
 	}
 
