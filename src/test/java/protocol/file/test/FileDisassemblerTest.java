@@ -10,12 +10,15 @@ import org.junit.jupiter.api.Test;
 import client.uploader.ClientUploader;
 import filedisassembler.ClientFileDisassembler;
 import filedisassembler.ClientFileDisassemblerImpl;
+import filedisassembler.ServerFileDisassembler;
+import filedisassembler.ServerFileDisassemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
+import server.uploader.ServerUploader;
 
 /**
  * Test program for FileDisassembler.
@@ -25,16 +28,16 @@ import packet.header.Types;
 public class FileDisassemblerTest {
 
 	/** The file disassembler */
-	private ClientFileDisassembler fileDisassembler;
+	private ServerFileDisassembler fileDisassembler;
 
 	/** The file disassembler for a longer file */
-	private ClientFileDisassemblerImpl fileDisassemblerLong;
+	private ServerFileDisassembler fileDisassemblerLong;
 
 	/** The mocks */
 	private EasyMockSupport mocks;
 
 	/** The data uploader */
-	private ClientUploader dataUploader;
+	private ServerUploader dataUploader;
 
 	/** The download number */
 	private int downloadNumber;
@@ -42,10 +45,10 @@ public class FileDisassemblerTest {
 	@BeforeEach
 	public void setup() {
 		mocks = new EasyMockSupport();
-		dataUploader = mocks.createMock(ClientUploader.class);
+		dataUploader = mocks.createMock(ServerUploader.class);
 		downloadNumber = 1;
-		fileDisassembler = new ClientFileDisassemblerImpl("Test.txt", dataUploader, downloadNumber);
-		fileDisassemblerLong = new ClientFileDisassemblerImpl("TestLong.txt", dataUploader, downloadNumber);
+		fileDisassembler = new ServerFileDisassemblerImpl("Test.txt", dataUploader, downloadNumber);
+		fileDisassemblerLong = new ServerFileDisassemblerImpl("TestLong.txt", dataUploader, downloadNumber);
 	}
 
 	/**
@@ -56,7 +59,7 @@ public class FileDisassemblerTest {
 	public void testFileDisassemblerFromFileOnePacket() {
 		int expectedSequenceNumber = 100;
 		int expectedAcknowledgementNumber = 0;
-		Flags expectedFlags = Flags.UPLOAD_LAST;
+		Flags expectedFlags = Flags.DOWNLOAD_LAST;
 		Types expectedTypes = Types.DATA;
 		int expectedDownloadNumber = downloadNumber;
 		Header expectedHeader = new HeaderImpl(expectedSequenceNumber, expectedAcknowledgementNumber, expectedFlags,
@@ -87,9 +90,9 @@ public class FileDisassemblerTest {
 		int expectedSequenceNumberSecondPacket = 101;
 		int expectedSequenceNumberThirdPacket = 102;
 		int expectedAcknowledgementNumber = 0;
-		Flags expectedFlagsFirstPacket = Flags.UPLOAD_MORETOCOME;
-		Flags expectedFlagsSecondPacket = Flags.UPLOAD_MORETOCOME;
-		Flags expectedFlagsThirdPacket = Flags.UPLOAD_LAST;
+		Flags expectedFlagsFirstPacket = Flags.DOWNLOAD_MORETOCOME;
+		Flags expectedFlagsSecondPacket = Flags.DOWNLOAD_MORETOCOME;
+		Flags expectedFlagsThirdPacket = Flags.DOWNLOAD_LAST;
 		Types expectedTypes = Types.DATA;
 		int expectedDownloadNumber = downloadNumber;
 		Header expectedHeaderFirstPacket = new HeaderImpl(expectedSequenceNumberFirstPacket,

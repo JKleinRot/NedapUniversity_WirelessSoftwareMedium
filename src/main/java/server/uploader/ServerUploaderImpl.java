@@ -80,6 +80,7 @@ public class ServerUploaderImpl implements ServerUploader {
 				createFileDisassembler(receivedPacket);
 				packetToSend = fileDisassembler.getNextPacket();
 				System.out.println("DownloadCharacteristics");
+				System.out.println(Arrays.toString(packetToSend.getBytes()));
 			} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)){
 				int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
 				if (currentAcknowledgementNumber != previousAcknowledgementNumber) {
@@ -104,9 +105,9 @@ public class ServerUploaderImpl implements ServerUploader {
 					}
 				}
 				if (retransmissionCount == 0 && successfulTransmissionCount >= increasePacketSizeThreshold) {
+//					successfulTransmissionCount = 0;
 					fileDisassembler.increasePacketSize();
 					System.out.println("Increase packet size");
-//					successfulTransmissionCount = 0;
 				}
 			} else {
 				packetToSend = createDataIntegrityPacket();
