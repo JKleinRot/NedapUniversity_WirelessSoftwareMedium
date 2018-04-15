@@ -105,7 +105,7 @@ public class ClientImpl implements Client {
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.send(packetToSend);
-			System.out.println("PacketSize = " + thePacketToSend.getLength() + " SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
+//			System.out.println("PacketSize = " + thePacketToSend.getLength() + " SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
 //			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
 //					+ packetToSend.getAddress());
 //			System.out.println(Arrays.toString(packetToSend.getData()));
