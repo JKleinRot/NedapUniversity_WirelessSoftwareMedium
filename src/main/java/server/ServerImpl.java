@@ -25,13 +25,13 @@ public class ServerImpl implements Server {
 
 	/** A byte buffer to hold the data to send */
 	private byte[] dataToSend;
-	
+
 	/** The data downloaders */
 	private Map<Integer, ServerDownloader> dataDownloaders;
-	
+
 	/** The data uploaders */
 	private Map<Integer, ServerUploader> dataUploaders;
-	
+
 	/** The more than enough byte buffer space number */
 	private static final int enoughSpace = 65000;
 
@@ -61,47 +61,12 @@ public class ServerImpl implements Server {
 			final DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 			try {
 				socket.receive(receivedPacket);
-				System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
-						+ " from " + receivedPacket.getAddress());
-//				System.out.println(Arrays.toString(receivedPacket.getData()));
-//				System.out.println("DataSize: " + receivedPacket.getLength());
-//				System.out.println("Flag: " + ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 8, 12)).getInt());
-				if (new String (receivedPacket.getData(), 0, 5).equals("Hello")) {
-					String message = "You have been connected to a wireless storage medium";
-					dataToSend = new byte[message.length()];
-					dataToSend = message.getBytes();
-					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
-							receivedPacket.getAddress(), receivedPacket.getPort());
-					socket.send(packetToSend);
-					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-							+ packetToSend.getAddress());
+				if (new String(receivedPacket.getData(), 0, 5).equals("Hello")) {
+					handleConnectionMessage(receivedPacket);
 				} else if (receivedPacket.getData()[11] == 1) {
-					if (ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 4) {
-						dataDownloaders.put(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new ServerDownloaderImpl());
-					}
-					Packet thePacketToSend = dataDownloaders.get(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData(), receivedPacket.getLength());
-					System.out.println("Upload");
-					dataToSend = new byte[thePacketToSend.getLength()];
-					dataToSend = thePacketToSend.getBytes();
-					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
-							receivedPacket.getAddress(), receivedPacket.getPort());
-					socket.send(packetToSend);
-					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-							+ packetToSend.getAddress());
+					handleUploadMessage(receivedPacket);
 				} else if (receivedPacket.getData()[11] == 2) {
-					if (ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 64) {
-						dataUploaders.put(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(), new ServerUploaderImpl());
-					}
-					Packet thePacketToSend = dataUploaders.get(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt()).processPacket(receivedPacket.getData(), receivedPacket.getLength());
-					System.out.println("Download " + Arrays.toString(thePacketToSend.getBytes()));
-					byte[] dataToSend = new byte[thePacketToSend.getLength()];
-					dataToSend = thePacketToSend.getBytes();
-					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
-							receivedPacket.getAddress(), receivedPacket.getPort());
-					socket.send(packetToSend);
-					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-							+ packetToSend.getAddress());
-//					System.out.println(Arrays.toString(packetToSend.getData()));
+					handleDownloadMessage(receivedPacket);
 				} else {
 					dataToSend = new byte[enoughSpace];
 					dataToSend = ("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
@@ -109,13 +74,80 @@ public class ServerImpl implements Server {
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
 							receivedPacket.getAddress(), receivedPacket.getPort());
 					socket.send(packetToSend);
-					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-							+ packetToSend.getAddress());
+					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength())
+							+ " to " + packetToSend.getAddress());
 				}
 			} catch (IOException e) {
 				System.out.println("ERROR: Connection lost");
 			}
 		}
+	}
+
+	/**
+	 * Handles the connection message received from the client.
+	 * 
+	 * @param receivedPacket
+	 *            The packet received
+	 * @throws IOException
+	 *             If the connection is lost
+	 */
+	private void handleConnectionMessage(DatagramPacket receivedPacket) throws IOException {
+		String message = "You have been connected to a wireless storage medium";
+		dataToSend = new byte[message.length()];
+		dataToSend = message.getBytes();
+		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
+				receivedPacket.getPort());
+		socket.send(packetToSend);
+		// System.out.println("Send: " + new String(packetToSend.getData(), 0,
+		// packetToSend.getLength()) + " to "
+		// + packetToSend.getAddress());
+	}
+
+	/**
+	 * Handles the upload messages received from the client.
+	 * 
+	 * @param receivedPacket
+	 *            The packet received
+	 * @throws IOException
+	 *             If the connection is lost
+	 */
+	private void handleUploadMessage(DatagramPacket receivedPacket) throws IOException {
+		if (ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 4) {
+			dataDownloaders.put(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(),
+					new ServerDownloaderImpl());
+		}
+		Packet thePacketToSend = dataDownloaders
+				.get(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt())
+				.processPacket(receivedPacket.getData(), receivedPacket.getLength());
+		System.out.println("Upload");
+		dataToSend = new byte[thePacketToSend.getLength()];
+		dataToSend = thePacketToSend.getBytes();
+		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
+				receivedPacket.getPort());
+		socket.send(packetToSend);
+	}
+
+	/**
+	 * Handles the download messages received from the client.
+	 * 
+	 * @param receivedPacket
+	 *            The packet received
+	 * @throws IOException
+	 *             If the connection is lost
+	 */
+	private void handleDownloadMessage(DatagramPacket receivedPacket) throws IOException {
+		if (ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 12, 16)).getInt() == 64) {
+			dataUploaders.put(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt(),
+					new ServerUploaderImpl());
+		}
+		Packet thePacketToSend = dataUploaders
+				.get(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt())
+				.processPacket(receivedPacket.getData(), receivedPacket.getLength());
+		byte[] dataToSend = new byte[thePacketToSend.getLength()];
+		dataToSend = thePacketToSend.getBytes();
+		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
+				receivedPacket.getPort());
+		socket.send(packetToSend);
 	}
 
 	public static void main(String args[]) {
