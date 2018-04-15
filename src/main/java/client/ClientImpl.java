@@ -117,7 +117,7 @@ public class ClientImpl implements Client {
 //			System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
-			sendOnePacket(thePacketToSend);
+			receivedPacket = sendOnePacket(thePacketToSend);
 		} catch (IOException e) {
 			System.out.println("ERROR: Connection lost");
 		}
