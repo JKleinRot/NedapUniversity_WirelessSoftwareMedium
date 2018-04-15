@@ -26,14 +26,14 @@ public interface ClientFileDisassembler {
 	public int getTotalDataSize();
 
 	/**
-	 * Splits a packet that is not transmitted after five tries into two packets of
-	 * equal size.
+	 * Decreases the packet that is not transmitted after five tries into packets of
+	 * the minimum size.
 	 * 
 	 * @param packet
 	 *            The packet not transmitted
-	 * @return the resulting packets with half the size of the original packet
+	 * @return the resulting packets
 	 */
-	public List<Packet> splitPacket(Packet packet);
+	public List<Packet> decreasePacketSize(Packet packet);
 
 	/**
 	 * Increases the packet size by doubling it if the packet size is below the

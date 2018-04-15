@@ -4,7 +4,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import filedisassembler.ServerFileDisassembler;
 import packet.Packet;
@@ -49,7 +51,19 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 
 	/** The total data size */
 	private int totalDataSize;
+	
+	/** The list of packets after decreasing the packet size */
+	private List<Packet> packetsDecreasedSize;
+	
+	/** The next packet of decreased size to send */
+	private int nextPacketDecreasedSize;
 
+	/** The minimum packet size */
+	private static final int minimalPacketSize = 64;
+	
+	/** The maximum packet size */
+	private static final int maximalPacketSize = 32768;
+	
 	/**
 	 * -----Constructor-----
 	 * 
@@ -64,6 +78,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		this.packetSize = defaultPacketSize;
 		firstSequenceNumber = 100;
 		totalDataSize = 0;
+		nextPacketDecreasedSize = 0;
 		setDataSize();
 		createFileInputStream(fileName);
 	}
@@ -152,9 +167,54 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		}
 		return header;
 	}
+	
+	@Override
+	public Packet getCurrentPacket() {
+		return currentPacket;
+	}
 
 	@Override
 	public int getTotalDataSize() {
 		return totalDataSize;
 	}
+
+	@Override
+	public void decreasePacketSize(Packet packet) {
+		nextPacketDecreasedSize = 0;
+		packetsDecreasedSize = new ArrayList<>();
+		packetSize = minimalPacketSize;
+		setDataSize();
+		byte[] data = packet.getData();
+		for (int i = 0; i < data.length / dataSize; i++) {
+			byte[] dataPart = Arrays.copyOfRange(data, i*dataSize, (i+1)*dataSize);
+			Header header = getNextHeader(dataPart);
+			Packet packetPart = new PacketImpl(header, dataPart);
+			packetsDecreasedSize.add(packetPart);
+			previousPacket = packetPart;
+		}
+	}
+
+	@Override
+	public void increasePacketSize() {
+		if (packetSize < defaultPacketSize) {
+			packetSize = packetSize * 2;
+		} else if (packetSize >= maximalPacketSize) {
+			packetSize = maximalPacketSize;
+		} else {
+			packetSize = (int) (packetSize * 1.5);
+		} 
+		setDataSize();
+	}
+
+	@Override
+	public Packet getNextPacketDecreasedSize() {
+		Packet packet = packetsDecreasedSize.get(nextPacketDecreasedSize);
+		nextPacketDecreasedSize++;
+		if (nextPacketDecreasedSize == packetsDecreasedSize.size()) {
+			dataUploader.setIsSendingPacketsAfterDecreasingSize(false);
+		}
+		return packet;
+	}
+	
+	
 }

@@ -164,7 +164,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	}
 	
 	@Override
-	public List<Packet> splitPacket(Packet packet) {
+	public List<Packet> decreasePacketSize(Packet packet) {
 		List<Packet> packets = new ArrayList<>();
 		packetSize = minimalPacketSize;
 		setDataSize();

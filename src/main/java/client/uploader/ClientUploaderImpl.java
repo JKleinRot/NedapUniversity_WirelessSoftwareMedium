@@ -135,7 +135,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	
 	@Override
 	public void decreasePacketSize(Packet packet) {
-		List<Packet> packets = fileDisassembler.splitPacket(packet);
+		List<Packet> packets = fileDisassembler.decreasePacketSize(packet);
 		for (Packet packetToSend : packets) {
 			client.sendOnePacket(packetToSend);
 		}

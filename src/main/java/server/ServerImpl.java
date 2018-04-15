@@ -98,9 +98,6 @@ public class ServerImpl implements Server {
 		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
 				receivedPacket.getPort());
 		socket.send(packetToSend);
-		// System.out.println("Send: " + new String(packetToSend.getData(), 0,
-		// packetToSend.getLength()) + " to "
-		// + packetToSend.getAddress());
 	}
 
 	/**

@@ -41,29 +41,80 @@ public class ServerUploaderImpl implements ServerUploader {
 	/** The download number */
 	private int downloadNumber;
 	
+	/** The previous acknowledgement number */
+	private int previousAcknowledgementNumber;
+	
+	/** The retransmission count */
+	private int retransmissionCount;
+	
+	/** The successful transmission in one try count */
+	private int successfulTransmissionCount;
+	
+	/** The amount of retransmissions needed before the packet size is reset to the minimum packet size */
+	private static final int decreasePacketSizeThreshold = 5;
+	
+	/** The amount of adjacent successful retransmissions needed before the packet size is increased */
+	private static final int increasePacketSizeThreshold = 5;
+	
+	/** Whether the server is sending packets that were the result of decreasing the packet size */
+	private boolean isSendingPacketsAfterDecreasingSize; 
+	
 	/**
 	 * -----Constructor-----
 	 * 
 	 * Creates a server uploader.
 	 */
 	public ServerUploaderImpl() {
-
+		previousAcknowledgementNumber = 0;
+		retransmissionCount = 0;
+		successfulTransmissionCount = 0;
+		isSendingPacketsAfterDecreasingSize = false;
 	}
 
 	@Override
 	public Packet processPacket(byte[] packet, int length) {
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
 		Packet packetToSend;
-		if (receivedPacket.getHeader().getTypes().equals(Types.DOWNLOADCHARACTERISTICS)) {
-			createFileDisassembler(receivedPacket);
-			packetToSend = fileDisassembler.getNextPacket();
-			System.out.println("DownloadCharacteristics");
-		} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)){
-			packetToSend = fileDisassembler.getNextPacket();
-			System.out.println("Ack");
+		if (!isSendingPacketsAfterDecreasingSize) {
+			if (receivedPacket.getHeader().getTypes().equals(Types.DOWNLOADCHARACTERISTICS)) {
+				createFileDisassembler(receivedPacket);
+				packetToSend = fileDisassembler.getNextPacket();
+				System.out.println("DownloadCharacteristics");
+			} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)){
+				int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
+				if (currentAcknowledgementNumber != previousAcknowledgementNumber) {
+					packetToSend = fileDisassembler.getNextPacket();
+					System.out.println("Ack");
+					if (retransmissionCount == 0) {
+						successfulTransmissionCount++;
+						System.out.println("Successful transmission count = " + successfulTransmissionCount);
+					}
+				} else {
+					if (retransmissionCount < decreasePacketSizeThreshold) {
+						packetToSend = fileDisassembler.getCurrentPacket();
+						retransmissionCount++;
+						successfulTransmissionCount = 0;
+						System.out.println("Retransmission count = " + retransmissionCount);
+					} else {
+						fileDisassembler.decreasePacketSize(receivedPacket);
+						System.out.println("Decrease packet size");
+						packetToSend = fileDisassembler.getNextPacketDecreasedSize();
+						isSendingPacketsAfterDecreasingSize = true;
+						retransmissionCount = 0;
+					}
+				}
+				if (retransmissionCount == 0 && successfulTransmissionCount >= increasePacketSizeThreshold) {
+					fileDisassembler.increasePacketSize();
+					System.out.println("Increase packet size");
+//					successfulTransmissionCount = 0;
+				}
+			} else {
+				packetToSend = createDataIntegrityPacket();
+			}
 		} else {
-			packetToSend = createDataIntegrityPacket();
+			packetToSend = fileDisassembler.getNextPacketDecreasedSize();
 		}
+		System.out.println("Packet size = " + packetToSend.getLength());
 		return packetToSend;
 	}
 
@@ -173,5 +224,10 @@ public class ServerUploaderImpl implements ServerUploader {
 	@Override
 	public void notifyServerFileNotFound() {
 		System.out.println("ERROR: File not found");
+	}
+
+	@Override
+	public void setIsSendingPacketsAfterDecreasingSize(boolean value) {
+		isSendingPacketsAfterDecreasingSize = false;
 	}
 }

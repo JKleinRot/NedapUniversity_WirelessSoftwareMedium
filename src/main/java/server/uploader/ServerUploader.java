@@ -26,4 +26,13 @@ public interface ServerUploader {
 	 */
 	public void notifyServerFileNotFound();
 
+	/**
+	 * Sets the boolean to indicate if the server is sending from the list of
+	 * decreased size packets.
+	 * 
+	 * @param value
+	 *            The value to set the boolean to
+	 */
+	public void setIsSendingPacketsAfterDecreasingSize(boolean value);
+
 }

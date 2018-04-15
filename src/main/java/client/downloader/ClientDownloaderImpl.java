@@ -72,7 +72,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	public void download(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		createFileAssembler(newFileName, newDirectory);
 		Packet packet = sendDownloadCharacteristicsPacket(fileDirectory, fileName);
-		System.out.println("ClientDownloader" + Arrays.toString(packet.getBytes()));
+//		System.out.println("ClientDownloader" + Arrays.toString(packet.getBytes()));
 		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)) {
 			System.out.println("Send another packet");
 			Packet ack = createAck(packet);
