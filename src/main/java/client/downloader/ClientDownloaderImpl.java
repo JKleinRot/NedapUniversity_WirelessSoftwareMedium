@@ -76,6 +76,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)) {
 			System.out.println("Send another packet");
 			System.out.println("Received packet size = " + packet.getLength());
+			System.out.println("Sequence number = " + packet.getHeader().getSequenceNumber());
 			Packet ack = createAck(packet);
 			packet = sendAck(ack);
 		}

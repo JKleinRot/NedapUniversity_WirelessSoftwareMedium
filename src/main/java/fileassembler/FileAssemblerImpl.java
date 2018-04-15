@@ -53,12 +53,14 @@ public class FileAssemblerImpl implements FileAssembler {
 	public void addPacket(Packet packet) {
 		if (packet.getHeader().getTypes() != Types.DATAINTEGRITY) {
 			if (packet.getHeader().getSequenceNumber() != lastSequenceNumber) {
-				try {
-					outputStream.write(packet.getData());
-				} catch (IOException e) {
-					System.out.println("ERROR: File could not be written");
+				if (packet.getData().length != 0) {
+					try {
+						outputStream.write(packet.getData());
+					} catch (IOException e) {
+						System.out.println("ERROR: File could not be written");
+					}
+					lastSequenceNumber = packet.getHeader().getSequenceNumber();
 				}
-				lastSequenceNumber = packet.getHeader().getSequenceNumber();
 			}
 		} else {
 			checkForDataIntegrity(packet);

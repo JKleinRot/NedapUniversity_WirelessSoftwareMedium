@@ -16,7 +16,7 @@ public class ServerUploaderImpl implements ServerUploader {
 
 	/** The file disassembler */
 	private ServerFileDisassembler fileDisassembler;
-	
+
 	/** The length of the header */
 	private static final int headerLength = 20;
 
@@ -34,31 +34,40 @@ public class ServerUploaderImpl implements ServerUploader {
 
 	/** The download number offset in the header */
 	private static final int downloadNumberOffset = 16;
-	
+
 	/** The final message number */
 	private static final int finalNumber = 20;
-	
+
 	/** The download number */
 	private int downloadNumber;
-	
+
 	/** The previous acknowledgement number */
 	private int previousAcknowledgementNumber;
-	
+
 	/** The retransmission count */
 	private int retransmissionCount;
-	
+
 	/** The successful transmission in one try count */
 	private int successfulTransmissionCount;
-	
-	/** The amount of retransmissions needed before the packet size is reset to the minimum packet size */
+
+	/**
+	 * The amount of retransmissions needed before the packet size is reset to the
+	 * minimum packet size
+	 */
 	private static final int decreasePacketSizeThreshold = 5;
-	
-	/** The amount of adjacent successful retransmissions needed before the packet size is increased */
+
+	/**
+	 * The amount of adjacent successful retransmissions needed before the packet
+	 * size is increased
+	 */
 	private static final int increasePacketSizeThreshold = 5;
-	
-	/** Whether the server is sending packets that were the result of decreasing the packet size */
-	private boolean isSendingPacketsAfterDecreasingSize; 
-	
+
+	/**
+	 * Whether the server is sending packets that were the result of decreasing the
+	 * packet size
+	 */
+	private boolean isSendingPacketsAfterDecreasingSize;
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -75,46 +84,52 @@ public class ServerUploaderImpl implements ServerUploader {
 	public Packet processPacket(byte[] packet, int length) {
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
 		Packet packetToSend;
-		if (!isSendingPacketsAfterDecreasingSize) {
-			if (receivedPacket.getHeader().getTypes().equals(Types.DOWNLOADCHARACTERISTICS)) {
-				createFileDisassembler(receivedPacket);
-				packetToSend = fileDisassembler.getNextPacket();
-				System.out.println("DownloadCharacteristics");
-				System.out.println(Arrays.toString(packetToSend.getBytes()));
-			} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)){
-				int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
-				if (currentAcknowledgementNumber != previousAcknowledgementNumber) {
+		System.out.println("Ack number = " + receivedPacket.getHeader().getAcknowledgementNumber());
+		if (receivedPacket.getHeader().getTypes() != Types.DATAINTEGRITY) {
+			if (!isSendingPacketsAfterDecreasingSize) {
+				if (receivedPacket.getHeader().getTypes().equals(Types.DOWNLOADCHARACTERISTICS)) {
+					createFileDisassembler(receivedPacket);
 					packetToSend = fileDisassembler.getNextPacket();
-					System.out.println("Ack");
-					if (retransmissionCount == 0) {
-						successfulTransmissionCount++;
-						System.out.println("Successful transmission count = " + successfulTransmissionCount);
-					}
-					retransmissionCount = 0;
-				} else {
-					if (retransmissionCount < decreasePacketSizeThreshold) {
-						packetToSend = fileDisassembler.getCurrentPacket();
-						retransmissionCount++;
-						successfulTransmissionCount = 0;
-						System.out.println("Retransmission count = " + retransmissionCount);
-					} else {
-						fileDisassembler.decreasePacketSize(receivedPacket);
-						System.out.println("Decrease packet size");
-						packetToSend = fileDisassembler.getNextPacketDecreasedSize();
-						isSendingPacketsAfterDecreasingSize = true;
+					System.out.println("DownloadCharacteristics");
+					System.out.println(Arrays.toString(packetToSend.getBytes()));
+				} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)) {
+					int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
+					if (currentAcknowledgementNumber != previousAcknowledgementNumber) {
+						previousAcknowledgementNumber = currentAcknowledgementNumber;
+						packetToSend = fileDisassembler.getNextPacket();
+						System.out.println("Ack");
+						if (retransmissionCount == 0) {
+							successfulTransmissionCount++;
+							System.out.println("Successful transmission count = " + successfulTransmissionCount);
+						}
 						retransmissionCount = 0;
+					} else {
+						if (retransmissionCount < decreasePacketSizeThreshold) {
+							packetToSend = fileDisassembler.getCurrentPacket();
+							retransmissionCount++;
+							successfulTransmissionCount = 0;
+							System.out.println("Retransmission count = " + retransmissionCount);
+						} else {
+							fileDisassembler.decreasePacketSize(receivedPacket);
+							System.out.println("Decrease packet size");
+							packetToSend = fileDisassembler.getNextPacketDecreasedSize();
+							isSendingPacketsAfterDecreasingSize = true;
+							retransmissionCount = 0;
+						}
 					}
-				}
-				if (retransmissionCount == 0 && successfulTransmissionCount >= increasePacketSizeThreshold) {
-					successfulTransmissionCount = 0;
-					fileDisassembler.increasePacketSize();
-					System.out.println("Increase packet size");
+					if (retransmissionCount == 0 && successfulTransmissionCount >= increasePacketSizeThreshold) {
+						successfulTransmissionCount = 0;
+						fileDisassembler.increasePacketSize();
+						System.out.println("Increase packet size");
+					}
+				} else {
+					packetToSend = createDataIntegrityPacket();
 				}
 			} else {
-				packetToSend = createDataIntegrityPacket();
+				packetToSend = fileDisassembler.getNextPacketDecreasedSize();
 			}
 		} else {
-			packetToSend = fileDisassembler.getNextPacketDecreasedSize();
+			packetToSend = createDataIntegrityPacket();
 		}
 		System.out.println("Packet size = " + packetToSend.getLength());
 		return packetToSend;
@@ -132,19 +147,16 @@ public class ServerUploaderImpl implements ServerUploader {
 				.wrap(Arrays.copyOfRange(packet, sequenceNumberOffset, acknowledgementNumberOffset)).getInt();
 		int acknowledgementNumber = ByteBuffer
 				.wrap(Arrays.copyOfRange(packet, acknowledgementNumberOffset, flagsOffset)).getInt();
-		Flags flags = reconstructFlags(
-				ByteBuffer.wrap(Arrays.copyOfRange(packet, flagsOffset, typesOffset)).getInt());
+		Flags flags = reconstructFlags(ByteBuffer.wrap(Arrays.copyOfRange(packet, flagsOffset, typesOffset)).getInt());
 		Types types = reconstructTypes(
 				ByteBuffer.wrap(Arrays.copyOfRange(packet, typesOffset, downloadNumberOffset)).getInt());
-		int downloadNumber = ByteBuffer.wrap(Arrays.copyOfRange(packet, downloadNumberOffset, headerLength))
-				.getInt();
+		int downloadNumber = ByteBuffer.wrap(Arrays.copyOfRange(packet, downloadNumberOffset, headerLength)).getInt();
 		Header header = new HeaderImpl(sequenceNumber, acknowledgementNumber, flags, types, downloadNumber);
-		byte[] data = ByteBuffer.wrap(Arrays.copyOfRange(packet, headerLength, packet.length))
-				.array();
+		byte[] data = ByteBuffer.wrap(Arrays.copyOfRange(packet, headerLength, packet.length)).array();
 		Packet thePacket = new PacketImpl(header, data);
 		return thePacket;
 	}
-	
+
 	/**
 	 * Reconstructs the flags from the bytes
 	 * 
@@ -177,7 +189,7 @@ public class ServerUploaderImpl implements ServerUploader {
 		}
 		return flags;
 	}
-	
+
 	/**
 	 * Reconstructs the types from the bytes
 	 * 
@@ -206,7 +218,7 @@ public class ServerUploaderImpl implements ServerUploader {
 		}
 		return types;
 	}
-	
+
 	private void createFileDisassembler(Packet packet) {
 		String data = new String(packet.getData());
 		String[] words = data.split(" ");
@@ -215,14 +227,15 @@ public class ServerUploaderImpl implements ServerUploader {
 		downloadNumber = Integer.parseInt(words[5]);
 		fileDisassembler = new ServerFileDisassemblerImpl(fileDirectory + fileName, this, downloadNumber);
 	}
-	
+
 	private Packet createDataIntegrityPacket() {
-		Header header = new HeaderImpl(finalNumber, 0, Flags.DOWNLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
+		Header header = new HeaderImpl(finalNumber, 0, Flags.DOWNLOAD_DATAINTEGRITY, Types.DATAINTEGRITY,
+				downloadNumber);
 		byte[] data = ("DataSize " + fileDisassembler.getTotalDataSize()).getBytes();
 		Packet packet = new PacketImpl(header, data);
 		return packet;
 	}
-	
+
 	@Override
 	public void notifyServerFileNotFound() {
 		System.out.println("ERROR: File not found");
