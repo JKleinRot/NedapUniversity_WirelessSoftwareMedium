@@ -90,6 +90,7 @@ public class ServerUploaderImpl implements ServerUploader {
 						successfulTransmissionCount++;
 						System.out.println("Successful transmission count = " + successfulTransmissionCount);
 					}
+					retransmissionCount = 0;
 				} else {
 					if (retransmissionCount < decreasePacketSizeThreshold) {
 						packetToSend = fileDisassembler.getCurrentPacket();
@@ -105,7 +106,7 @@ public class ServerUploaderImpl implements ServerUploader {
 					}
 				}
 				if (retransmissionCount == 0 && successfulTransmissionCount >= increasePacketSizeThreshold) {
-//					successfulTransmissionCount = 0;
+					successfulTransmissionCount = 0;
 					fileDisassembler.increasePacketSize();
 					System.out.println("Increase packet size");
 				}
