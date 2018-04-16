@@ -162,6 +162,11 @@ public class ClientTUIImpl implements ClientTUI {
 				input = readInput(
 						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
 								+ "Please enter the word between bracket to perform the action");
+			} else if (words.length == 1 && words[0].equals("statistics")) {
+				System.out.println(processManager.getStatistics());
+				input = readInput(
+						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+								+ "Please enter the word between bracket to perform the action");
 			} else {
 				input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");				
 			}

@@ -1,5 +1,7 @@
 package client.processmanager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import client.Client;
@@ -15,6 +17,15 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 
 	/** The download number */
 	private int downloadNumber;
+	
+	/** The upload number */
+	private int uploadNumber;
+	
+	/** The uploaders */
+	private List<ClientUploader> uploaders;
+	
+	/** The downloaders */
+	private List<ClientDownloader> downloaders;
 
 	/**
 	 * -----Constructor-----
@@ -33,12 +44,16 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	public ProcessManagerImpl(Client client) {
 		this.client = client;
 		downloadNumber = 1;
+		uploadNumber = 1;
+		uploaders = new ArrayList<>();
+		downloaders = new ArrayList<>();
 	}
 
 	@Override
 	public void handleUploadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		ClientUploader dataUploader = new ClientUploaderImpl(client, this, downloadNumber);
-		downloadNumber++;
+		uploadNumber++;
+		uploaders.add(dataUploader);
 		dataUploader.upload(fileName, fileDirectory, newDirectory, newFileName);
 	}
 	
@@ -46,6 +61,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	public void handleDownloadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		ClientDownloader dataDownloader = new ClientDownloaderImpl(client, this, downloadNumber);
 		downloadNumber++;
+		downloaders.add(dataDownloader);
 		dataDownloader.download(fileName, fileDirectory, newDirectory, newFileName);
 	}
  
@@ -65,6 +81,17 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		setChanged();
 		notifyObservers("The file " + fileName + " from " + fileDirectory + " is downloaded from the server into " + newDirectory + " as " + newFileName);
+	}
+
+	@Override
+	public String getStatistics() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Statistics of uploaders: \n");
+		for (ClientUploader uploader : uploaders) {
+			builder.append(uploader.getStatistics());
+		}
+		builder.append("Statistics of downloaders: \n");
+		return builder.toString();
 	}
 
 }

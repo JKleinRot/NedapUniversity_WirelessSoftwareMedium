@@ -51,4 +51,11 @@ public interface ClientUploader {
 	 *            The retransmission count of this packet
 	 */
 	public void updateStatistics(int retransmissionCount);
+
+	/**
+	 * Returns the current statistics of the upload.
+	 * 
+	 * @return the statistics
+	 */
+	public String getStatistics();
 }

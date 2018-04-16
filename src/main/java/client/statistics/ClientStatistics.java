@@ -25,7 +25,7 @@ public interface ClientStatistics {
 	 *            The start time
 	 */
 	public void setStartTime(LocalDateTime startTime);
-	
+
 	/**
 	 * Sets the end time of the upload.
 	 * 
@@ -33,4 +33,19 @@ public interface ClientStatistics {
 	 *            The end time
 	 */
 	public void setEndTime(LocalDateTime endTime);
+
+	/**
+	 * Updates the part of the data that is already send.
+	 * 
+	 * @param lastPacketSize
+	 *            The size of the packet send
+	 */
+	public void updatePartSend(int lastPacketSize);
+
+	/**
+	 * Returns the statistics in a formatted string ready to print on the console.
+	 * 
+	 * @return the statistics
+	 */
+	public String getStatistics();
 }

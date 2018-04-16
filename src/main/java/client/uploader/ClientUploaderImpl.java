@@ -42,6 +42,9 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	
 	/** The client statistics */
 	private ClientStatistics clientStatistics;
+	
+	/** The string representation of the uploader */
+	private String characteristics;
 
 	/**
 	 * -----Constructor-----
@@ -57,12 +60,13 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		this.client = client;
 		this.downloadNumber = downloadNumber;
 		this.processManager = processManager;
-		clientStatistics = new ClientStatisticsImpl();
 	}
 
 	@Override
 	public void upload(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+		characteristics = "Upload " + fileName + " from " + fileDirectory + " to " + newDirectory + " as " + newFileName + "\n";
 		createFileDisassembler(fileDirectory + fileName);
+		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		sendData();
 		sendDataIntegrityPacket();
@@ -107,6 +111,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 			Packet packet = fileDisassembler.getNextPacket();
 			client.sendOnePacket(packet, this);
 			previousPacket = packet;
+			clientStatistics.updatePartSend(packet.getData().length);
 		}
 		clientStatistics.setEndTime(LocalDateTime.now());
 	}
@@ -158,6 +163,14 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	@Override
 	public void updateStatistics(int retransmissionCount) {
 		clientStatistics.updateRetransmissionCount(retransmissionCount);
+	}
+
+	@Override
+	public String getStatistics() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(characteristics);
+		builder.append(clientStatistics.getStatistics());
+		return builder.toString();
 	}
 
 }

@@ -67,4 +67,11 @@ public interface ProcessManager {
 	 *            The new file name
 	 */
 	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName);
+
+	/**
+	 * Returns the statistics of all downloads and uploads performed.
+	 * 
+	 * @return the statistics
+	 */
+	public String getStatistics();
 }
