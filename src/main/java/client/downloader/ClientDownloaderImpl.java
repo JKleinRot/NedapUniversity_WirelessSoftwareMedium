@@ -49,6 +49,9 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The download number offset in the header */
 	private static final int downloadNumberOffset = 16;
+	
+	/** The next sequence number expected */
+	private int nextSequenceNumberExpected;
 
 	/**
 	 * -----Constructor-----
@@ -66,6 +69,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		this.client = client;
 		this.processManager = processManager;
 		this.downloadNumber = downloadNumber;
+		nextSequenceNumberExpected = 100;
 	}
 
 	@Override
@@ -73,7 +77,8 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		createFileAssembler(newFileName, newDirectory);
 		Packet packet = sendDownloadCharacteristicsPacket(fileDirectory, fileName);
 //		System.out.println("ClientDownloader" + Arrays.toString(packet.getBytes()));
-		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)) {
+		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY) && packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
+			nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
 			System.out.println("Send another packet");
 			System.out.println("Received packet size = " + packet.getLength());
 			System.out.println("Sequence number received = " + packet.getHeader().getSequenceNumber());
