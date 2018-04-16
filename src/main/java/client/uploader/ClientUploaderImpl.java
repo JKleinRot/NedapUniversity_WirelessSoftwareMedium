@@ -95,12 +95,14 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		createFileDisassembler(fileDirectory + fileName);
 		if (!isFileFound) {
 			System.out.println("Upload file does not exist");
+//			notifyProcessManagerFileNotFound();
 			return;
 		}
 		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		if (!isFileFound) {
 			System.out.println("Where to upload does not exist");
+			notifyProcessManagerFileNotFound();
 			return;
 		}
 		sendData();
@@ -116,7 +118,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private void createFileDisassembler(String fileName) {
 		fileDisassembler = new ClientFileDisassemblerImpl(fileName, this, uploadNumber);
 	}
-
+	
 	/**
 	 * Sends the upload characteristics packet to the server.
 	 * 

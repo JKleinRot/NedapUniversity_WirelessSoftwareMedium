@@ -102,7 +102,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	@Override
 	public void fileNotFound(ClientUploader uploader) {
 		Thread uploadThread = uploadThreads.get(uploader.getUploadNumber());
-		uploadThread.interrupt();
+//		uploadThread.interrupt();
 		uploaders.remove(uploader);
 		uploadThreads.remove(uploader.getUploadNumber());
 		setChanged();

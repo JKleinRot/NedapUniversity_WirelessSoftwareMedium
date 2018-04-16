@@ -5,16 +5,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import client.downloader.ClientDownloader;
 import packet.Packet;
 import packet.header.Types;
 
 public class ClientFileAssemblerImpl implements ClientFileAssembler {
-	
+
 	/** The file output stream */
 	private OutputStream outputStream;
-	
+
 	/** The last sequence number */
 	private int lastSequenceNumber;
+
+	/** The downloader */
+	private ClientDownloader downloader;
 
 	/**
 	 * -----Constructor-----
@@ -27,8 +31,12 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 	 *            The file directory
 	 * @param downloadNumber
 	 *            The download number
+	 * @param downloader
+	 *            The downloader
 	 */
-	public ClientFileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
+	public ClientFileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber,
+			ClientDownloader downloader) {
+		this.downloader = downloader;
 		createFileOutputStream(fileDirectory, fileName);
 		lastSequenceNumber = 0;
 	}
@@ -46,6 +54,7 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 			outputStream = new FileOutputStream(fileDirectory + fileName);
 		} catch (FileNotFoundException e) {
 			System.out.println("ERROR: No such directory");
+			downloader.notifyFileNotFound();
 		}
 	}
 
@@ -74,6 +83,6 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 	 *            The data integrity packet
 	 */
 	private void checkForDataIntegrity(Packet packet) {
-		
+
 	}
 }

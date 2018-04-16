@@ -1,5 +1,6 @@
 package client.downloader;
 
+import java.io.File;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
@@ -66,6 +67,9 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The string representation of the uploader */
 	private String characteristics;
+	
+	/** Whether the file is found */
+	private boolean isFileFound;
 
 	/**
 	 * -----Constructor-----
@@ -84,6 +88,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		this.processManager = processManager;
 		this.downloadNumber = downloadNumber;
 		nextSequenceNumberExpected = 100;
+		isFileFound = true;
 	}
 
 	@Override
@@ -91,10 +96,16 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		characteristics = "Download " + fileName + " from " + fileDirectory + " to " + newDirectory + " as "
 				+ newFileName + "\n";
 		createFileAssembler(newFileName, newDirectory);
+		if (!isFileFound) {
+			notifyProcessManagerFileNotFound();
+			return;
+		}
 		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
 		Packet ackDownloadCharacteristics = sendDownloadCharacteristicsPacket(fileDirectory, fileName);
 		if (new String(ackDownloadCharacteristics.getData()).equals("File not found")) {
 			notifyProcessManagerFileNotFound();
+			File file = new File(newDirectory + newFileName);
+			file.delete();
 			return;
 		} else {
 			clientStatistics.setTotalDataSize(ackDownloadCharacteristics.getData());
@@ -131,7 +142,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 *            The file directory
 	 */
 	private void createFileAssembler(String fileName, String fileDirectory) {
-		fileAssembler = new ClientFileAssemblerImpl(fileName, fileDirectory, downloadNumber);
+		fileAssembler = new ClientFileAssemblerImpl(fileName, fileDirectory, downloadNumber, this);
 	}
 
 	/**
@@ -338,5 +349,10 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	@Override
 	public int getDownloadNumber() {
 		return downloadNumber;
+	}
+
+	@Override
+	public void notifyFileNotFound() {
+		isFileFound = false;
 	}
 }

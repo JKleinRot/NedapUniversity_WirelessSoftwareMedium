@@ -42,4 +42,9 @@ public interface ClientDownloader {
 	 * @return the download number
 	 */
 	public int getDownloadNumber();
+
+	/**
+	 * Notifies the client that the file is not found on the server.
+	 */
+	public void notifyFileNotFound();
 }
