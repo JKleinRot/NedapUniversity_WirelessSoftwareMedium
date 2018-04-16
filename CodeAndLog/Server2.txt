@@ -1,0 +1,123 @@
+Server:
+Apr 11 08:43:43 raspberrypi java[1110]: Ack number received = 106
+Apr 11 08:43:43 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:43 raspberrypi java[1110]: Ack: 106
+Apr 11 08:43:43 raspberrypi java[1110]: Successful transmission count = 2
+Apr 11 08:43:43 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 107, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:43 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:43 raspberrypi java[1110]: Sequence number send = 107
+Apr 11 08:43:43 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 107, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 106, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 106, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Ack number received = 106
+Apr 11 08:43:45 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:45 raspberrypi java[1110]: Retransmission count = 1
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 107, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 107
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 107, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 107, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 107, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Ack number received = 107
+Apr 11 08:43:45 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:45 raspberrypi java[1110]: Ack: 107
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 108, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 108
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 108, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 108, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 108, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Ack number received = 108
+Apr 11 08:43:45 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:45 raspberrypi java[1110]: Ack: 108
+Apr 11 08:43:45 raspberrypi java[1110]: Successful transmission count = 1
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 109, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 109
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 109, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 109, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 109, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Ack number received = 109
+Apr 11 08:43:45 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:45 raspberrypi java[1110]: Ack: 109
+Apr 11 08:43:45 raspberrypi java[1110]: Successful transmission count = 2
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 110
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Ack number received = 110
+Apr 11 08:43:45 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:45 raspberrypi java[1110]: Ack: 110
+Apr 11 08:43:45 raspberrypi java[1110]: Successful transmission count = 3
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 111
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Ack number received = 111
+Apr 11 08:43:45 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:45 raspberrypi java[1110]: Ack: 111
+Apr 11 08:43:45 raspberrypi java[1110]: Successful transmission count = 4
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 112
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Ack number received = 111
+Apr 11 08:43:47 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:47 raspberrypi java[1110]: Retransmission count = 1
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:47 raspberrypi java[1110]: Sequence number send = 112
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Ack number received = 112
+Apr 11 08:43:47 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:47 raspberrypi java[1110]: Ack: 112
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:47 raspberrypi java[1110]: Sequence number send = 113
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Ack number received = 112
+Apr 11 08:43:47 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:47 raspberrypi java[1110]: Retransmission count = 1
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:47 raspberrypi java[1110]: Sequence number send = 113
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Ack number received = 113
+Apr 11 08:43:47 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:47 raspberrypi java[1110]: Ack: 113
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 114, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:47 raspberrypi java[1110]: Sequence number send = 114
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 114, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+lines 1135-1185
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 111
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Ack number received = 111
+Apr 11 08:43:45 raspberrypi java[1110]: boolean = false
+Apr 11 08:43:45 raspberrypi java[1110]: Ack: 111
+Apr 11 08:43:45 raspberrypi java[1110]: Successful transmission count = 4
+Apr 11 08:43:45 raspberrypi java[1110]: ServerUploader packet send: [0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:45 raspberrypi java[1110]: Packet size = 1536
+Apr 11 08:43:45 raspberrypi java[1110]: Sequence number send = 112
+Apr 11 08:43:45 raspberrypi java[1110]: ServerImpl packet send: [0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerImpl packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: ServerUploader packet received: [0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 2, 0, 0, 0, 32, 0, 0, 0, 7]
+Apr 11 08:43:47 raspberrypi java[1110]: Ack number received = 111
+Apr 11 08:43:47 raspberrypi java[1110]: boolean = false

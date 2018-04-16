@@ -184,6 +184,8 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		packetsDecreasedSize = new ArrayList<>();
 		packetSize = minimalPacketSize;
 		setDataSize();
+		System.out.println("Data size = " + dataSize);
+		System.out.println("Data length = " + packet.getData().length);
 		byte[] data = packet.getData();
 		for (int i = 0; i < data.length / dataSize; i++) {
 			byte[] dataPart = Arrays.copyOfRange(data, i*dataSize, (i+1)*dataSize);
@@ -192,6 +194,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 			packetsDecreasedSize.add(packetPart);
 			previousPacket = packetPart;
 		}
+		System.out.println("Amount of packets = " + packetsDecreasedSize.size());
 	}
 
 	@Override
@@ -210,8 +213,10 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	public Packet getNextPacketDecreasedSize() {
 		Packet packet = packetsDecreasedSize.get(nextPacketDecreasedSize);
 		nextPacketDecreasedSize++;
+		System.out.println("next small packet = " + nextPacketDecreasedSize);
 		if (nextPacketDecreasedSize == packetsDecreasedSize.size()) {
 			dataUploader.setIsSendingPacketsAfterDecreasingSize(false);
+			System.out.println("Back to false");
 		}
 		return packet;
 	}
