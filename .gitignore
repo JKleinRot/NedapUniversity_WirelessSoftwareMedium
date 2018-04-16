@@ -8,3 +8,5 @@
 .classpath
 */.DS_Store
 */main/.DS_Store
+*.mp4
+*.zip

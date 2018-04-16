@@ -54,7 +54,14 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		ClientUploader dataUploader = new ClientUploaderImpl(client, this, downloadNumber);
 		uploadNumber++;
 		uploaders.add(dataUploader);
-		dataUploader.upload(fileName, fileDirectory, newDirectory, newFileName);
+		
+		final Thread uploadThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				dataUploader.upload(fileName, fileDirectory, newDirectory, newFileName);
+			}
+		});
+		uploadThread.start();
 	}
 	
 	@Override

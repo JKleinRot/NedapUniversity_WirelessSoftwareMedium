@@ -55,14 +55,14 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	public String getStatistics() {
 		String statistics;
 		if (endTime == null) {
-			int duration = (int) Duration.between(startTime, endTime).getSeconds();
+			int duration = (int) Duration.between(startTime, LocalDateTime.now()).getSeconds();
 			int speed;
 			if (duration != 0) { 
 				speed = bytesSend / duration;
 			} else {
 				speed = bytesSend;
 			}
-			int percentageComplete = (bytesSend / totalBytes) * 100;
+			int percentageComplete = (bytesSend * 100) / totalBytes;
 			if (duration != 0) {
 				statistics = bytesSend + " of " + totalBytes + " bytes are send in " + duration + "\n"
 						+ "The average upload speed is " + speed + " bytes/second\n" + retransmissionCount + " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
