@@ -28,8 +28,8 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	/** The process manager */
 	private ProcessManager processManager;
 
-	/** The download number */
-	private int downloadNumber;
+	/** The upload number */
+	private int uploadNumber;
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
@@ -55,10 +55,12 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 *            The client
 	 * @param processManager
 	 *            The process manager
+	 *            @param uploadNumber
+	 *            The upload number
 	 */
-	public ClientUploaderImpl(Client client, ProcessManager processManager, int downloadNumber) {
+	public ClientUploaderImpl(Client client, ProcessManager processManager, int uploadNumber) {
 		this.client = client;
-		this.downloadNumber = downloadNumber;
+		this.uploadNumber = uploadNumber;
 		this.processManager = processManager;
 	}
 
@@ -79,7 +81,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 * @param fileName
 	 */
 	private void createFileDisassembler(String fileName) {
-		fileDisassembler = new ClientFileDisassemblerImpl(fileName, this, downloadNumber);
+		fileDisassembler = new ClientFileDisassemblerImpl(fileName, this, uploadNumber);
 	}
 
 	/**
@@ -92,8 +94,8 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 */
 	private void sendUploadCharacteristicsPacket(String newDirectory, String newFileName) {
 		Header header = new HeaderImpl(requestSequenceNumber, 0, Flags.UPLOAD, Types.UPLOADCHARACTERISTICS,
-				downloadNumber);
-		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber)
+				uploadNumber);
+		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + uploadNumber)
 				.getBytes();
 		Packet packet = new PacketImpl(header, data);
 		client.sendOnePacket(packet, this);
@@ -120,7 +122,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 * Sends the data integrity packet to the server.
 	 */
 	private void sendDataIntegrityPacket() {
-		Header header = new HeaderImpl(finalNumber, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
+		Header header = new HeaderImpl(finalNumber, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, uploadNumber);
 		byte[] data = ("DataSize " + fileDisassembler.getTotalDataSize()).getBytes();
 		Packet packet = new PacketImpl(header, data);
 		client.sendOnePacket(packet, this);
@@ -128,7 +130,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 
 	@Override
 	public void notifyProcessManagerFileNotFound() {
-		processManager.fileNotFound();
+		processManager.fileNotFound(this);
 	}
 
 	/**
@@ -171,6 +173,11 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		builder.append(characteristics);
 		builder.append(clientStatistics.getStatistics());
 		return builder.toString();
+	}
+
+	@Override
+	public Object getUploadNumber() {
+		return uploadNumber;
 	}
 
 }

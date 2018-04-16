@@ -1,5 +1,6 @@
 package filedisassembler;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,6 +65,9 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	/** The maximum packet size */
 	private static final int maximalPacketSize = 32768;
 	
+	/** The data size found by using File.length */
+	private int fileLengthKnownBeforeSending;
+	
 	/**
 	 * -----Constructor-----
 	 * 
@@ -79,6 +83,8 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		firstSequenceNumber = 100;
 		totalDataSize = 0;
 		nextPacketDecreasedSize = 0;
+		File file = new File(fileName);
+		fileLengthKnownBeforeSending = (int) file.length();
 		setDataSize();
 		createFileInputStream(fileName);
 	}
@@ -219,6 +225,11 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 			System.out.println("Back to false");
 		}
 		return packet;
+	}
+
+	@Override
+	public int getDataSizeBeforeSending() {
+		return fileLengthKnownBeforeSending;
 	}
 	
 	

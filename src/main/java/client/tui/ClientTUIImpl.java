@@ -190,7 +190,7 @@ public class ClientTUIImpl implements ClientTUI {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg.equals("File not found")) {
-			System.out.println("This file is not found. Please enter another file name");
+			System.out.println("This file is not found. Please try to download or upload another file");
 		} else if (((String) arg).contains("uploaded to the server")) {
 			System.out.println(arg); 
 		} else if (((String) arg).contains("downloaded from the server")) {

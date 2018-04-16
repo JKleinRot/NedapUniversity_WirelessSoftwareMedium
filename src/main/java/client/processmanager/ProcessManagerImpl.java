@@ -1,7 +1,9 @@
 package client.processmanager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 
 import client.Client;
@@ -16,16 +18,22 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	private Client client;
 
 	/** The download number */
-	private int downloadNumber;
+	private int numberOfDownloaders;
 	
 	/** The upload number */
-	private int uploadNumber;
+	private int numberOfUploaders;
 	
 	/** The uploaders */
 	private List<ClientUploader> uploaders;
 	
+	/** The upload threads */
+	private Map<Integer, Thread> uploadThreads;
+	
 	/** The downloaders */
 	private List<ClientDownloader> downloaders;
+	
+	/** The download threads */
+	private Map<Integer, Thread> downloadThreads;
 
 	/**
 	 * -----Constructor-----
@@ -43,44 +51,60 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	 */
 	public ProcessManagerImpl(Client client) {
 		this.client = client;
-		downloadNumber = 1;
-		uploadNumber = 1;
+		numberOfDownloaders = 1;
+		numberOfUploaders = 1;
 		uploaders = new ArrayList<>();
+		uploadThreads = new HashMap<>();
 		downloaders = new ArrayList<>();
+		downloadThreads = new HashMap<>();
 	}
 
 	@Override
 	public void handleUploadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName) {
-		ClientUploader dataUploader = new ClientUploaderImpl(client, this, downloadNumber);
-		uploadNumber++;
+		ClientUploader dataUploader = new ClientUploaderImpl(client, this, numberOfUploaders);
 		uploaders.add(dataUploader);
-		
 		final Thread uploadThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				dataUploader.upload(fileName, fileDirectory, newDirectory, newFileName);
 			}
 		});
+		uploadThreads.put(numberOfUploaders, uploadThread);
+		numberOfUploaders++;
 		uploadThread.start();
 	}
 	
 	@Override
 	public void handleDownloadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName) {
-		ClientDownloader dataDownloader = new ClientDownloaderImpl(client, this, downloadNumber);
-		downloadNumber++;
+		ClientDownloader dataDownloader = new ClientDownloaderImpl(client, this, numberOfDownloaders);
 		downloaders.add(dataDownloader);
-		
 		final Thread downloadThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				dataDownloader.download(fileName, fileDirectory, newDirectory, newFileName);
 			}
 		});
+		downloadThreads.put(numberOfDownloaders, downloadThread);
+		numberOfDownloaders++;
 		downloadThread.start();
 	}
  
 	@Override
-	public void fileNotFound() {
+	public void fileNotFound(ClientDownloader downloader) {
+		Thread downloadThread = downloadThreads.get(downloader.getDownloadNumber());
+		downloadThread.interrupt();
+		downloaders.remove(downloader);
+		downloadThreads.remove(downloader.getDownloadNumber());
+		setChanged();
+		notifyObservers("File not found");
+	}
+	
+	@Override
+	public void fileNotFound(ClientUploader uploader) {
+		Thread uploadThread = uploadThreads.get(uploader.getUploadNumber());
+		uploadThread.interrupt();
+		uploaders.remove(uploader);
+		uploadThreads.remove(uploader.getUploadNumber());
 		setChanged();
 		notifyObservers("File not found");
 	}

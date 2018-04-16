@@ -22,7 +22,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The client */
 	private Client client;
-	
+
 	/** The process manager */
 	private ProcessManager processManager;
 
@@ -34,6 +34,9 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
+	
+	/** The first data request sequence number */
+	private static final int firstDataAcknowledgementNumber = 99;
 
 	/** The length of the header */
 	private static final int headerLength = 20;
@@ -52,16 +55,16 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The download number offset in the header */
 	private static final int downloadNumberOffset = 16;
-	
+
 	/** The next sequence number expected */
 	private int nextSequenceNumberExpected;
 
 	/** The client statistics */
 	private ClientStatistics clientStatistics;
-	
+
 	/** The string representation of the uploader */
 	private String characteristics;
-	
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -83,22 +86,35 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	@Override
 	public void download(String fileName, String fileDirectory, String newDirectory, String newFileName) {
-		characteristics = "Download " + fileName + " from " + fileDirectory + " to " + newDirectory + " as " + newFileName + "\n";
+		characteristics = "Download " + fileName + " from " + fileDirectory + " to " + newDirectory + " as "
+				+ newFileName + "\n";
 		createFileAssembler(newFileName, newDirectory);
 		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
-		Packet packet = sendDownloadCharacteristicsPacket(fileDirectory, fileName);
+		Packet ackDownloadCharacteristics = sendDownloadCharacteristicsPacket(fileDirectory, fileName);
+		if (new String(ackDownloadCharacteristics.getData()).equals("File not found")) {
+			notifyProcessManagerFileNotFound();
+			return;
+		} else {
+			clientStatistics.setTotalDataSize(ackDownloadCharacteristics.getData());
+		}
+		Packet packet = sendAckToDownloadCharacteristics();
 		clientStatistics.setStartTime(LocalDateTime.now());
-		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY) && packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
+		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)
+				&& packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
 			nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
 			clientStatistics.updatePartSend(packet.getData().length);
-//			System.out.println("Send another packet");
-//			System.out.println("Received packet size = " + packet.getLength());
-//			System.out.println("Sequence number received = " + packet.getHeader().getSequenceNumber());
+			// System.out.println("Send another packet");
+			// System.out.println("Received packet size = " + packet.getLength());
+			// System.out.println("Sequence number received = " +
+			// packet.getHeader().getSequenceNumber());
 			Packet ack = createAck(packet);
-//			System.out.println("ClientDownloader packet send: " + Arrays.toString(ack.getHeader().getBytes()));
-//			System.out.println("Ack number send = " + ack.getHeader().getAcknowledgementNumber());
+			// System.out.println("ClientDownloader packet send: " +
+			// Arrays.toString(ack.getHeader().getBytes()));
+			// System.out.println("Ack number send = " +
+			// ack.getHeader().getAcknowledgementNumber());
 			packet = sendAck(ack);
-//			System.out.println("ClientDownloader packet received: " + Arrays.toString(packet.getHeader().getBytes()));
+			// System.out.println("ClientDownloader packet received: " +
+			// Arrays.toString(packet.getHeader().getBytes()));
 		}
 		clientStatistics.setEndTime(LocalDateTime.now());
 		notifyProcessManagerDownloadComplete(fileName, fileDirectory, newDirectory, newFileName);
@@ -135,8 +151,32 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
+//		fileAssembler.addPacket(receivedPacket);
+		return receivedPacket;
+	}
+
+	/**
+	 * Sends an ack on the received download characteristics to request the first
+	 * data.
+	 * 
+	 * @return the first data
+	 */
+	private Packet sendAckToDownloadCharacteristics() {
+		Header header = new HeaderImpl(0, firstDataAcknowledgementNumber, Flags.DOWNLOAD, Types.ACK, downloadNumber);
+		byte[] data = new byte[0];
+		Packet packet = new PacketImpl(header, data);
+		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet);
+		Packet receivedPacket = recreatePacket(
+				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
 		fileAssembler.addPacket(receivedPacket);
 		return receivedPacket;
+	}
+	
+	/**
+	 * Notifies the process manager that the file is not found.
+	 */
+	private void notifyProcessManagerFileNotFound() {
+		processManager.fileNotFound(this);
 	}
 
 	/**
@@ -260,7 +300,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		fileAssembler.addPacket(receivedPacket);
 		return receivedPacket;
 	}
-	
+
 	/**
 	 * Notifies the process manager that the current download is complete.
 	 * 
@@ -273,7 +313,8 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 * @param newFileName
 	 *            The new file name
 	 */
-	private void notifyProcessManagerDownloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+	private void notifyProcessManagerDownloadComplete(String fileName, String fileDirectory, String newDirectory,
+			String newFileName) {
 		processManager.downloadComplete(fileName, fileDirectory, newDirectory, newFileName);
 	}
 
@@ -288,5 +329,10 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		builder.append(characteristics);
 		builder.append(clientStatistics.getStatistics());
 		return builder.toString();
+	}
+	
+	@Override
+	public int getDownloadNumber() {
+		return downloadNumber;
 	}
 }

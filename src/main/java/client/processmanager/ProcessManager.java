@@ -1,5 +1,8 @@
 package client.processmanager;
 
+import client.downloader.ClientDownloader;
+import client.uploader.ClientUploader;
+
 /**
  * Manages the processes executed in response to inputs by the user.
  * 
@@ -36,9 +39,14 @@ public interface ProcessManager {
 	public void handleDownloadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName);
 
 	/**
-	 * Notifies the client that the file is not found.
+	 * Notifies the client that the file is not found for the uploader.
 	 */
-	public void fileNotFound();
+	public void fileNotFound(ClientUploader uploader);
+	
+	/**
+	 * Notifies the client that the file is not found for the downloader.
+	 */
+	public void fileNotFound(ClientDownloader downloader);
 
 	/**
 	 * Notifies the client that the upload is complete.

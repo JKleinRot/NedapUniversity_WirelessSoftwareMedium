@@ -55,4 +55,12 @@ public interface ServerFileDisassembler {
 	 * @return the next packet
 	 */
 	public Packet getNextPacketDecreasedSize();
+
+	/**
+	 * Returns the data size of the file before sending the file by using
+	 * File.length.
+	 * 
+	 * @return the data size in bytes
+	 */
+	public int getDataSizeBeforeSending();
 }

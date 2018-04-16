@@ -58,4 +58,11 @@ public interface ClientUploader {
 	 * @return the statistics
 	 */
 	public String getStatistics();
+
+	/**
+	 * Returns the upload number.
+	 * 
+	 * @return the upload number
+	 */
+	public Object getUploadNumber();
 }

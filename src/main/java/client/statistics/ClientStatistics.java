@@ -48,4 +48,12 @@ public interface ClientStatistics {
 	 * @return the statistics
 	 */
 	public String getStatistics();
+
+	/**
+	 * Sets the total data size for the client downloader.
+	 * 
+	 * @param packet
+	 *            The received packet
+	 */
+	public void setTotalDataSize(byte[] packet);
 }

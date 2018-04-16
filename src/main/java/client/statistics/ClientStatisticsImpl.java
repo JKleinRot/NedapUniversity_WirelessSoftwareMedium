@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Arrays;
 
 public class ClientStatisticsImpl implements ClientStatistics {
 
@@ -27,7 +28,6 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	public ClientStatisticsImpl(String fileName) {
 		File file = new File(fileName);
 		totalBytes = (int) file.length();
-		System.out.println("Long: " + file.length() + " Int: " + totalBytes);
 		retransmissionCount = 0;
 		bytesSend = 0;
 	}
@@ -89,6 +89,13 @@ public class ClientStatisticsImpl implements ClientStatistics {
 			}
 		}
 		return statistics;
+	}
+
+	@Override
+	public void setTotalDataSize(byte[] packet) {
+		String data = new String(packet);
+		String[] words = data.split(" ");
+		totalBytes = Integer.parseInt(words[1]);
 	}
 
 }
