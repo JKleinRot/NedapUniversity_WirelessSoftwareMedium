@@ -9,8 +9,10 @@ import client.Client;
 import client.processmanager.ProcessManager;
 import client.statistics.ClientStatistics;
 import client.statistics.ClientStatisticsImpl;
-import fileassembler.FileAssembler;
-import fileassembler.FileAssemblerImpl;
+import fileassembler.ClientFileAssembler;
+import fileassembler.ClientFileAssemblerImpl;
+import fileassembler.ServerFileAssembler;
+import fileassembler.ServerFileAssemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
@@ -30,7 +32,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	private int downloadNumber;
 
 	/** The file assembler */
-	private FileAssembler fileAssembler;
+	private ClientFileAssembler fileAssembler;
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
@@ -129,7 +131,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 *            The file directory
 	 */
 	private void createFileAssembler(String fileName, String fileDirectory) {
-		fileAssembler = new FileAssemblerImpl(fileName, fileDirectory, downloadNumber);
+		fileAssembler = new ClientFileAssemblerImpl(fileName, fileDirectory, downloadNumber);
 	}
 
 	/**
@@ -247,6 +249,8 @@ public class ClientDownloaderImpl implements ClientDownloader {
 			types = Types.DATA;
 		} else if (value == 2) {
 			types = Types.FILENAME;
+		} else if (value == 3) {
+			types = Types.FILENOTFOUND;
 		} else if (value == 4) {
 			types = Types.UPLOADCHARACTERISTICS;
 		} else if (value == 8) {

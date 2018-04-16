@@ -185,7 +185,7 @@ public class ClientImpl implements Client {
 				retransmissionCount++;
 				successfulTransmissionCount = 0;
 //				System.out.println("Retransmission count = " + retransmissionCount);
-				sendOnePacket(thePacketToSend, uploader);
+				receivedPacket = sendOnePacket(thePacketToSend, uploader);
 			} else {
 //				System.out.println("Decrease packet size");
 				uploader.decreasePacketSize(thePacketToSend);

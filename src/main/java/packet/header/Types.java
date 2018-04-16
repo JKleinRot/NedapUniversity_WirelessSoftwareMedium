@@ -13,7 +13,13 @@ public enum Types {
 																	new byte[] { 0b00000000, 0b00000000, 0b00000000,
 																			0b01000000 }), LASTACK(
 																					new byte[] { 0b00000000, 0b00000000,
-																							0b00000000, (byte) 0b10000000 });
+																							0b00000000,
+																							(byte) 0b10000000 }), FILENOTFOUND(
+																									new byte[] {
+																											0b00000000,
+																											0b00000000,
+																											0b00000000,
+																											0b00000011 });
 
 	/** The bytes */
 	private byte[] bytes;

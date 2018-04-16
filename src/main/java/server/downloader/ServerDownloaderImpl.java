@@ -3,8 +3,8 @@ package server.downloader;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import fileassembler.FileAssembler;
-import fileassembler.FileAssemblerImpl;
+import fileassembler.ServerFileAssembler;
+import fileassembler.ServerFileAssemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
@@ -15,7 +15,7 @@ import packet.header.Types;
 public class ServerDownloaderImpl implements ServerDownloader {
 
 	/** The file assembler */
-	private FileAssembler fileAssembler;
+	private ServerFileAssembler fileAssembler;
 
 	/** The length of the header */
 	private static final int headerLength = 20;
@@ -35,13 +35,16 @@ public class ServerDownloaderImpl implements ServerDownloader {
 	/** The download number offset in the header */
 	private static final int downloadNumberOffset = 16;
 
+	/** Whether the file is found */
+	private boolean isFileFound;
+
 	/**
 	 * -----Constructor-----
 	 * 
 	 * Creates a server downloader.
 	 */
 	public ServerDownloaderImpl() {
-
+		isFileFound = true;
 	}
 
 	@Override
@@ -49,6 +52,9 @@ public class ServerDownloaderImpl implements ServerDownloader {
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
 		if (receivedPacket.getHeader().getTypes().equals(Types.UPLOADCHARACTERISTICS)) {
 			createFileAssembler(receivedPacket);
+			if (!isFileFound) {
+				return createFileNotFoundPacket(receivedPacket);
+			}
 		} else {
 			fileAssembler.addPacket(receivedPacket);
 		}
@@ -68,15 +74,12 @@ public class ServerDownloaderImpl implements ServerDownloader {
 				.wrap(Arrays.copyOfRange(packet, sequenceNumberOffset, acknowledgementNumberOffset)).getInt();
 		int acknowledgementNumber = ByteBuffer
 				.wrap(Arrays.copyOfRange(packet, acknowledgementNumberOffset, flagsOffset)).getInt();
-		Flags flags = reconstructFlags(
-				ByteBuffer.wrap(Arrays.copyOfRange(packet, flagsOffset, typesOffset)).getInt());
+		Flags flags = reconstructFlags(ByteBuffer.wrap(Arrays.copyOfRange(packet, flagsOffset, typesOffset)).getInt());
 		Types types = reconstructTypes(
 				ByteBuffer.wrap(Arrays.copyOfRange(packet, typesOffset, downloadNumberOffset)).getInt());
-		int downloadNumber = ByteBuffer.wrap(Arrays.copyOfRange(packet, downloadNumberOffset, headerLength))
-				.getInt();
+		int downloadNumber = ByteBuffer.wrap(Arrays.copyOfRange(packet, downloadNumberOffset, headerLength)).getInt();
 		Header header = new HeaderImpl(sequenceNumber, acknowledgementNumber, flags, types, downloadNumber);
-		byte[] data = ByteBuffer.wrap(Arrays.copyOfRange(packet, headerLength, packet.length))
-				.array();
+		byte[] data = ByteBuffer.wrap(Arrays.copyOfRange(packet, headerLength, packet.length)).array();
 		Packet thePacket = new PacketImpl(header, data);
 		return thePacket;
 	}
@@ -155,7 +158,21 @@ public class ServerDownloaderImpl implements ServerDownloader {
 		String fileDirectory = words[1];
 		String fileName = words[3];
 		int downloadNumber = Integer.parseInt(words[5]);
-		fileAssembler = new FileAssemblerImpl(fileName, fileDirectory, downloadNumber);
+		fileAssembler = new ServerFileAssemblerImpl(fileName, fileDirectory, downloadNumber, this);
+	}
+
+	/**
+	 * Creates a file not found packet.
+	 * 
+	 * @param receivedPacket
+	 *            The packet received
+	 * @return the file not found packet
+	 */
+	private Packet createFileNotFoundPacket(Packet receivedPacket) {
+		Header header = new HeaderImpl(0, 0, Flags.UPLOAD, Types.FILENOTFOUND, receivedPacket.getHeader().getDownloadNumber());
+		byte[] data = new byte[0];
+		Packet packet = new PacketImpl(header, data);
+		return packet;
 	}
 
 	/**
@@ -170,6 +187,11 @@ public class ServerDownloaderImpl implements ServerDownloader {
 				packet.getHeader().getDownloadNumber());
 		Packet ack = new PacketImpl(header, new byte[0]);
 		return ack;
+	}
+
+	@Override
+	public void notifyFileNotFound() {
+		isFileFound = false;
 	}
 
 }

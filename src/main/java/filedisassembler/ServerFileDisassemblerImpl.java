@@ -76,7 +76,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	 * @param filename
 	 *            The file name
 	 */
-	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber) {
+	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber, ServerUploader uploader) {
 		this.dataUploader = dataUploader;
 		this.downloadNumber = downloadNumber;
 		this.packetSize = defaultPacketSize;

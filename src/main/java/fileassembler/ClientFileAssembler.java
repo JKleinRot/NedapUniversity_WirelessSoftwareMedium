@@ -8,7 +8,7 @@ import packet.Packet;
  * 
  * @author janine.kleinrot
  */
-public interface FileAssembler {
+public interface ClientFileAssembler {
 
 	/**
 	 * Adds packet to file.

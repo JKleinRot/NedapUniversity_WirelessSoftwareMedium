@@ -7,14 +7,18 @@ import java.io.OutputStream;
 
 import packet.Packet;
 import packet.header.Types;
+import server.downloader.ServerDownloader;
 
-public class FileAssemblerImpl implements FileAssembler {
+public class ServerFileAssemblerImpl implements ServerFileAssembler {
 	
 	/** The file output stream */
 	private OutputStream outputStream;
 	
 	/** The last sequence number */
 	private int lastSequenceNumber;
+	
+	/** The downloader */
+	private ServerDownloader downloader;
 
 	/**
 	 * -----Constructor-----
@@ -28,7 +32,8 @@ public class FileAssemblerImpl implements FileAssembler {
 	 * @param downloadNumber
 	 *            The download number
 	 */
-	public FileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber) {
+	public ServerFileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber, ServerDownloader downloader) {
+		this.downloader = downloader;
 		createFileOutputStream(fileDirectory, fileName);
 		lastSequenceNumber = 0;
 	}
@@ -46,6 +51,7 @@ public class FileAssemblerImpl implements FileAssembler {
 			outputStream = new FileOutputStream(fileDirectory + fileName);
 		} catch (FileNotFoundException e) {
 			System.out.println("ERROR: No such directory");
+			downloader.notifyFileNotFound();
 		}
 	}
 

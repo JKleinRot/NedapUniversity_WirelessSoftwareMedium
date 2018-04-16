@@ -13,8 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import client.uploader.ClientUploader;
-import fileassembler.FileAssembler;
-import fileassembler.FileAssemblerImpl;
+import fileassembler.ServerFileAssembler;
+import fileassembler.ServerFileAssemblerImpl;
 import filedisassembler.ClientFileDisassembler;
 import filedisassembler.ClientFileDisassemblerImpl;
 import packet.Packet;
@@ -32,10 +32,10 @@ import packet.header.Types;
 public class FileAssemblerTest {
 
 	/** The file assembler for the short file */
-	private FileAssembler fileAssembler;
+	private ServerFileAssembler fileAssembler;
 	
 	/** The file assembler for the long file */
-	private FileAssembler fileAssemblerLong;
+	private ServerFileAssembler fileAssemblerLong;
 	
 	/** The new file name of the short file */
 	private String newFileName;
@@ -118,8 +118,8 @@ public class FileAssemblerTest {
 		header = new HeaderImpl(20, 0, Flags.DOWNLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, downloadNumber);
 		byte[] dataLong = ("DataSize " + 2588).getBytes();
 		lastPacketLong = new PacketImpl(header, dataLong);
-		fileAssembler = new FileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
-		fileAssemblerLong = new FileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
+		fileAssembler = new ServerFileAssemblerImpl(newFileName, fileDirectory, downloadNumber);
+		fileAssemblerLong = new ServerFileAssemblerImpl(newFileNameLong, fileDirectory, downloadNumber);
 	}
 	
 	/** 
