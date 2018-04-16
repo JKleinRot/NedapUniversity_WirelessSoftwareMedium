@@ -33,25 +33,31 @@ public class ClientImpl implements Client {
 
 	/** The TUI */
 	private ClientTUI clientTUI;
-	
+
 	/** The timeout duration in milliseconds */
 	private static final int timeoutDuration = 2000;
-	
+
 	/** The retransmission count */
 	private int retransmissionCount;
-	
+
 	/** The successful transmission in one try count */
 	private int successfulTransmissionCount;
-	
+
 	/** The more than enough byte buffer space number */
 	private static final int enoughSpace = 65000;
-	
-	/** The amount of retransmissions needed before the packet size is reset to the minimum packet size */
+
+	/**
+	 * The amount of retransmissions needed before the packet size is reset to the
+	 * minimum packet size
+	 */
 	private static final int decreasePacketSizeThreshold = 5;
-	
-	/** The amount of adjacent successful retransmissions needed before the packet size is increased */
+
+	/**
+	 * The amount of adjacent successful retransmissions needed before the packet
+	 * size is increased
+	 */
 	private static final int increasePacketSizeThreshold = 5;
-	
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -98,26 +104,32 @@ public class ClientImpl implements Client {
 		}
 		return receivedPacket;
 	}
-	
-	@Override 
+
+	@Override
 	public DatagramPacket sendOnePacket(Packet thePacketToSend) {
 		byte[] receivedData = new byte[enoughSpace];
-		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
+		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(),
+				address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.send(packetToSend);
-//			System.out.println("ClientImpl packet send: " + Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
-//			System.out.println("PacketSize = " + thePacketToSend.getLength() + " SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
-//			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-//					+ packetToSend.getAddress());
-//			System.out.println(Arrays.toString(packetToSend.getData()));
+			// System.out.println("ClientImpl packet send: " +
+			// Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
+			// System.out.println("PacketSize = " + thePacketToSend.getLength() + "
+			// SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
+			// System.out.println("Send: " + new String(packetToSend.getData(), 0,
+			// packetToSend.getLength()) + " to "
+			// + packetToSend.getAddress());
+			// System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
-//			System.out.println("ClientImpl packet received: " + Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
-//			System.out.println("Length: " + receivedPacket.getLength());
-//			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
-//					+ " from " + receivedPacket.getAddress());
-//			System.out.println(Arrays.toString(receivedPacket.getData()));
+			// System.out.println("ClientImpl packet received: " +
+			// Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
+			// System.out.println("Length: " + receivedPacket.getLength());
+			// System.out.println("Received: " + new String(receivedPacket.getData(), 0,
+			// receivedPacket.getLength())
+			// + " from " + receivedPacket.getAddress());
+			// System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			receivedPacket = sendOnePacket(thePacketToSend);
@@ -126,27 +138,33 @@ public class ClientImpl implements Client {
 		}
 		return receivedPacket;
 	}
-	
-	@Override 
+
+	@Override
 	public DatagramPacket sendOnePacket(Packet thePacketToSend, ClientDownloader downloader) {
 		byte[] receivedData = new byte[enoughSpace];
-		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
+		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(),
+				address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		int retransmissionCount = 0;
 		try {
 			socket.send(packetToSend);
-//			System.out.println("ClientImpl packet send: " + Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
-//			System.out.println("PacketSize = " + thePacketToSend.getLength() + " SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
-//			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-//					+ packetToSend.getAddress());
-//			System.out.println(Arrays.toString(packetToSend.getData()));
+			// System.out.println("ClientImpl packet send: " +
+			// Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
+			// System.out.println("PacketSize = " + thePacketToSend.getLength() + "
+			// SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
+			// System.out.println("Send: " + new String(packetToSend.getData(), 0,
+			// packetToSend.getLength()) + " to "
+			// + packetToSend.getAddress());
+			// System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
-//			System.out.println("ClientImpl packet received: " + Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
-//			System.out.println("Length: " + receivedPacket.getLength());
-//			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
-//					+ " from " + receivedPacket.getAddress());
-//			System.out.println(Arrays.toString(receivedPacket.getData()));
+			// System.out.println("ClientImpl packet received: " +
+			// Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
+			// System.out.println("Length: " + receivedPacket.getLength());
+			// System.out.println("Received: " + new String(receivedPacket.getData(), 0,
+			// receivedPacket.getLength())
+			// + " from " + receivedPacket.getAddress());
+			// System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			retransmissionCount++;
@@ -157,37 +175,42 @@ public class ClientImpl implements Client {
 		downloader.updateStatistics(retransmissionCount);
 		return receivedPacket;
 	}
-	
+
 	@Override
-	public DatagramPacket sendOnePacket(Packet thePacketToSend, ClientUploader uploader ) {
+	public DatagramPacket sendOnePacket(Packet thePacketToSend, ClientUploader uploader) {
 		byte[] receivedData = new byte[enoughSpace];
-		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(), address, portNumber);
+		DatagramPacket packetToSend = new DatagramPacket(thePacketToSend.getBytes(), thePacketToSend.getLength(),
+				address, portNumber);
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.send(packetToSend);
-//			System.out.println("PacketSize = " + thePacketToSend.getLength() + " SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
-//			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-//					+ packetToSend.getAddress());
-//			System.out.println(Arrays.toString(packetToSend.getData()));
+			// System.out.println("PacketSize = " + thePacketToSend.getLength() + "
+			// SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
+			// System.out.println("Send: " + new String(packetToSend.getData(), 0,
+			// packetToSend.getLength()) + " to "
+			// + packetToSend.getAddress());
+			// System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 			if (retransmissionCount == 0) {
 				successfulTransmissionCount++;
-//				System.out.println("Successful transmission count = " + successfulTransmissionCount);
+				// System.out.println("Successful transmission count = " +
+				// successfulTransmissionCount);
 			}
-//			System.out.println("Length: " + receivedPacket.getLength());
-//			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
-//					+ " from " + receivedPacket.getAddress());
-//			System.out.println(Arrays.toString(receivedPacket.getData()));
+			// System.out.println("Length: " + receivedPacket.getLength());
+			// System.out.println("Received: " + new String(receivedPacket.getData(), 0,
+			// receivedPacket.getLength())
+			// + " from " + receivedPacket.getAddress());
+			// System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			if (retransmissionCount < decreasePacketSizeThreshold) {
 				retransmissionCount++;
 				successfulTransmissionCount = 0;
-//				System.out.println("Retransmission count = " + retransmissionCount);
+				// System.out.println("Retransmission count = " + retransmissionCount);
 				receivedPacket = sendOnePacket(thePacketToSend, uploader);
 			} else {
-//				System.out.println("Decrease packet size");
+				// System.out.println("Decrease packet size");
 				uploader.decreasePacketSize(thePacketToSend);
 			}
 		} catch (IOException e) {
@@ -197,7 +220,8 @@ public class ClientImpl implements Client {
 		retransmissionCount = 0;
 		if (successfulTransmissionCount >= increasePacketSizeThreshold) {
 			uploader.increasePacketSize();
-//			System.out.println("Increase packet size. Successful transmission count = " + successfulTransmissionCount);
+			// System.out.println("Increase packet size. Successful transmission count = " +
+			// successfulTransmissionCount);
 			successfulTransmissionCount = 0;
 		}
 		return receivedPacket;

@@ -31,7 +31,7 @@ public interface Client {
 	 * @return the packet received
 	 */
 	public DatagramPacket sendOnePacket(Packet packetToSend);
-	
+
 	/**
 	 * Sends one packet and returns the response received. Is able to tell the
 	 * downloader the amount of retransmissions needed.

@@ -15,8 +15,8 @@ public interface ServerDownloader {
 	 * @returns the packet to send
 	 */
 	public Packet processPacket(byte[] packet, int length);
-	
-	/** 
+
+	/**
 	 * Notifies the client that the file is not found.
 	 */
 	public void notifyFileNotFound();

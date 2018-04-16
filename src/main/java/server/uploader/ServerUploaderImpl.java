@@ -257,15 +257,16 @@ public class ServerUploaderImpl implements ServerUploader {
 	 * @return the packet to send
 	 */
 	private Packet createDownloadCharacteristicsAck(Packet receivedPacket) {
-		 Header header = new HeaderImpl(0, receivedPacket.getHeader().getSequenceNumber(), Flags.DOWNLOAD, Types.ACK, downloadNumber);
-		 byte[] data;
-		 if (isFileFound) {
-			 data = ("DataSize " + fileDisassembler.getDataSizeBeforeSending()).getBytes();
-		 } else {
-			 data = ("File not found").getBytes();
-		 }
-		 Packet packet = new PacketImpl(header, data);
-		 return packet;
+		Header header = new HeaderImpl(0, receivedPacket.getHeader().getSequenceNumber(), Flags.DOWNLOAD, Types.ACK,
+				downloadNumber);
+		byte[] data;
+		if (isFileFound) {
+			data = ("DataSize " + fileDisassembler.getDataSizeBeforeSending()).getBytes();
+		} else {
+			data = ("File not found").getBytes();
+		}
+		Packet packet = new PacketImpl(header, data);
+		return packet;
 	}
 
 	/**

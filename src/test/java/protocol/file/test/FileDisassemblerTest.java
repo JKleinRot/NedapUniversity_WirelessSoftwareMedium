@@ -7,9 +7,6 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import client.uploader.ClientUploader;
-import filedisassembler.ClientFileDisassembler;
-import filedisassembler.ClientFileDisassemblerImpl;
 import filedisassembler.ServerFileDisassembler;
 import filedisassembler.ServerFileDisassemblerImpl;
 import packet.Packet;
@@ -47,8 +44,9 @@ public class FileDisassemblerTest {
 		mocks = new EasyMockSupport();
 		dataUploader = mocks.createMock(ServerUploader.class);
 		downloadNumber = 1;
-		fileDisassembler = new ServerFileDisassemblerImpl("Test.txt", dataUploader, downloadNumber);
-		fileDisassemblerLong = new ServerFileDisassemblerImpl("TestLong.txt", dataUploader, downloadNumber);
+		fileDisassembler = new ServerFileDisassemblerImpl("Test.txt", dataUploader, downloadNumber, dataUploader);
+		fileDisassemblerLong = new ServerFileDisassemblerImpl("TestLong.txt", dataUploader, downloadNumber,
+				dataUploader);
 	}
 
 	/**
@@ -155,7 +153,7 @@ public class FileDisassemblerTest {
 		assertEquals(expectedFlagsThirdPacket, thirdPacket.getHeader().getFlags());
 		assertEquals(expectedTypes, thirdPacket.getHeader().getTypes());
 		assertEquals(expectedDownloadNumber, thirdPacket.getHeader().getDownloadNumber());
-		
+
 		assertEquals(expectedTotalDataSize, fileDisassemblerLong.getTotalDataSize());
 	}
 }

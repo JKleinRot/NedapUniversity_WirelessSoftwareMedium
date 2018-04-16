@@ -11,10 +11,10 @@ public class PacketImpl implements Packet {
 
 	/** The data */
 	private byte[] data;
-	
+
 	/** The header position */
 	private static final int headerPosition = 0;
-	
+
 	/** The data position */
 	private static final int dataPosition = 20;
 
@@ -40,12 +40,12 @@ public class PacketImpl implements Packet {
 	public byte[] getData() {
 		return data;
 	}
-	
+
 	@Override
 	public int getLength() {
 		return header.getLength() + data.length;
 	}
-	
+
 	@Override
 	public byte[] getBytes() {
 		ByteBuffer buffer = ByteBuffer.allocate(getLength());

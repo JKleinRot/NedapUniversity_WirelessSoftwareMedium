@@ -12,8 +12,6 @@ import client.statistics.ClientStatistics;
 import client.statistics.ClientStatisticsImpl;
 import fileassembler.ClientFileAssembler;
 import fileassembler.ClientFileAssemblerImpl;
-import fileassembler.ServerFileAssembler;
-import fileassembler.ServerFileAssemblerImpl;
 import packet.Packet;
 import packet.PacketImpl;
 import packet.header.Flags;
@@ -37,7 +35,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
-	
+
 	/** The first data request sequence number */
 	private static final int firstDataAcknowledgementNumber = 99;
 
@@ -67,7 +65,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	/** The string representation of the uploader */
 	private String characteristics;
-	
+
 	/** Whether the file is found */
 	private boolean isFileFound;
 
@@ -164,7 +162,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
-//		fileAssembler.addPacket(receivedPacket);
+		// fileAssembler.addPacket(receivedPacket);
 		return receivedPacket;
 	}
 
@@ -184,7 +182,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		fileAssembler.addPacket(receivedPacket);
 		return receivedPacket;
 	}
-	
+
 	/**
 	 * Notifies the process manager that the file is not found.
 	 */
@@ -345,7 +343,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		builder.append(clientStatistics.getStatistics());
 		return builder.toString();
 	}
-	
+
 	@Override
 	public int getDownloadNumber() {
 		return downloadNumber;

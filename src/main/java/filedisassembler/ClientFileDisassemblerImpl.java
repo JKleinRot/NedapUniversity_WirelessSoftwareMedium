@@ -38,10 +38,10 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 
 	/** The default packet size */
 	private static final int defaultPacketSize = 1024;
-	
+
 	/** The minimum packet size */
 	private static final int minimalPacketSize = 64;
-	
+
 	/** The maximum packet size */
 	private static final int maximalPacketSize = 32768;
 
@@ -53,7 +53,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 
 	/** The first sequence number */
 	private int firstSequenceNumber;
-	
+
 	/** The total data size */
 	private int totalDataSize;
 
@@ -81,7 +81,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	private void setDataSize() {
 		dataSize = packetSize - headerSize;
 	}
-	
+
 	/**
 	 * Creates the buffered reader for the file.
 	 * 
@@ -95,7 +95,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 			notifyDataUploaderFileNotFound();
 		}
 	}
-	
+
 	/**
 	 * Notifies the data uploader that the file is not found.
 	 */
@@ -149,20 +149,22 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		} else if (previousPacket == null && data.length != dataSize) {
 			header = new HeaderImpl(firstSequenceNumber, 0, Flags.UPLOAD_LAST, Types.DATA, downloadNumber);
 		} else if (previousPacket != null && data.length == dataSize) {
-			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_MORETOCOME, Types.DATA, downloadNumber);
+			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_MORETOCOME,
+					Types.DATA, downloadNumber);
 		} else if (previousPacket != null && data.length != dataSize) {
-			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_LAST, Types.DATA, downloadNumber);
+			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_LAST,
+					Types.DATA, downloadNumber);
 		} else {
 			header = new HeaderImpl(0, 0, Flags.UNDEFINED, Types.UNDEFINED, 0);
 		}
 		return header;
 	}
-	
+
 	@Override
 	public int getTotalDataSize() {
 		return totalDataSize;
 	}
-	
+
 	@Override
 	public List<Packet> decreasePacketSize(Packet packet) {
 		List<Packet> packets = new ArrayList<>();
@@ -170,7 +172,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		setDataSize();
 		byte[] data = packet.getData();
 		for (int i = 0; i < data.length / dataSize; i++) {
-			byte[] dataPart = Arrays.copyOfRange(data, i*dataSize, (i+1)*dataSize);
+			byte[] dataPart = Arrays.copyOfRange(data, i * dataSize, (i + 1) * dataSize);
 			Header header = getNextHeader(dataPart);
 			Packet packetPart = new PacketImpl(header, dataPart);
 			packets.add(packetPart);
@@ -178,7 +180,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		}
 		return packets;
 	}
-	
+
 	@Override
 	public void increasePacketSize() {
 		if (packetSize < defaultPacketSize) {
@@ -187,7 +189,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 			packetSize = maximalPacketSize;
 		} else {
 			packetSize = (int) (packetSize * 1.5);
-		} 
+		}
 		setDataSize();
 	}
 }

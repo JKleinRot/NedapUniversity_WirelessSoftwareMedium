@@ -19,7 +19,12 @@ public enum Flags {
 																											0b00000000,
 																											0b00000000,
 																											0b00000010,
-																											0b00000010 }), DOWNLOAD_DATAINTEGRITY(new byte[] { 0b00000000, 0b00000000, 0b00000100, 0b00000010 });
+																											0b00000010 }), DOWNLOAD_DATAINTEGRITY(
+																													new byte[] {
+																															0b00000000,
+																															0b00000000,
+																															0b00000100,
+																															0b00000010 });
 
 	/** The bytes */
 	private byte[] bytes;

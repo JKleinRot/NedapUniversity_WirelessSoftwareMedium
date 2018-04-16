@@ -10,13 +10,13 @@ import packet.header.Types;
 import server.downloader.ServerDownloader;
 
 public class ServerFileAssemblerImpl implements ServerFileAssembler {
-	
+
 	/** The file output stream */
 	private OutputStream outputStream;
-	
+
 	/** The last sequence number */
 	private int lastSequenceNumber;
-	
+
 	/** The downloader */
 	private ServerDownloader downloader;
 
@@ -32,7 +32,8 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 	 * @param downloadNumber
 	 *            The download number
 	 */
-	public ServerFileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber, ServerDownloader downloader) {
+	public ServerFileAssemblerImpl(String fileName, String fileDirectory, int downloadNumber,
+			ServerDownloader downloader) {
 		this.downloader = downloader;
 		createFileOutputStream(fileDirectory, fileName);
 		lastSequenceNumber = 0;
@@ -80,6 +81,6 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 	 *            The data integrity packet
 	 */
 	private void checkForDataIntegrity(Packet packet) {
-		
+
 	}
 }

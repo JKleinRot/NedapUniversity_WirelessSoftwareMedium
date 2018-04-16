@@ -1,7 +1,5 @@
 package filedisassembler;
 
-import java.util.List;
-
 import packet.Packet;
 
 /**

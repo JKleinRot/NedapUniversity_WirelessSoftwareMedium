@@ -19,19 +19,19 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 
 	/** The download number */
 	private int numberOfDownloaders;
-	
+
 	/** The upload number */
 	private int numberOfUploaders;
-	
+
 	/** The uploaders */
 	private List<ClientUploader> uploaders;
-	
+
 	/** The upload threads */
 	private Map<Integer, Thread> uploadThreads;
-	
+
 	/** The downloaders */
 	private List<ClientDownloader> downloaders;
-	
+
 	/** The download threads */
 	private Map<Integer, Thread> downloadThreads;
 
@@ -73,7 +73,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		numberOfUploaders++;
 		uploadThread.start();
 	}
-	
+
 	@Override
 	public void handleDownloadRequest(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		ClientDownloader dataDownloader = new ClientDownloaderImpl(client, this, numberOfDownloaders);
@@ -88,7 +88,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		numberOfDownloaders++;
 		downloadThread.start();
 	}
- 
+
 	@Override
 	public void fileNotFound(ClientDownloader downloader) {
 		Thread downloadThread = downloadThreads.get(downloader.getDownloadNumber());
@@ -98,11 +98,9 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		setChanged();
 		notifyObservers("File not found");
 	}
-	
+
 	@Override
 	public void fileNotFound(ClientUploader uploader) {
-		Thread uploadThread = uploadThreads.get(uploader.getUploadNumber());
-//		uploadThread.interrupt();
 		uploaders.remove(uploader);
 		uploadThreads.remove(uploader.getUploadNumber());
 		setChanged();
@@ -112,13 +110,15 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	@Override
 	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		setChanged();
-		notifyObservers("The file " + fileName + " from " + fileDirectory + " is uploaded to the server into " + newDirectory + " as " + newFileName);
+		notifyObservers("The file " + fileName + " from " + fileDirectory + " is uploaded to the server into "
+				+ newDirectory + " as " + newFileName);
 	}
 
 	@Override
 	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		setChanged();
-		notifyObservers("The file " + fileName + " from " + fileDirectory + " is downloaded from the server into " + newDirectory + " as " + newFileName);
+		notifyObservers("The file " + fileName + " from " + fileDirectory + " is downloaded from the server into "
+				+ newDirectory + " as " + newFileName);
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public interface ProcessManager {
 	 * Notifies the client that the file is not found for the uploader.
 	 */
 	public void fileNotFound(ClientUploader uploader);
-	
+
 	/**
 	 * Notifies the client that the file is not found for the downloader.
 	 */

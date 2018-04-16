@@ -52,22 +52,22 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 
 	/** The total data size */
 	private int totalDataSize;
-	
+
 	/** The list of packets after decreasing the packet size */
 	private List<Packet> packetsDecreasedSize;
-	
+
 	/** The next packet of decreased size to send */
 	private int nextPacketDecreasedSize;
 
 	/** The minimum packet size */
 	private static final int minimalPacketSize = 64;
-	
+
 	/** The maximum packet size */
 	private static final int maximalPacketSize = 32768;
-	
+
 	/** The data size found by using File.length */
 	private int fileLengthKnownBeforeSending;
-	
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -76,7 +76,8 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	 * @param filename
 	 *            The file name
 	 */
-	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber, ServerUploader uploader) {
+	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber,
+			ServerUploader uploader) {
 		this.dataUploader = dataUploader;
 		this.downloadNumber = downloadNumber;
 		this.packetSize = defaultPacketSize;
@@ -173,7 +174,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		}
 		return header;
 	}
-	
+
 	@Override
 	public Packet getCurrentPacket() {
 		return currentPacket;
@@ -194,7 +195,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		System.out.println("Data length = " + packet.getData().length);
 		byte[] data = packet.getData();
 		for (int i = 0; i < data.length / dataSize; i++) {
-			byte[] dataPart = Arrays.copyOfRange(data, i*dataSize, (i+1)*dataSize);
+			byte[] dataPart = Arrays.copyOfRange(data, i * dataSize, (i + 1) * dataSize);
 			Header header = getNextHeader(dataPart);
 			Packet packetPart = new PacketImpl(header, dataPart);
 			packetsDecreasedSize.add(packetPart);
@@ -211,7 +212,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 			packetSize = maximalPacketSize;
 		} else {
 			packetSize = (int) (packetSize * 1.5);
-		} 
+		}
 		setDataSize();
 	}
 
@@ -231,6 +232,5 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	public int getDataSizeBeforeSending() {
 		return fileLengthKnownBeforeSending;
 	}
-	
-	
+
 }

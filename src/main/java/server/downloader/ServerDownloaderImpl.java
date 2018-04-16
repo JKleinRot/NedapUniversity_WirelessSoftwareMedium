@@ -169,7 +169,8 @@ public class ServerDownloaderImpl implements ServerDownloader {
 	 * @return the file not found packet
 	 */
 	private Packet createFileNotFoundPacket(Packet receivedPacket) {
-		Header header = new HeaderImpl(0, 0, Flags.UPLOAD, Types.FILENOTFOUND, receivedPacket.getHeader().getDownloadNumber());
+		Header header = new HeaderImpl(0, 0, Flags.UPLOAD, Types.FILENOTFOUND,
+				receivedPacket.getHeader().getDownloadNumber());
 		byte[] data = new byte[0];
 		Packet packet = new PacketImpl(header, data);
 		return packet;

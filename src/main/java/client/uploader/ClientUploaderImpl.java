@@ -42,16 +42,16 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 
 	/** The previous send packet */
 	private Packet previousPacket;
-	
+
 	/** The client statistics */
 	private ClientStatistics clientStatistics;
-	
+
 	/** The string representation of the uploader */
 	private String characteristics;
 
 	/** Whether the file is found */
 	private boolean isFileFound;
-	
+
 	/** The length of the header */
 	private static final int headerLength = 20;
 
@@ -79,7 +79,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 *            The client
 	 * @param processManager
 	 *            The process manager
-	 *            @param uploadNumber
+	 * @param uploadNumber
 	 *            The upload number
 	 */
 	public ClientUploaderImpl(Client client, ProcessManager processManager, int uploadNumber) {
@@ -91,11 +91,12 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 
 	@Override
 	public void upload(String fileName, String fileDirectory, String newDirectory, String newFileName) {
-		characteristics = "Upload " + fileName + " from " + fileDirectory + " to " + newDirectory + " as " + newFileName + "\n";
+		characteristics = "Upload " + fileName + " from " + fileDirectory + " to " + newDirectory + " as " + newFileName
+				+ "\n";
 		createFileDisassembler(fileDirectory + fileName);
 		if (!isFileFound) {
 			System.out.println("Upload file does not exist");
-//			notifyProcessManagerFileNotFound();
+			// notifyProcessManagerFileNotFound();
 			return;
 		}
 		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
@@ -118,7 +119,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private void createFileDisassembler(String fileName) {
 		fileDisassembler = new ClientFileDisassemblerImpl(fileName, this, uploadNumber);
 	}
-	
+
 	/**
 	 * Sends the upload characteristics packet to the server.
 	 * 
@@ -139,7 +140,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 			isFileFound = false;
 		}
 	}
-	
+
 	/**
 	 * Recreates the packet with header and data from the byte array.
 	 * 
@@ -271,10 +272,11 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 * @param newFileName
 	 *            The new file name
 	 */
-	private void notifyProcessManagerUploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+	private void notifyProcessManagerUploadComplete(String fileName, String fileDirectory, String newDirectory,
+			String newFileName) {
 		processManager.uploadComplete(fileName, fileDirectory, newDirectory, newFileName);
 	}
-	
+
 	@Override
 	public void decreasePacketSize(Packet packet) {
 		List<Packet> packets = fileDisassembler.decreasePacketSize(packet);
@@ -282,12 +284,12 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 			client.sendOnePacket(packetToSend);
 		}
 	}
-	
+
 	@Override
 	public void increasePacketSize() {
 		fileDisassembler.increasePacketSize();
 	}
-	
+
 	@Override
 	public void updateStatistics(int retransmissionCount) {
 		clientStatistics.updateRetransmissionCount(retransmissionCount);

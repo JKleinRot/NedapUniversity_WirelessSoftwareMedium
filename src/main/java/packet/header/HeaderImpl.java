@@ -18,7 +18,7 @@ public class HeaderImpl implements Header {
 
 	/** The download number */
 	private int downloadNumber;
-	
+
 	/** The length of the header */
 	private static final int headerLength = 20;
 
@@ -106,7 +106,7 @@ public class HeaderImpl implements Header {
 	public int getDownloadNumber() {
 		return downloadNumber;
 	}
-	
+
 	@Override
 	public int getLength() {
 		return headerLength;
