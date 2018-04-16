@@ -117,7 +117,7 @@ public class ServerImpl implements Server {
 		Packet thePacketToSend = dataDownloaders
 				.get(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt())
 				.processPacket(receivedPacket.getData(), receivedPacket.getLength());
-		System.out.println("Upload");
+//		System.out.println("Upload");
 		dataToSend = new byte[thePacketToSend.getLength()];
 		dataToSend = thePacketToSend.getBytes();
 		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
@@ -145,7 +145,7 @@ public class ServerImpl implements Server {
 		dataToSend = thePacketToSend.getBytes();
 		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
 				receivedPacket.getPort());
-		System.out.println("ServerImpl packet send: " + Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
+//		System.out.println("ServerImpl packet send: " + Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
 		socket.send(packetToSend);
 	}
 

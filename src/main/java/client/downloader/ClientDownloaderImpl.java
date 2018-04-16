@@ -2,10 +2,13 @@ package client.downloader;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import client.Client;
 import client.processmanager.ProcessManager;
+import client.statistics.ClientStatistics;
+import client.statistics.ClientStatisticsImpl;
 import fileassembler.FileAssembler;
 import fileassembler.FileAssemblerImpl;
 import packet.Packet;
@@ -53,6 +56,12 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	/** The next sequence number expected */
 	private int nextSequenceNumberExpected;
 
+	/** The client statistics */
+	private ClientStatistics clientStatistics;
+	
+	/** The string representation of the uploader */
+	private String characteristics;
+	
 	/**
 	 * -----Constructor-----
 	 * 
@@ -74,20 +83,24 @@ public class ClientDownloaderImpl implements ClientDownloader {
 
 	@Override
 	public void download(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+		characteristics = "Download " + fileName + " from " + fileDirectory + " to " + newDirectory + " as " + newFileName + "\n";
 		createFileAssembler(newFileName, newDirectory);
+		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
 		Packet packet = sendDownloadCharacteristicsPacket(fileDirectory, fileName);
-//		System.out.println("ClientDownloader" + Arrays.toString(packet.getBytes()));
+		clientStatistics.setStartTime(LocalDateTime.now());
 		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY) && packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
 			nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
-			System.out.println("Send another packet");
-			System.out.println("Received packet size = " + packet.getLength());
-			System.out.println("Sequence number received = " + packet.getHeader().getSequenceNumber());
+			clientStatistics.updatePartSend(packet.getData().length);
+//			System.out.println("Send another packet");
+//			System.out.println("Received packet size = " + packet.getLength());
+//			System.out.println("Sequence number received = " + packet.getHeader().getSequenceNumber());
 			Packet ack = createAck(packet);
-			System.out.println("ClientDownloader packet send: " + Arrays.toString(ack.getHeader().getBytes()));
-			System.out.println("Ack number send = " + ack.getHeader().getAcknowledgementNumber());
+//			System.out.println("ClientDownloader packet send: " + Arrays.toString(ack.getHeader().getBytes()));
+//			System.out.println("Ack number send = " + ack.getHeader().getAcknowledgementNumber());
 			packet = sendAck(ack);
-			System.out.println("ClientDownloader packet received: " + Arrays.toString(packet.getHeader().getBytes()));
+//			System.out.println("ClientDownloader packet received: " + Arrays.toString(packet.getHeader().getBytes()));
 		}
+		clientStatistics.setEndTime(LocalDateTime.now());
 		notifyProcessManagerDownloadComplete(fileName, fileDirectory, newDirectory, newFileName);
 	}
 
@@ -241,7 +254,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 * @return the received packet
 	 */
 	private Packet sendAck(Packet ack) {
-		DatagramPacket receivedPacketDatagram = client.sendOnePacket(ack);
+		DatagramPacket receivedPacketDatagram = client.sendOnePacket(ack, this);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedPacketDatagram.getData(), 0, receivedPacketDatagram.getLength()));
 		fileAssembler.addPacket(receivedPacket);
@@ -262,5 +275,18 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 */
 	private void notifyProcessManagerDownloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		processManager.downloadComplete(fileName, fileDirectory, newDirectory, newFileName);
+	}
+
+	@Override
+	public void updateStatistics(int retransmissionCount) {
+		clientStatistics.updateRetransmissionCount(retransmissionCount);
+	}
+
+	@Override
+	public String getStatistics() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(characteristics);
+		builder.append(clientStatistics.getStatistics());
+		return builder.toString();
 	}
 }

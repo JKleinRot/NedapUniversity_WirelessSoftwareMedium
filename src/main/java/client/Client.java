@@ -2,6 +2,7 @@ package client;
 
 import java.net.DatagramPacket;
 
+import client.downloader.ClientDownloader;
 import client.uploader.ClientUploader;
 import packet.Packet;
 
@@ -30,6 +31,18 @@ public interface Client {
 	 * @return the packet received
 	 */
 	public DatagramPacket sendOnePacket(Packet packetToSend);
+	
+	/**
+	 * Sends one packet and returns the response received. Is able to tell the
+	 * downloader the amount of retransmissions needed.
+	 * 
+	 * @param packetToSend
+	 *            The packet to send
+	 * @param downloader
+	 *            The client downloader
+	 * @return the packet received
+	 */
+	public DatagramPacket sendOnePacket(Packet packetToSend, ClientDownloader downloader);
 
 	/**
 	 * Sends one packet and returns the response received. Is able to tell the

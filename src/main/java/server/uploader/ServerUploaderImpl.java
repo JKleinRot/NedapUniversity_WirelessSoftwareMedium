@@ -84,25 +84,25 @@ public class ServerUploaderImpl implements ServerUploader {
 	public Packet processPacket(byte[] packet, int length) {
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
 		Packet packetToSend;
-		System.out.println("ServerUploader packet received: " + Arrays.toString(receivedPacket.getHeader().getBytes()));
-		System.out.println("Ack number received = " + receivedPacket.getHeader().getAcknowledgementNumber());
-		System.out.println("boolean = " + isSendingPacketsAfterDecreasingSize);
+//		System.out.println("ServerUploader packet received: " + Arrays.toString(receivedPacket.getHeader().getBytes()));
+//		System.out.println("Ack number received = " + receivedPacket.getHeader().getAcknowledgementNumber());
+//		System.out.println("boolean = " + isSendingPacketsAfterDecreasingSize);
 		if (receivedPacket.getHeader().getTypes() != Types.DATAINTEGRITY) {
 			if (!isSendingPacketsAfterDecreasingSize) {
 				if (receivedPacket.getHeader().getTypes().equals(Types.DOWNLOADCHARACTERISTICS)) {
 					createFileDisassembler(receivedPacket);
 					packetToSend = fileDisassembler.getNextPacket();
-					System.out.println("DownloadCharacteristics");
-					System.out.println(Arrays.toString(packetToSend.getBytes()));
+//					System.out.println("DownloadCharacteristics");
+//					System.out.println(Arrays.toString(packetToSend.getBytes()));
 				} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)) {
 					int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
 					if (currentAcknowledgementNumber != previousAcknowledgementNumber) {
 						previousAcknowledgementNumber = currentAcknowledgementNumber;
 						packetToSend = fileDisassembler.getNextPacket();
-						System.out.println("Ack: " + currentAcknowledgementNumber);
+//						System.out.println("Ack: " + currentAcknowledgementNumber);
 						if (retransmissionCount == 0) {
 							successfulTransmissionCount++;
-							System.out.println("Successful transmission count = " + successfulTransmissionCount);
+//							System.out.println("Successful transmission count = " + successfulTransmissionCount);
 						}
 						retransmissionCount = 0;
 					} else {
@@ -110,10 +110,10 @@ public class ServerUploaderImpl implements ServerUploader {
 							packetToSend = fileDisassembler.getCurrentPacket();
 							retransmissionCount++;
 							successfulTransmissionCount = 0;
-							System.out.println("Retransmission count = " + retransmissionCount);
+//							System.out.println("Retransmission count = " + retransmissionCount);
 						} else {
 							fileDisassembler.decreasePacketSize(fileDisassembler.getCurrentPacket());
-							System.out.println("Decrease packet size");
+//							System.out.println("Decrease packet size");
 							packetToSend = fileDisassembler.getNextPacketDecreasedSize();
 							isSendingPacketsAfterDecreasingSize = true;
 							retransmissionCount = 0;
@@ -123,7 +123,7 @@ public class ServerUploaderImpl implements ServerUploader {
 					if (retransmissionCount == 0 && successfulTransmissionCount >= increasePacketSizeThreshold) {
 						successfulTransmissionCount = 0;
 						fileDisassembler.increasePacketSize();
-						System.out.println("Increase packet size");
+//						System.out.println("Increase packet size");
 					}
 				} else {
 					packetToSend = createDataIntegrityPacket();
@@ -134,9 +134,9 @@ public class ServerUploaderImpl implements ServerUploader {
 		} else {
 			packetToSend = createDataIntegrityPacket();
 		}
-		System.out.println("ServerUploader packet send: " + Arrays.toString(packetToSend.getHeader().getBytes()));
-		System.out.println("Packet size = " + packetToSend.getLength());
-		System.out.println("Sequence number send = " + packetToSend.getHeader().getSequenceNumber());
+//		System.out.println("ServerUploader packet send: " + Arrays.toString(packetToSend.getHeader().getBytes()));
+//		System.out.println("Packet size = " + packetToSend.getLength());
+//		System.out.println("Sequence number send = " + packetToSend.getHeader().getSequenceNumber());
 		return packetToSend;
 	}
 

@@ -69,7 +69,14 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		ClientDownloader dataDownloader = new ClientDownloaderImpl(client, this, downloadNumber);
 		downloadNumber++;
 		downloaders.add(dataDownloader);
-		dataDownloader.download(fileName, fileDirectory, newDirectory, newFileName);
+		
+		final Thread downloadThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				dataDownloader.download(fileName, fileDirectory, newDirectory, newFileName);
+			}
+		});
+		downloadThread.start();
 	}
  
 	@Override
@@ -98,6 +105,9 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 			builder.append(uploader.getStatistics());
 		}
 		builder.append("Statistics of downloaders: \n");
+		for (ClientDownloader downloader : downloaders) {
+			builder.append(downloader.getStatistics());
+		}
 		return builder.toString();
 	}
 

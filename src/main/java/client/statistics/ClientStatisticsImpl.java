@@ -27,6 +27,7 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	public ClientStatisticsImpl(String fileName) {
 		File file = new File(fileName);
 		totalBytes = (int) file.length();
+		System.out.println("Long: " + file.length() + " Int: " + totalBytes);
 		retransmissionCount = 0;
 		bytesSend = 0;
 	}
