@@ -43,4 +43,12 @@ public interface ClientUploader {
 	 * transmitted successfully.
 	 */
 	public void increasePacketSize();
+
+	/**
+	 * Updates the retransmission count in the statistics.
+	 * 
+	 * @param retransmissionCount
+	 *            The retransmission count of this packet
+	 */
+	public void updateStatistics(int retransmissionCount);
 }

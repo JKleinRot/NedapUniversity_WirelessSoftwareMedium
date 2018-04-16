@@ -161,6 +161,7 @@ public class ClientImpl implements Client {
 		} catch (IOException e) {
 			System.out.println("ERROR: Connection lost");
 		}
+		uploader.updateStatistics(retransmissionCount);
 		retransmissionCount = 0;
 		if (successfulTransmissionCount >= increasePacketSizeThreshold) {
 			uploader.increasePacketSize();

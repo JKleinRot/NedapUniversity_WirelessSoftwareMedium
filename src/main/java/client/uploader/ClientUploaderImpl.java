@@ -1,10 +1,13 @@
 package client.uploader;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Observable;
 
 import client.Client;
 import client.processmanager.ProcessManager;
+import client.statistics.ClientStatistics;
+import client.statistics.ClientStatisticsImpl;
 import filedisassembler.ClientFileDisassembler;
 import filedisassembler.ClientFileDisassemblerImpl;
 import packet.Packet;
@@ -36,6 +39,9 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 
 	/** The previous send packet */
 	private Packet previousPacket;
+	
+	/** The client statistics */
+	private ClientStatistics clientStatistics;
 
 	/**
 	 * -----Constructor-----
@@ -51,6 +57,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		this.client = client;
 		this.downloadNumber = downloadNumber;
 		this.processManager = processManager;
+		clientStatistics = new ClientStatisticsImpl();
 	}
 
 	@Override
@@ -95,11 +102,13 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 *            The file to send
 	 */
 	private void sendData() {
+		clientStatistics.setStartTime(LocalDateTime.now());
 		while (previousPacket == null || !previousPacket.getHeader().getFlags().equals(Flags.UPLOAD_LAST)) {
 			Packet packet = fileDisassembler.getNextPacket();
 			client.sendOnePacket(packet, this);
 			previousPacket = packet;
 		}
+		clientStatistics.setEndTime(LocalDateTime.now());
 	}
 
 	/**
@@ -144,6 +153,11 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	@Override
 	public void increasePacketSize() {
 		fileDisassembler.increasePacketSize();
+	}
+	
+	@Override
+	public void updateStatistics(int retransmissionCount) {
+		clientStatistics.updateRetransmissionCount(retransmissionCount);
 	}
 
 }
