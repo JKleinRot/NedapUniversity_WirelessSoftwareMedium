@@ -46,6 +46,9 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	/** The string representation of the uploader */
 	private String characteristics;
 
+	/** Whether the file is found */
+	private boolean isFileFound;
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -68,6 +71,9 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	public void upload(String fileName, String fileDirectory, String newDirectory, String newFileName) {
 		characteristics = "Upload " + fileName + " from " + fileDirectory + " to " + newDirectory + " as " + newFileName + "\n";
 		createFileDisassembler(fileDirectory + fileName);
+		if (!isFileFound) {
+			return;
+		}
 		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		sendData();
@@ -131,6 +137,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	@Override
 	public void notifyProcessManagerFileNotFound() {
 		processManager.fileNotFound(this);
+		isFileFound = false;
 	}
 
 	/**
