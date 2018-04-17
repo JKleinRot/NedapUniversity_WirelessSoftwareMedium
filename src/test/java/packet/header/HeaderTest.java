@@ -1,4 +1,4 @@
-package protocol.file.packet.header.test;
+package packet.header;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
