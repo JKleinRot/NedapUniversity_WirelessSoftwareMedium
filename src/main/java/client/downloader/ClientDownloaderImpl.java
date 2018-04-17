@@ -113,7 +113,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)
 				&& packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
 			nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
-			clientStatistics.updatePartSend(packet.getData().length);
+			clientStatistics.updatePartSent(packet.getData().length);
 			// System.out.println("Send another packet");
 			// System.out.println("Received packet size = " + packet.getLength());
 			// System.out.println("Sequence number received = " +

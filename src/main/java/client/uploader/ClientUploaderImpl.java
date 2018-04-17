@@ -40,7 +40,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	/** The final message number */
 	private static final int finalNumber = 20;
 
-	/** The previous send packet */
+	/** The previous sent packet */
 	private Packet previousPacket;
 
 	/** The client statistics */
@@ -246,7 +246,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 			Packet packet = fileDisassembler.getNextPacket();
 			client.sendOnePacket(packet, this);
 			previousPacket = packet;
-			clientStatistics.updatePartSend(packet.getData().length);
+			clientStatistics.updatePartSent(packet.getData().length);
 		}
 		clientStatistics.setEndTime(LocalDateTime.now());
 	}

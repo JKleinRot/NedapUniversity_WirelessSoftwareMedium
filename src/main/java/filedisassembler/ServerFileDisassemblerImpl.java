@@ -44,7 +44,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	/** The default packet size */
 	private static final int defaultPacketSize = 1024;
 
-	/** The previous send packet */
+	/** The previous sent packet */
 	private Packet previousPacket;
 
 	/** The current packet */

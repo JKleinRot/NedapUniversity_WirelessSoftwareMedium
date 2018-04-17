@@ -14,7 +14,7 @@ public interface ClientStatistics {
 	 * Updates the retransmission count.
 	 * 
 	 * @param retransmissionCount
-	 *            The retransmission count for the packet send
+	 *            The retransmission count for the packet sent
 	 */
 	public void updateRetransmissionCount(int retransmissionCount);
 
@@ -35,12 +35,12 @@ public interface ClientStatistics {
 	public void setEndTime(LocalDateTime endTime);
 
 	/**
-	 * Updates the part of the data that is already send.
+	 * Updates the part of the data that is already sent.
 	 * 
 	 * @param lastPacketSize
-	 *            The size of the packet send
+	 *            The size of the packet sent
 	 */
-	public void updatePartSend(int lastPacketSize);
+	public void updatePartSent(int lastPacketSize);
 
 	/**
 	 * Returns the statistics in a formatted string ready to print on the console.

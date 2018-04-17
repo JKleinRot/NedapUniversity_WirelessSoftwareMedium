@@ -15,7 +15,7 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	/** The end time */
 	private LocalDateTime endTime;
 
-	/** The amount of data send */
+	/** The amount of data sent */
 	private long bytesSent;
 
 	/** The total amount of bytes in the file */
@@ -44,7 +44,7 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	}
 
 	@Override
-	public void updatePartSend(int lastPacketSize) {
+	public void updatePartSent(int lastPacketSize) {
 		bytesSent = bytesSent + lastPacketSize;
 	}
 

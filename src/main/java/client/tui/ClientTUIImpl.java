@@ -51,7 +51,7 @@ public class ClientTUIImpl implements ClientTUI {
 
 	/** Whether the server is uploading or downloading */
 	private boolean isWorking;
-	
+
 	/** Whether the user has requested files */
 	private boolean isFileRequest;
 
@@ -73,7 +73,7 @@ public class ClientTUIImpl implements ClientTUI {
 	public void run() {
 		boolean isRunning = true;
 		String input = readInput(
-				"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+				"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 						+ "Please enter the word between bracket to perform the action");
 		while (isRunning) {
 			String[] words = input.split(" ");
@@ -88,7 +88,7 @@ public class ClientTUIImpl implements ClientTUI {
 				} else if (isWorking) {
 					System.out.println("Already uploading or downloading a file");
 					input = readInput(
-							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 									+ "Please enter the word between bracket to perform the action");
 				} else {
 					input = readInput(
@@ -128,7 +128,7 @@ public class ClientTUIImpl implements ClientTUI {
 					setAllBooleansFalse();
 					isWorking = true;
 					input = readInput(
-							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 									+ "Please enter the word between bracket to perform the action");
 				} else {
 					input = readInput(
@@ -145,7 +145,7 @@ public class ClientTUIImpl implements ClientTUI {
 				} else if (isWorking) {
 					System.out.println("Already uploading or downloading a file");
 					input = readInput(
-							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 									+ "Please enter the word between bracket to perform the action");
 				} else {
 					input = readInput(
@@ -185,7 +185,7 @@ public class ClientTUIImpl implements ClientTUI {
 					setAllBooleansFalse();
 					isWorking = true;
 					input = readInput(
-							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 									+ "Please enter the word between bracket to perform the action");
 				} else {
 					input = readInput(
@@ -194,21 +194,22 @@ public class ClientTUIImpl implements ClientTUI {
 			} else if (words.length == 1 && words[0].equals("abort")) {
 				setAllBooleansFalse();
 				input = readInput(
-						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 								+ "Please enter the word between bracket to perform the action");
 			} else if (words.length == 1 && words[0].equals("statistics")) {
 				System.out.println(processManager.getStatistics());
 				input = readInput(
-						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 								+ "Please enter the word between bracket to perform the action");
 			} else if (words.length == 1 && words[0].equals("files")) {
 				if (!isWorking && !isFileRequest) {
 					input = readInput(
 							"Of what directory do you want to see the subdirectories and files? Please enter \"files\" followed by the desired directory (for the top directory enter \" / \")");
 				} else if (isWorking) {
-					System.out.println("Cannot request files while uploading or downloading a file. Please wait until the download or upload is finished");
+					System.out.println(
+							"Cannot request files while uploading or downloading a file. Please wait until the download or upload is finished");
 					input = readInput(
-							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 									+ "Please enter the word between bracket to perform the action");
 				} else if (isFileRequest) {
 					input = readInput(
@@ -219,10 +220,12 @@ public class ClientTUIImpl implements ClientTUI {
 					String filesAndDirectories = processManager.handleFilesRequest(words[1]);
 					System.out.println(filesAndDirectories);
 					input = readInput(
-							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
 									+ "Please enter the word between bracket to perform the action");
 					setAllBooleansFalse();
 				}
+			} else if (words.length == 1 && words[0].equals("pause")) {
+
 			} else {
 				input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 			}
