@@ -48,7 +48,10 @@ public class ClientTUIImpl implements ClientTUI {
 
 	/** Whether the user has set the upload location */
 	private boolean isDownloadLocationSet;
-
+	
+	/** Whether the server is uploading or downloading */
+	private boolean isWorking;
+	
 	/**
 	 * -----Constructor-----
 	 * 
@@ -72,13 +75,18 @@ public class ClientTUIImpl implements ClientTUI {
 		while (isRunning) {
 			String[] words = input.split(" ");
 			if (words.length == 1 && words[0].equals("download")) {
-				if (!isDownloadRequest && !isUploadRequest) {
+				if (!isDownloadRequest && !isUploadRequest && !isWorking) {
 					input = readInput(
 							"What file do you want to download? Please enter \"download\" followed by the file name");
 					isDownloadRequest = true;
 				} else if (isDownloadRequest) {
 					input = readInput(
 							"Already requesting a download. Please enter the desired parameters or enter \"abort\" to stop the current action");
+				} else if (isWorking) {
+					System.out.println("Already uploading or downloading a file");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+									+ "Please enter the word between bracket to perform the action");
 				} else {
 					input = readInput(
 							"Please enter the desired parameters or enter \"abort\" to stop the current action");
@@ -115,6 +123,7 @@ public class ClientTUIImpl implements ClientTUI {
 					newFileName = words[2];
 					processManager.handleDownloadRequest(fileName, fileDirectory, newDirectory, newFileName);
 					setAllBooleansFalse();
+					isWorking = true;
 					input = readInput(
 							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
 									+ "Please enter the word between bracket to perform the action");
@@ -123,13 +132,18 @@ public class ClientTUIImpl implements ClientTUI {
 							"Please enter the desired parameters or enter \"abort\" to stop the current action");
 				}
 			} else if (words.length == 1 && words[0].equals("upload")) {
-				if (!isUploadRequest && !isDownloadRequest) {
+				if (!isUploadRequest && !isDownloadRequest && !isWorking) {
 					input = readInput(
 							"What file do you want to upload? Please enter \"upload\" followed by the file name");
 					isUploadRequest = true;
 				} else if (isUploadRequest) {
 					input = readInput(
 							"Already requesting an upload. Please enter the desired parameters or enter \"abort\" to stop the current action");
+				} else if (isWorking) {
+					System.out.println("Already uploading or downloading a file");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+									+ "Please enter the word between bracket to perform the action");
 				} else {
 					input = readInput(
 							"Please enter the desired parameters or enter \"abort\" to stop the current action");
@@ -166,6 +180,7 @@ public class ClientTUIImpl implements ClientTUI {
 					newFileName = words[2];
 					processManager.handleUploadRequest(fileName, fileDirectory, newDirectory, newFileName);
 					setAllBooleansFalse();
+					isWorking = true;
 					input = readInput(
 							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
 									+ "Please enter the word between bracket to perform the action");
@@ -208,12 +223,16 @@ public class ClientTUIImpl implements ClientTUI {
 		if (arg.equals("File not found")) {
 			System.out.println("This file is not found. Please try to download or upload another file");
 		} else if (((String) arg).contains("uploaded to the server")) {
+			isWorking = false;
 			System.out.println(arg);
 		} else if (((String) arg).contains("downloaded from the server")) {
+			isWorking = false;
 			System.out.println(arg);
 		} else if(((String) arg).contains("incorrectly uploaded")) {
+			isWorking = false;
 			System.out.println(arg);
 		} else if (((String) arg).contains("incorrectly downloaded")) {
+			isWorking = false;
 			System.out.println(arg);
 		}
 	}
