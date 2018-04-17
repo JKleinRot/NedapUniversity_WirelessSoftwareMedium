@@ -52,6 +52,9 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	/** Whether the file is found */
 	private boolean isFileFound;
 
+	/** Whether the file is correct */
+	private boolean isFileCorrect;
+
 	/** The length of the header */
 	private static final int headerLength = 20;
 
@@ -108,7 +111,11 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		}
 		sendData();
 		sendDataIntegrityPacket();
-		notifyProcessManagerUploadComplete(fileName, fileDirectory, newDirectory, newFileName);
+		if (isFileCorrect) {
+			notifyProcessManagerUploadComplete(fileName, fileDirectory, newDirectory, newFileName);
+		} else {
+			notifyProcessManagerUploadIncorrect(fileName, fileDirectory, newDirectory, newFileName);
+		}
 	}
 
 	/**
@@ -249,9 +256,16 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 */
 	private void sendDataIntegrityPacket() {
 		Header header = new HeaderImpl(finalNumber, 0, Flags.UPLOAD_DATAINTEGRITY, Types.DATAINTEGRITY, uploadNumber);
-		byte[] data = ("DataSize " + fileDisassembler.getTotalDataSize()).getBytes();
+		byte[] data = fileDisassembler.getChecksum();
 		Packet packet = new PacketImpl(header, data);
-		client.sendOnePacket(packet, this);
+		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet, this);
+		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
+		System.out.println(new String(receivedPacket.getData()));
+		if (new String(receivedPacket.getData()).equals("Correct")) {
+			isFileCorrect = true;
+		} else if (new String(receivedPacket.getData()).equals("Incorrect")) {
+			isFileCorrect = false;
+		}
 	}
 
 	@Override
@@ -275,6 +289,23 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private void notifyProcessManagerUploadComplete(String fileName, String fileDirectory, String newDirectory,
 			String newFileName) {
 		processManager.uploadComplete(fileName, fileDirectory, newDirectory, newFileName);
+	}
+
+	/**
+	 * Notifies the process manager that the upload is incorrect
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	private void notifyProcessManagerUploadIncorrect(String fileName, String fileDirectory, String newDirectory,
+			String newFileName) {
+		processManager.uploadIncorrect(fileName, fileDirectory, newDirectory, newFileName);
 	}
 
 	@Override

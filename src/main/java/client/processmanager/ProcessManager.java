@@ -82,4 +82,18 @@ public interface ProcessManager {
 	 * @return the statistics
 	 */
 	public String getStatistics();
+
+	/**
+	 * Notifies the client that the upload is incorrect.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName);
 }

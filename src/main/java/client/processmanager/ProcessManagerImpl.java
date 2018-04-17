@@ -135,4 +135,11 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		return builder.toString();
 	}
 
+	@Override
+	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+		setChanged();
+		notifyObservers("The file " + fileName + " from " + fileDirectory + " was incorrectly uploaded to the server into "
+				+ newDirectory + " as " + newFileName);
+	}
+
 }

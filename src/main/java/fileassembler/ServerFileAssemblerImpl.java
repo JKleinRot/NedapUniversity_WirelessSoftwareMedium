@@ -1,9 +1,14 @@
 package fileassembler;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import packet.Packet;
 import packet.header.Types;
@@ -19,6 +24,15 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 
 	/** The downloader */
 	private ServerDownloader downloader;
+	
+	/** The checksum */
+	private byte[] checksum;
+	
+	/** Whether the file is correctly transfered */
+	private boolean isFileCorrect;
+	
+	/** The file */
+	private File file;
 
 	/**
 	 * -----Constructor-----
@@ -36,6 +50,7 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 			ServerDownloader downloader) {
 		this.downloader = downloader;
 		createFileOutputStream(fileDirectory, fileName);
+		file = new File(fileDirectory + fileName);
 		lastSequenceNumber = 0;
 	}
 
@@ -61,12 +76,18 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 		if (packet.getHeader().getTypes() != Types.DATAINTEGRITY) {
 			if (packet.getHeader().getSequenceNumber() != lastSequenceNumber) {
 				if (packet.getData().length != 0) {
+					MessageDigest messageDigest = null;
 					try {
+						messageDigest = MessageDigest.getInstance("MD5");
 						outputStream.write(packet.getData());
+						DigestOutputStream digestOutputstream = new DigestOutputStream(outputStream, messageDigest);
+					} catch (NoSuchAlgorithmException e) {
+						System.out.println("No such algorithm");
 					} catch (IOException e) {
 						System.out.println("ERROR: File could not be written");
 					}
 					lastSequenceNumber = packet.getHeader().getSequenceNumber();
+					checksum = messageDigest.digest();
 				}
 			}
 		} else {
@@ -81,6 +102,17 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 	 *            The data integrity packet
 	 */
 	private void checkForDataIntegrity(Packet packet) {
-
+		System.out.println(Arrays.toString(checksum));
+		if (!Arrays.equals(packet.getData(), checksum)) {
+			isFileCorrect = false;
+			file.delete();
+		} else {
+			isFileCorrect = true;
+		}
+	}
+	
+	@Override
+	public boolean isFileCorrect() {
+		return isFileCorrect;
 	}
 }

@@ -184,9 +184,23 @@ public class ServerDownloaderImpl implements ServerDownloader {
 	 * @return the ack packet
 	 */
 	private Packet createAck(Packet packet) {
-		Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.UPLOAD, Types.ACK,
-				packet.getHeader().getDownloadNumber());
-		Packet ack = new PacketImpl(header, new byte[0]);
+		Packet ack;
+		if (packet.getHeader().getTypes() != Types.DATAINTEGRITY) {
+			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.UPLOAD, Types.ACK,
+					packet.getHeader().getDownloadNumber());
+			ack = new PacketImpl(header, new byte[0]);
+		} else {
+			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.UPLOAD, Types.DATAINTEGRITY, packet.getHeader().getDownloadNumber());
+			byte[] data;
+			if (fileAssembler.isFileCorrect()) {
+				data = "Correct".getBytes();
+				System.out.println("Correct");
+			} else {
+				data = "Incorrect".getBytes();
+				System.out.println("Incorrect");
+			}
+			ack = new PacketImpl(header, data);
+		}
 		return ack;
 	}
 

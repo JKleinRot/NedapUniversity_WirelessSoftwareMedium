@@ -40,4 +40,11 @@ public interface ClientFileDisassembler {
 	 * default size. Above the default size the packet size is multiplied by 1.5
 	 */
 	public void increasePacketSize();
+
+	/**
+	 * Returns the checksum of the data.
+	 * 
+	 * @return the checksum
+	 */
+	public byte[] getChecksum();
 }
