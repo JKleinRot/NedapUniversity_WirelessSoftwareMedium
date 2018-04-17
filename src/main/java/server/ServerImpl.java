@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import filefinder.FileFinder;
+import filefinder.FileFinderImpl;
 import packet.Packet;
 import server.downloader.ServerDownloader;
 import server.downloader.ServerDownloaderImpl;
@@ -32,6 +34,9 @@ public class ServerImpl implements Server {
 	/** The data uploaders */
 	private Map<Integer, ServerUploader> dataUploaders;
 
+	/** The file finder */
+	private FileFinder fileFinder;
+
 	/** The more than enough byte buffer space number */
 	private static final int enoughSpace = 65000;
 
@@ -52,6 +57,7 @@ public class ServerImpl implements Server {
 		isRunning = true;
 		dataDownloaders = new HashMap<>();
 		dataUploaders = new HashMap<>();
+		fileFinder = new FileFinderImpl();
 	}
 
 	@Override
@@ -69,6 +75,8 @@ public class ServerImpl implements Server {
 					handleUploadMessage(receivedPacket);
 				} else if (receivedPacket.getData()[11] == 2) {
 					handleDownloadMessage(receivedPacket);
+				} else if (receivedPacket.getData()[11] == 8) {
+					handleFileRequest(receivedPacket);
 				} else {
 					dataToSend = new byte[enoughSpace];
 					dataToSend = ("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
@@ -148,6 +156,21 @@ public class ServerImpl implements Server {
 				receivedPacket.getPort());
 		// System.out.println("ServerImpl packet send: " +
 		// Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
+		socket.send(packetToSend);
+	}
+
+	/**
+	 * Handles the file request from the client.
+	 * 
+	 * @param receivedPacket
+	 *            The packet received
+	 * @throws IOException
+	 *             If the connection is lost
+	 */
+	private void handleFileRequest(DatagramPacket receivedPacket) throws IOException {
+		Packet packet = fileFinder.find(receivedPacket);
+		DatagramPacket packetToSend = new DatagramPacket(packet.getBytes(), packet.getLength(),
+				receivedPacket.getAddress(), receivedPacket.getPort());
 		socket.send(packetToSend);
 	}
 

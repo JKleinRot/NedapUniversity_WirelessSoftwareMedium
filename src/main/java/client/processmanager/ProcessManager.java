@@ -110,4 +110,13 @@ public interface ProcessManager {
 	 *            The new file name
 	 */
 	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName);
+
+	/**
+	 * Handles the request for the files in a directory on the server
+	 * 
+	 * @param directory
+	 *            The directory
+	 * @return the files and directories found
+	 */
+	public String handleFilesRequest(String directory);
 }

@@ -48,10 +48,10 @@ public class ClientTUIImpl implements ClientTUI {
 
 	/** Whether the user has set the upload location */
 	private boolean isDownloadLocationSet;
-	
+
 	/** Whether the server is uploading or downloading */
 	private boolean isWorking;
-	
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -198,6 +198,15 @@ public class ClientTUIImpl implements ClientTUI {
 				input = readInput(
 						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
 								+ "Please enter the word between bracket to perform the action");
+			} else if (words.length == 1 && words[0].equals("files")) {
+				input = readInput(
+						"Of what directory do you want to see the subdirectories and files? Please enter \"files\" followed by the desired directory (for the top directory enter \" / \")");
+			} else if (words.length == 2 && words[0].equals("files")) {
+				String filesAndDirectories = processManager.handleFilesRequest(words[1]);
+				System.out.println(filesAndDirectories);
+				input = readInput(
+						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+								+ "Please enter the word between bracket to perform the action");
 			} else {
 				input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 			}
@@ -228,7 +237,7 @@ public class ClientTUIImpl implements ClientTUI {
 		} else if (((String) arg).contains("downloaded from the server")) {
 			isWorking = false;
 			System.out.println(arg);
-		} else if(((String) arg).contains("incorrectly uploaded")) {
+		} else if (((String) arg).contains("incorrectly uploaded")) {
 			isWorking = false;
 			System.out.println(arg);
 		} else if (((String) arg).contains("incorrectly downloaded")) {

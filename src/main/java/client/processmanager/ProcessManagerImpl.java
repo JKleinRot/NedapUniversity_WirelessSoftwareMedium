@@ -11,6 +11,8 @@ import client.downloader.ClientDownloader;
 import client.downloader.ClientDownloaderImpl;
 import client.uploader.ClientUploader;
 import client.uploader.ClientUploaderImpl;
+import filerequester.FileRequester;
+import filerequester.FileRequesterImpl;
 
 public class ProcessManagerImpl extends Observable implements ProcessManager {
 
@@ -34,6 +36,9 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 
 	/** The download threads */
 	private Map<Integer, Thread> downloadThreads;
+	
+	/** The file requester */
+	private FileRequester fileRequester;
 
 	/**
 	 * -----Constructor-----
@@ -57,6 +62,7 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		uploadThreads = new HashMap<>();
 		downloaders = new ArrayList<>();
 		downloadThreads = new HashMap<>();
+		fileRequester = new FileRequesterImpl(client);
 	}
 
 	@Override
@@ -147,6 +153,12 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		setChanged();
 		notifyObservers("The file " + fileName + " from " + fileDirectory + " was incorrectly downloaded to the server into "
 				+ newDirectory + " as " + newFileName);
+	}
+
+	@Override
+	public String handleFilesRequest(String directory) {
+		String filesAndDirectories = fileRequester.handleFilesRequest(directory);
+		return filesAndDirectories;
 	}
 
 }
