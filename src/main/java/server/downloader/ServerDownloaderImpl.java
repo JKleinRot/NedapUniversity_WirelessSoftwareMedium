@@ -193,13 +193,14 @@ public class ServerDownloaderImpl implements ServerDownloader {
 			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.UPLOAD, Types.DATAINTEGRITY, packet.getHeader().getDownloadNumber());
 			byte[] data;
 			if (fileAssembler.isFileCorrect()) {
-				data = "Correct".getBytes();
+				data = ("Correct").getBytes();
 				System.out.println("Correct");
 			} else {
-				data = "Incorrect".getBytes();
+				data = ("Incorrect").getBytes();
 				System.out.println("Incorrect");
 			}
 			ack = new PacketImpl(header, data);
+			System.out.println(Arrays.toString(ack.getBytes()));
 		}
 		return ack;
 	}

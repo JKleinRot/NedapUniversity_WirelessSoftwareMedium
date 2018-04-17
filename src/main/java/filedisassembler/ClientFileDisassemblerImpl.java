@@ -62,6 +62,9 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	
 	/** The checksum */
 	private byte[] checksum;
+	
+	/** The message digest */
+	private MessageDigest messageDigest;
 
 	/**
 	 * -----Constructor-----
@@ -95,7 +98,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	 *            The file name
 	 */
 	private void createFileInputStream(String fileName) {
-		MessageDigest messageDigest = null;
+		messageDigest = null;
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
 			inputStream = new FileInputStream(fileName);
@@ -105,7 +108,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		} catch (FileNotFoundException e) {
 			notifyDataUploaderFileNotFound();
 		}
-		checksum = messageDigest.digest();
+//		checksum = messageDigest.digest();
 	}
 
 	/**
@@ -144,6 +147,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		} else {
 			data = new byte[0];
 		}
+		messageDigest.update(data);
 		return data;
 	}
 
@@ -207,6 +211,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 
 	@Override
 	public byte[] getChecksum() {
+		checksum = messageDigest.digest();
 		System.out.println(Arrays.toString(checksum));
 		return checksum;
 	}

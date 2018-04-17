@@ -260,10 +260,12 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		Packet packet = new PacketImpl(header, data);
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet, this);
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
-		System.out.println(new String(receivedPacket.getData()));
+		System.out.println(Arrays.toString(receivedPacket.getBytes()));
 		if (new String(receivedPacket.getData()).equals("Correct")) {
+			System.out.println("Correct");
 			isFileCorrect = true;
 		} else if (new String(receivedPacket.getData()).equals("Incorrect")) {
+			System.out.println("Incorrect");
 			isFileCorrect = false;
 		}
 	}
