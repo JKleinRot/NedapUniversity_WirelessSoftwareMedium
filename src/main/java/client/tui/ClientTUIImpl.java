@@ -51,6 +51,9 @@ public class ClientTUIImpl implements ClientTUI {
 
 	/** Whether the server is uploading or downloading */
 	private boolean isWorking;
+	
+	/** Whether the user has requested files */
+	private boolean isFileRequest;
 
 	/**
 	 * -----Constructor-----
@@ -199,14 +202,27 @@ public class ClientTUIImpl implements ClientTUI {
 						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
 								+ "Please enter the word between bracket to perform the action");
 			} else if (words.length == 1 && words[0].equals("files")) {
-				input = readInput(
-						"Of what directory do you want to see the subdirectories and files? Please enter \"files\" followed by the desired directory (for the top directory enter \" / \")");
+				if (!isWorking && !isFileRequest) {
+					input = readInput(
+							"Of what directory do you want to see the subdirectories and files? Please enter \"files\" followed by the desired directory (for the top directory enter \" / \")");
+				} else if (isWorking) {
+					System.out.println("Cannot request files while uploading or downloading a file. Please wait until the download or upload is finished");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+									+ "Please enter the word between bracket to perform the action");
+				} else if (isFileRequest) {
+					input = readInput(
+							"Please enter the desired parameters or enter \"abort\" to stop the current action");
+				}
 			} else if (words.length == 2 && words[0].equals("files")) {
-				String filesAndDirectories = processManager.handleFilesRequest(words[1]);
-				System.out.println(filesAndDirectories);
-				input = readInput(
-						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
-								+ "Please enter the word between bracket to perform the action");
+				if (isFileRequest) {
+					String filesAndDirectories = processManager.handleFilesRequest(words[1]);
+					System.out.println(filesAndDirectories);
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? "
+									+ "Please enter the word between bracket to perform the action");
+					setAllBooleansFalse();
+				}
 			} else {
 				input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 			}
@@ -225,6 +241,7 @@ public class ClientTUIImpl implements ClientTUI {
 		isDownloadFileSet = false;
 		isDownloadDirectorySet = false;
 		isDownloadLocationSet = false;
+		isFileRequest = false;
 	}
 
 	@Override

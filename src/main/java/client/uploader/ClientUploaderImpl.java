@@ -267,6 +267,8 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		} else if (new String(receivedPacket.getData()).equals("Incorrect")) {
 			System.out.println("Incorrect");
 			isFileCorrect = false;
+		} else {
+			sendDataIntegrityPacket();
 		}
 	}
 

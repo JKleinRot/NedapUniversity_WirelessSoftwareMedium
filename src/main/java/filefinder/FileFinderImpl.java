@@ -148,20 +148,27 @@ public class FileFinderImpl implements FileFinder {
 	 */
 	private String findFilesAndDirectories(byte[] directoryBytes) {
 		File directory = new File(new String(directoryBytes));
+		if (!directory.exists()) {
+			return "No such directory";
+		}
 		StringBuilder builder = new StringBuilder();
 		StringBuilder files = new StringBuilder();
 		StringBuilder directories = new StringBuilder();
 		File[] filesAndDirectories = directory.listFiles();
-		for (File file : filesAndDirectories) {
-			if (file.isFile()) {
-				files.append("File: " + file.getName() + "\n");
-			} else if (file.isDirectory()) {
-				directories.append("Directory: " + file.getName() + "\n");
+		if (filesAndDirectories.length != 0) {
+			for (File file : filesAndDirectories) {
+				if (file.isFile()) {
+					files.append("File: " + file.getName() + "\n");
+				} else if (file.isDirectory()) {
+					directories.append("Directory: " + file.getName() + "\n");
+				}
 			}
+			builder.append(files.toString());
+			builder.append(directories.toString());
+			return builder.toString();
+		} else {
+			return "Empty directory";
 		}
-		builder.append(files.toString());
-		builder.append(directories.toString());
-		return builder.toString();
 	}
 	
 
