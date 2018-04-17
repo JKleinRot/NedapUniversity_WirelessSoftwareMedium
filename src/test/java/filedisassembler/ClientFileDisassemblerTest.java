@@ -7,6 +7,7 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import client.uploader.ClientUploader;
 import filedisassembler.ServerFileDisassembler;
 import filedisassembler.ServerFileDisassemblerImpl;
 import packet.Packet;
@@ -22,19 +23,22 @@ import server.uploader.ServerUploader;
  * 
  * @author janine.kleinrot
  */
-public class FileDisassemblerTest {
+public class ClientFileDisassemblerTest {
 
 	/** The file disassembler */
-	private ServerFileDisassembler fileDisassembler;
+	private ClientFileDisassembler fileDisassembler;
 
 	/** The file disassembler for a longer file */
-	private ServerFileDisassembler fileDisassemblerLong;
+	private ClientFileDisassembler fileDisassemblerLong;
+	
+	/** The file disassembler for a really long file */
+	private ClientFileDisassembler fileDisassemblerReallyLong;
 
 	/** The mocks */
 	private EasyMockSupport mocks;
 
 	/** The data uploader */
-	private ServerUploader dataUploader;
+	private ClientUploader dataUploader;
 
 	/** The download number */
 	private int downloadNumber;
@@ -42,11 +46,11 @@ public class FileDisassemblerTest {
 	@BeforeEach
 	public void setup() {
 		mocks = new EasyMockSupport();
-		dataUploader = mocks.createMock(ServerUploader.class);
+		dataUploader = mocks.createMock(ClientUploader.class);
 		downloadNumber = 1;
-		fileDisassembler = new ServerFileDisassemblerImpl("Test.txt", dataUploader, downloadNumber, dataUploader);
-		fileDisassemblerLong = new ServerFileDisassemblerImpl("TestLong.txt", dataUploader, downloadNumber,
-				dataUploader);
+		fileDisassembler = new ClientFileDisassemblerImpl("Test.txt", dataUploader, downloadNumber);
+		fileDisassemblerLong = new ClientFileDisassemblerImpl("TestLong.txt", dataUploader, downloadNumber);
+		fileDisassemblerReallyLong = new ClientFileDisassemblerImpl("trailer.mp4", dataUploader, downloadNumber);
 	}
 
 	/**
@@ -57,7 +61,7 @@ public class FileDisassemblerTest {
 	public void testFileDisassemblerFromFileOnePacket() {
 		int expectedSequenceNumber = 100;
 		int expectedAcknowledgementNumber = 0;
-		Flags expectedFlags = Flags.DOWNLOAD_LAST;
+		Flags expectedFlags = Flags.UPLOAD_LAST;
 		Types expectedTypes = Types.DATA;
 		int expectedDownloadNumber = downloadNumber;
 		Header expectedHeader = new HeaderImpl(expectedSequenceNumber, expectedAcknowledgementNumber, expectedFlags,
@@ -80,7 +84,7 @@ public class FileDisassemblerTest {
 
 	/**
 	 * Tests that a file is constructed with packets that contain headers and data.
-	 * The file is distributed over multiple packets
+	 * The file is distributed over multiple packets.
 	 */
 	@Test
 	public void testCreateFileWithPacketsFromFileMultiplePackets() {
@@ -88,9 +92,9 @@ public class FileDisassemblerTest {
 		int expectedSequenceNumberSecondPacket = 101;
 		int expectedSequenceNumberThirdPacket = 102;
 		int expectedAcknowledgementNumber = 0;
-		Flags expectedFlagsFirstPacket = Flags.DOWNLOAD_MORETOCOME;
-		Flags expectedFlagsSecondPacket = Flags.DOWNLOAD_MORETOCOME;
-		Flags expectedFlagsThirdPacket = Flags.DOWNLOAD_LAST;
+		Flags expectedFlagsFirstPacket = Flags.UPLOAD_MORETOCOME;
+		Flags expectedFlagsSecondPacket = Flags.UPLOAD_MORETOCOME;
+		Flags expectedFlagsThirdPacket = Flags.UPLOAD_LAST;
 		Types expectedTypes = Types.DATA;
 		int expectedDownloadNumber = downloadNumber;
 		Header expectedHeaderFirstPacket = new HeaderImpl(expectedSequenceNumberFirstPacket,
@@ -155,5 +159,75 @@ public class FileDisassemblerTest {
 		assertEquals(expectedDownloadNumber, thirdPacket.getHeader().getDownloadNumber());
 
 		assertEquals(expectedTotalDataSize, fileDisassemblerLong.getTotalDataSize());
+	}
+
+	/**
+	 * Tests that the checksum is correct.
+	 */
+	@Test
+	public void testGetChecksum() {
+		byte[] expectedChecksum = new byte[] { -107, 45, 44, 86, -48, 72, 89, 88, 51, 103, 71, -68, -35, -104, 89, 13 };
+
+		fileDisassembler.getNextPacket();
+
+		assertArrayEquals(expectedChecksum, fileDisassembler.getChecksum());
+	}
+
+	/**
+	 * Tests that between the default and maximum packet size the packet size is
+	 * increased with a factor 1.5.
+	 */
+	@Test
+	public void testIncreasePacketSize() {
+		int packetLength = 1024;
+		int longPacketLength = 1536;
+		Packet packet = fileDisassemblerLong.getNextPacket();
+		fileDisassemblerLong.increasePacketSize();
+		Packet longPacket = fileDisassemblerLong.getNextPacket();
+
+		assertEquals(packetLength, packet.getLength());
+		assertEquals(longPacketLength, longPacket.getLength());
+	}
+	
+	/**
+	 * Tests that between the default and maximum packet size the packet size is
+	 * increased with a factor 1.5.
+	 */
+	@Test
+	public void testIncreasePacketSizeOnMaximum() {
+		int packetLength = 32768;
+		int longPacketLength = 32768;
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		Packet packet = fileDisassemblerReallyLong.getNextPacket();
+		fileDisassemblerReallyLong.increasePacketSize();
+		Packet longPacket = fileDisassemblerReallyLong.getNextPacket();
+
+		assertEquals(packetLength, packet.getLength());
+		assertEquals(longPacketLength, longPacket.getLength());
+	}
+	
+	/**
+	 * Tests that the packet is split in more packets of 64 bytes.
+	 */
+	@Test
+	public void testDecreasePacketSize() {
+		int shortPacketLength = 64;
+		
+		Packet packet = fileDisassemblerLong.getNextPacket();
+		fileDisassemblerLong.decreasePacketSize(packet);
+		Packet normalPacket = fileDisassemblerLong.getNextPacket();
+		fileDisassemblerLong.increasePacketSize();
+		Packet normalPacketIncreasedLength = fileDisassemblerLong.getNextPacket();
+		
+		assertEquals(shortPacketLength, normalPacket.getLength());
+		assertEquals(shortPacketLength * 2, normalPacketIncreasedLength.getLength());
 	}
 }

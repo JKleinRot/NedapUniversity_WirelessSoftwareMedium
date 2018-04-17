@@ -85,8 +85,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	 * @param filename
 	 *            The file name
 	 */
-	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber,
-			ServerUploader uploader) {
+	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber) {
 		this.dataUploader = dataUploader;
 		this.downloadNumber = downloadNumber;
 		this.packetSize = defaultPacketSize;
@@ -173,7 +172,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	 * @return the header
 	 */
 	private Header getNextHeader(byte[] data) {
-		Header header;
+		Header header = null;
 		if (previousPacket == null && data.length == dataSize) {
 			header = new HeaderImpl(firstSequenceNumber, 0, Flags.DOWNLOAD_MORETOCOME, Types.DATA, downloadNumber);
 		} else if (previousPacket == null && data.length != dataSize) {
@@ -184,9 +183,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		} else if (previousPacket != null && data.length != dataSize) {
 			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.DOWNLOAD_LAST,
 					Types.DATA, downloadNumber);
-		} else {
-			header = new HeaderImpl(0, 0, Flags.UNDEFINED, Types.UNDEFINED, 0);
-		}
+		} 
 		return header;
 	}
 
@@ -223,7 +220,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	public void increasePacketSize() {
 		if (packetSize < defaultPacketSize) {
 			packetSize = packetSize * 2;
-		} else if (packetSize >= maximalPacketSize) {
+		} else if ((packetSize * 1.5) >= maximalPacketSize) {
 			packetSize = maximalPacketSize;
 		} else {
 			packetSize = (int) (packetSize * 1.5);

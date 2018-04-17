@@ -159,7 +159,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	 * @return the header
 	 */
 	private Header getNextHeader(byte[] data) {
-		Header header;
+		Header header = null;
 		if (previousPacket == null && data.length == dataSize) {
 			header = new HeaderImpl(firstSequenceNumber, 0, Flags.UPLOAD_MORETOCOME, Types.DATA, downloadNumber);
 		} else if (previousPacket == null && data.length != dataSize) {
@@ -170,9 +170,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		} else if (previousPacket != null && data.length != dataSize) {
 			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_LAST,
 					Types.DATA, downloadNumber);
-		} else {
-			header = new HeaderImpl(0, 0, Flags.UNDEFINED, Types.UNDEFINED, 0);
-		}
+		} 
 		return header;
 	}
 
@@ -201,7 +199,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	public void increasePacketSize() {
 		if (packetSize < defaultPacketSize) {
 			packetSize = packetSize * 2;
-		} else if (packetSize >= maximalPacketSize) {
+		} else if ((packetSize * 1.5) >= maximalPacketSize) {
 			packetSize = maximalPacketSize;
 		} else {
 			packetSize = (int) (packetSize * 1.5);

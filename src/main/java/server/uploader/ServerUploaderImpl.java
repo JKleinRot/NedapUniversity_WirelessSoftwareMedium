@@ -246,7 +246,7 @@ public class ServerUploaderImpl implements ServerUploader {
 		String fileDirectory = words[1];
 		String fileName = words[3];
 		downloadNumber = Integer.parseInt(words[5]);
-		fileDisassembler = new ServerFileDisassemblerImpl(fileDirectory + fileName, this, downloadNumber, this);
+		fileDisassembler = new ServerFileDisassemblerImpl(fileDirectory + fileName, this, downloadNumber);
 	}
 
 	/**
