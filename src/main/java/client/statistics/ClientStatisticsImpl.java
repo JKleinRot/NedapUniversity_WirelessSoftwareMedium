@@ -16,16 +16,16 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	private LocalDateTime endTime;
 
 	/** The amount of data send */
-	private int bytesSend;
+	private long bytesSent;
 
 	/** The total amount of bytes in the file */
-	private int totalBytes;
+	private long totalBytes;
 
 	public ClientStatisticsImpl(String fileName) {
 		File file = new File(fileName);
-		totalBytes = (int) file.length();
+		totalBytes = file.length();
 		retransmissionCount = 0;
-		bytesSend = 0;
+		bytesSent = 0;
 	}
 
 	@Override
@@ -45,45 +45,45 @@ public class ClientStatisticsImpl implements ClientStatistics {
 
 	@Override
 	public void updatePartSend(int lastPacketSize) {
-		bytesSend = bytesSend + lastPacketSize;
+		bytesSent = bytesSent + lastPacketSize;
 	}
 
 	@Override
 	public String getStatistics() {
 		String statistics;
 		if (endTime == null) {
-			int duration = (int) Duration.between(startTime, LocalDateTime.now()).getSeconds();
-			int speed;
+			long duration = Duration.between(startTime, LocalDateTime.now()).getSeconds();
+			long speed;
 			if (duration != 0) {
-				speed = bytesSend / duration;
+				speed = bytesSent / duration;
 			} else {
-				speed = bytesSend;
+				speed = bytesSent;
 			}
-			int percentageComplete = (bytesSend * 100) / totalBytes;
+			long percentageComplete = (bytesSent * 100L) / totalBytes;
 			if (duration != 0) {
-				statistics = bytesSend + " of " + totalBytes + " bytes are send in " + duration + " seconds\n"
+				statistics = bytesSent + " of " + totalBytes + " bytes are sent in " + duration + " seconds\n"
 						+ "The average upload speed is " + speed + " bytes/second\n" + retransmissionCount
 						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
 			} else {
-				statistics = bytesSend + " of " + totalBytes + " bytes are send in less than a second\n"
+				statistics = bytesSent + " of " + totalBytes + " bytes are sent in less than a second\n"
 						+ "The average upload speed is higher than " + speed + " bytes/seconds\n" + retransmissionCount
 						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
 			}
 		} else {
-			int duration = (int) Duration.between(startTime, endTime).getSeconds();
-			int speed;
+			long duration = Duration.between(startTime, endTime).getSeconds();
+			long speed;
 			if (duration != 0) {
-				speed = bytesSend / duration;
+				speed = bytesSent / duration;
 			} else {
-				speed = bytesSend;
+				speed = bytesSent;
 			}
 			int percentageComplete = 100;
 			if (duration != 0) {
-				statistics = bytesSend + " of " + totalBytes + " bytes are send in " + duration + " seconds\n"
+				statistics = bytesSent + " of " + totalBytes + " bytes are sent in " + duration + " seconds\n"
 						+ "The average upload speed is " + speed + " bytes/second\n" + retransmissionCount
 						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
 			} else {
-				statistics = bytesSend + " of " + totalBytes + " bytes are send in less than a second\n"
+				statistics = bytesSent + " of " + totalBytes + " bytes are sent in less than a second\n"
 						+ "The average upload speed is higher than " + speed + " bytes/seconds\n" + retransmissionCount
 						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
 			}
