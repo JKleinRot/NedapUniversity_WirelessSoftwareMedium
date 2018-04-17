@@ -20,9 +20,6 @@ public class FileRequesterImpl implements FileRequester {
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
 
-	/** The first data request sequence number */
-	private static final int firstDataAcknowledgementNumber = 99;
-
 	/** The length of the header */
 	private static final int headerLength = 20;
 

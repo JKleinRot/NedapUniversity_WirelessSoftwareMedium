@@ -102,7 +102,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
 			inputStream = new FileInputStream(fileName);
-			DigestInputStream digestInputStream = new DigestInputStream(inputStream, messageDigest);
+			new DigestInputStream(inputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("No such algorithm");	
 		} catch (FileNotFoundException e) {

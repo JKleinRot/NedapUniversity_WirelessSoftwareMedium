@@ -70,7 +70,7 @@ public class ServerFileAssemblerImpl implements ServerFileAssembler {
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
 			outputStream = new FileOutputStream(fileDirectory + fileName);
-			DigestOutputStream digestOutputstream = new DigestOutputStream(outputStream, messageDigest);
+			new DigestOutputStream(outputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("No such algorithm");	
 		} catch (FileNotFoundException e) {

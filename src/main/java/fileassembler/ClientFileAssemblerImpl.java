@@ -72,7 +72,7 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
 			outputStream = new FileOutputStream(fileDirectory + fileName);
-			DigestOutputStream digestOutputStream = new DigestOutputStream(outputStream, messageDigest);
+			new DigestOutputStream(outputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("No such algorithm");	
 		} catch (FileNotFoundException e) {
