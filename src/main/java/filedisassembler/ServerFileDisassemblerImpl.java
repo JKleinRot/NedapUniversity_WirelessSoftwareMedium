@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +70,12 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 
 	/** The data size found by using File.length */
 	private int fileLengthKnownBeforeSending;
+	
+	/** The checksum */
+	private byte[] checksum;
+	
+	/** The message digest */
+	private MessageDigest messageDigest;
 
 	/**
 	 * -----Constructor-----
@@ -104,8 +113,13 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	 *            The file name
 	 */
 	private void createFileInputStream(String fileName) {
+		messageDigest = null;
 		try {
+			messageDigest = MessageDigest.getInstance("MD5");
 			inputStream = new FileInputStream(fileName);
+			DigestInputStream digestInputStream = new DigestInputStream(inputStream, messageDigest);
+		} catch (NoSuchAlgorithmException e) {
+			System.out.println("No such algorithm");	
 		} catch (FileNotFoundException e) {
 			notifyDataUploaderFileNotFound();
 		}
@@ -147,6 +161,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		} else {
 			data = new byte[0];
 		}
+		messageDigest.update(data);
 		return data;
 	}
 
@@ -233,4 +248,12 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		return fileLengthKnownBeforeSending;
 	}
 
+	@Override
+	public byte[] getChecksum() {
+		checksum = messageDigest.digest();
+		System.out.println(Arrays.toString(checksum));
+		return checksum;
+	}
+
+	
 }

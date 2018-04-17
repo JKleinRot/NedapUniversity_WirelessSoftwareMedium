@@ -61,4 +61,11 @@ public interface ServerFileDisassembler {
 	 * @return the data size in bytes
 	 */
 	public int getDataSizeBeforeSending();
+	
+	/**
+	 * Returns the checksum of the data.
+	 * 
+	 * @return the checksum
+	 */
+	public byte[] getChecksum();
 }

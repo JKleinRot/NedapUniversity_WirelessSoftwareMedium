@@ -277,7 +277,7 @@ public class ServerUploaderImpl implements ServerUploader {
 	private Packet createDataIntegrityPacket() {
 		Header header = new HeaderImpl(finalNumber, 0, Flags.DOWNLOAD_DATAINTEGRITY, Types.DATAINTEGRITY,
 				downloadNumber);
-		byte[] data = ("DataSize " + fileDisassembler.getTotalDataSize()).getBytes();
+		byte[] data = fileDisassembler.getChecksum();
 		Packet packet = new PacketImpl(header, data);
 		return packet;
 	}

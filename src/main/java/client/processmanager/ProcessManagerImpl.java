@@ -142,4 +142,11 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 				+ newDirectory + " as " + newFileName);
 	}
 
+	@Override
+	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+		setChanged();
+		notifyObservers("The file " + fileName + " from " + fileDirectory + " was incorrectly downloaded to the server into "
+				+ newDirectory + " as " + newFileName);
+	}
+
 }

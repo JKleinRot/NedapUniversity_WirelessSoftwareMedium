@@ -96,4 +96,18 @@ public interface ProcessManager {
 	 *            The new file name
 	 */
 	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName);
+
+	/**
+	 * Notifies the client that the download is incorrect.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
+	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName);
 }

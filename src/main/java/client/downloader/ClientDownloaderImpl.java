@@ -128,7 +128,13 @@ public class ClientDownloaderImpl implements ClientDownloader {
 			// Arrays.toString(packet.getHeader().getBytes()));
 		}
 		clientStatistics.setEndTime(LocalDateTime.now());
-		notifyProcessManagerDownloadComplete(fileName, fileDirectory, newDirectory, newFileName);
+		if (fileAssembler.isFileCorrect()) {
+			notifyProcessManagerDownloadComplete(fileName, fileDirectory, newDirectory, newFileName);
+		} else {
+			notifyProcessManagerDownloadIncorrect(fileName, fileDirectory, newDirectory, newFileName);
+		}
+		
+		
 	}
 
 	/**
@@ -293,7 +299,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 			ack = new PacketImpl(header, data);
 		} else {
 			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.DOWNLOAD_DATAINTEGRITY,
-					Types.LASTACK, downloadNumber);
+					Types.DATAINTEGRITY, downloadNumber);
 			byte[] data = new byte[0];
 			ack = new PacketImpl(header, data);
 		}
@@ -330,6 +336,11 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	private void notifyProcessManagerDownloadComplete(String fileName, String fileDirectory, String newDirectory,
 			String newFileName) {
 		processManager.downloadComplete(fileName, fileDirectory, newDirectory, newFileName);
+	}
+	
+	private void notifyProcessManagerDownloadIncorrect(String fileName, String fileDirectory, String newDirectory,
+			String newFileName) {
+		processManager.downloadIncorrect(fileName, fileDirectory, newDirectory, newFileName);
 	}
 
 	@Override

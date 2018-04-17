@@ -213,6 +213,8 @@ public class ClientTUIImpl implements ClientTUI {
 			System.out.println(arg);
 		} else if(((String) arg).contains("incorrectly uploaded")) {
 			System.out.println(arg);
+		} else if (((String) arg).contains("incorrectly downloaded")) {
+			System.out.println(arg);
 		}
 	}
 

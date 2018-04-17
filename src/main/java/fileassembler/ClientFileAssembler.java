@@ -17,4 +17,11 @@ public interface ClientFileAssembler {
 	 *            The packet received
 	 */
 	public void addPacket(Packet packet);
+
+	/**
+	 * Returns whether the file is correct.
+	 * 
+	 * @return true if the file is correct
+	 */
+	public boolean isFileCorrect();
 }
