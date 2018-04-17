@@ -161,4 +161,20 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		return filesAndDirectories;
 	}
 
+	@Override
+	public void pause() {
+		if (uploaders.size() == 1) {
+			ClientUploader uploader = uploaders.get(0);
+			uploader.pause();
+		}
+	}
+
+	@Override
+	public void resume() {
+		if (uploaders.size() == 1) {
+			ClientUploader uploader = uploaders.get(0);
+			uploader.resume();
+		}
+	}
+
 }

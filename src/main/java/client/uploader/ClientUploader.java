@@ -65,4 +65,14 @@ public interface ClientUploader {
 	 * @return the upload number
 	 */
 	public Object getUploadNumber();
+	
+	/**
+	 * Pauses the upload.
+	 */
+	public void pause();
+
+	/**
+	 * Resumes the upload.
+	 */
+	public void resume();
 }

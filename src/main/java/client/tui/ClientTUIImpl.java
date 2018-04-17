@@ -225,7 +225,15 @@ public class ClientTUIImpl implements ClientTUI {
 					setAllBooleansFalse();
 				}
 			} else if (words.length == 1 && words[0].equals("pause")) {
-
+				processManager.pause();
+				input = readInput(
+						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
+								+ "Please enter the word between bracket to perform the action");
+			} else if (words.length == 1 && words[0].equals("resume")) {
+				processManager.resume();
+				input = readInput(
+						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
+								+ "Please enter the word between bracket to perform the action");
 			} else {
 				input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 			}

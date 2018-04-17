@@ -119,4 +119,14 @@ public interface ProcessManager {
 	 * @return the files and directories found
 	 */
 	public String handleFilesRequest(String directory);
+
+	/**
+	 * Pauses the current transfer.
+	 */
+	public void pause();
+	
+	/**
+	 * Resumes the paused transfer.
+	 */
+	public void resume();
 }

@@ -72,6 +72,9 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 
 	/** The download number offset in the header */
 	private static final int downloadNumberOffset = 16;
+	
+	/** Whether the upload is running */
+	private volatile boolean isRunning;
 
 	/**
 	 * -----Constructor-----
@@ -90,6 +93,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		this.uploadNumber = uploadNumber;
 		this.processManager = processManager;
 		isFileFound = true;
+		isRunning = true;
 	}
 
 	@Override
@@ -243,10 +247,12 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private void sendData() {
 		clientStatistics.setStartTime(LocalDateTime.now());
 		while (previousPacket == null || !previousPacket.getHeader().getFlags().equals(Flags.UPLOAD_LAST)) {
-			Packet packet = fileDisassembler.getNextPacket();
-			client.sendOnePacket(packet, this);
-			previousPacket = packet;
-			clientStatistics.updatePartSent(packet.getData().length);
+			if (isRunning) {
+				Packet packet = fileDisassembler.getNextPacket();
+				client.sendOnePacket(packet, this);
+				previousPacket = packet;
+				clientStatistics.updatePartSent(packet.getData().length);
+			}
 		}
 		clientStatistics.setEndTime(LocalDateTime.now());
 	}
@@ -341,6 +347,16 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	@Override
 	public Object getUploadNumber() {
 		return uploadNumber;
+	}
+
+	@Override
+	public void pause() {
+		isRunning = false;
+	}
+	
+	@Override
+	public void resume() {
+		isRunning = true;
 	}
 
 }
