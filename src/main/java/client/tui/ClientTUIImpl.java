@@ -55,6 +55,9 @@ public class ClientTUIImpl implements ClientTUI {
 	/** Whether the user has requested files */
 	private boolean isFileRequest;
 
+	/** Whether the current upload or download is paused */
+	private boolean isPaused;
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -225,15 +228,38 @@ public class ClientTUIImpl implements ClientTUI {
 					setAllBooleansFalse();
 				}
 			} else if (words.length == 1 && words[0].equals("pause")) {
-				processManager.pause();
-				input = readInput(
-						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
-								+ "Please enter the word between bracket to perform the action");
+				if (isWorking && !isPaused) {
+					processManager.pause();
+					System.out.println("The current upload or download is paused");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
+									+ "Please enter the word between bracket to perform the action");
+					isPaused = true;
+				} else if (isWorking && isPaused) {
+					System.out.println("The current upload or download is already paused");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
+									+ "Please enter the word between bracket to perform the action");
+				} else if (!isWorking) {
+					System.out.println("There is no upload or download to pause");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
+									+ "Please enter the word between bracket to perform the action");
+				}
 			} else if (words.length == 1 && words[0].equals("resume")) {
-				processManager.resume();
-				input = readInput(
-						"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
-								+ "Please enter the word between bracket to perform the action");
+				if (isWorking && isPaused) {
+					processManager.resume();
+					System.out.println("The pause upload or download is resumed");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
+									+ "Please enter the word between bracket to perform the action");
+					isPaused = false;
+				} else if (!isPaused || !isWorking) {
+					System.out.println("There is no paused upload or download to resume");
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)? To pause and resume a download or upload use (pause) and (resume). "
+									+ "Please enter the word between bracket to perform the action");
+				}
 			} else {
 				input = readInput("Please enter the desired parameters or enter \"abort\" to stop the current action");
 			}
