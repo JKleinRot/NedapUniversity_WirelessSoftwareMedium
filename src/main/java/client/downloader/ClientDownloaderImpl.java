@@ -69,6 +69,9 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	/** Whether the file is found */
 	private boolean isFileFound;
 
+	/** Whether the download is running */
+	private volatile boolean isRunning;
+
 	/**
 	 * -----Constructor-----
 	 * 
@@ -87,6 +90,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		this.downloadNumber = downloadNumber;
 		nextSequenceNumberExpected = 100;
 		isFileFound = true;
+		isRunning = true;
 	}
 
 	@Override
@@ -112,20 +116,22 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		clientStatistics.setStartTime(LocalDateTime.now());
 		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)
 				&& packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
-			nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
-			clientStatistics.updatePartSent(packet.getData().length);
-			// System.out.println("Send another packet");
-			// System.out.println("Received packet size = " + packet.getLength());
-			// System.out.println("Sequence number received = " +
-			// packet.getHeader().getSequenceNumber());
-			Packet ack = createAck(packet);
-			// System.out.println("ClientDownloader packet send: " +
-			// Arrays.toString(ack.getHeader().getBytes()));
-			// System.out.println("Ack number send = " +
-			// ack.getHeader().getAcknowledgementNumber());
-			packet = sendAck(ack);
-			// System.out.println("ClientDownloader packet received: " +
-			// Arrays.toString(packet.getHeader().getBytes()));
+			if (isRunning) {
+				nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
+				clientStatistics.updatePartSent(packet.getData().length);
+				// System.out.println("Send another packet");
+				// System.out.println("Received packet size = " + packet.getLength());
+				// System.out.println("Sequence number received = " +
+				// packet.getHeader().getSequenceNumber());
+				Packet ack = createAck(packet);
+				// System.out.println("ClientDownloader packet send: " +
+				// Arrays.toString(ack.getHeader().getBytes()));
+				// System.out.println("Ack number send = " +
+				// ack.getHeader().getAcknowledgementNumber());
+				packet = sendAck(ack);
+				// System.out.println("ClientDownloader packet received: " +
+				// Arrays.toString(packet.getHeader().getBytes()));
+			}
 		}
 		clientStatistics.setEndTime(LocalDateTime.now());
 		if (fileAssembler.isFileCorrect()) {
@@ -364,5 +370,15 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	@Override
 	public void notifyFileNotFound() {
 		isFileFound = false;
+	}
+
+	@Override
+	public void pause() {
+		isRunning = false;
+	}
+
+	@Override
+	public void resume() {
+		isRunning = true;
 	}
 }

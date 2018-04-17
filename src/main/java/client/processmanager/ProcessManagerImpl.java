@@ -166,6 +166,9 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		if (uploaders.size() == 1) {
 			ClientUploader uploader = uploaders.get(0);
 			uploader.pause();
+		} else if (downloaders.size() == 1) {
+			ClientDownloader downloader = downloaders.get(0);
+			downloader.pause();
 		}
 	}
 
@@ -174,6 +177,9 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		if (uploaders.size() == 1) {
 			ClientUploader uploader = uploaders.get(0);
 			uploader.resume();
+		} else if (downloaders.size() == 1) {
+			ClientDownloader downloader = downloaders.get(0);
+			downloader.resume();
 		}
 	}
 
