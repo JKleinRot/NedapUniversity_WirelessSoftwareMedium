@@ -89,7 +89,7 @@ public class ServerUploaderImpl implements ServerUploader {
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
 		Packet packetToSend;
 		// System.out.println("ServerUploader packet received: " +
-		// Arrays.toString(receivedPacket.getHeader().getBytes()));
+		System.out.println("Received " + Arrays.toString(receivedPacket.getHeader().getBytes()));
 		// System.out.println("Ack number received = " +
 		// receivedPacket.getHeader().getAcknowledgementNumber());
 		// System.out.println("boolean = " + isSendingPacketsAfterDecreasingSize);
@@ -100,7 +100,7 @@ public class ServerUploaderImpl implements ServerUploader {
 					// packetToSend = fileDisassembler.getNextPacket();
 					packetToSend = createDownloadCharacteristicsAck(receivedPacket);
 					// System.out.println("DownloadCharacteristics");
-					// System.out.println(Arrays.toString(packetToSend.getBytes()));
+					 System.out.println("Send " + Arrays.toString(packetToSend.getHeader().getBytes()));
 				} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)) {
 					int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
 					if (currentAcknowledgementNumber != previousAcknowledgementNumber) {

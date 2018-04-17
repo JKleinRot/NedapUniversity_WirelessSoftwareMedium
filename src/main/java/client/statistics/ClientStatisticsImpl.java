@@ -61,7 +61,7 @@ public class ClientStatisticsImpl implements ClientStatistics {
 			}
 			int percentageComplete = (bytesSend * 100) / totalBytes;
 			if (duration != 0) {
-				statistics = bytesSend + " of " + totalBytes + " bytes are send in " + duration + "\n"
+				statistics = bytesSend + " of " + totalBytes + " bytes are send in " + duration + " seconds\n"
 						+ "The average upload speed is " + speed + " bytes/second\n" + retransmissionCount
 						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
 			} else {
@@ -79,7 +79,7 @@ public class ClientStatisticsImpl implements ClientStatistics {
 			}
 			int percentageComplete = 100;
 			if (duration != 0) {
-				statistics = bytesSend + " of " + totalBytes + " bytes are send in " + duration + "\n"
+				statistics = bytesSend + " of " + totalBytes + " bytes are send in " + duration + " seconds\n"
 						+ "The average upload speed is " + speed + " bytes/second\n" + retransmissionCount
 						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
 			} else {
@@ -95,6 +95,7 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	public void setTotalDataSize(byte[] packet) {
 		String data = new String(packet);
 		String[] words = data.split(" ");
+		System.out.println(data);
 		totalBytes = Integer.parseInt(words[1]);
 	}
 
