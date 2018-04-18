@@ -36,23 +36,17 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 
 	/** The download threads */
 	private Map<Integer, Thread> downloadThreads;
-	
+
 	/** The file requester */
 	private FileRequester fileRequester;
 
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a ProcessManagerImpl that handles the request from the user.
+	 * Creates a process manager that handles the request from the user.
 	 * 
-	 * @param dataDownloader
-	 *            The data downloader
-	 * @param dataUploader
-	 *            The data uploader
-	 * @param statisticsManager
-	 *            The statistics manager
-	 * @param storageRequester
-	 *            The storage requester
+	 * @param client
+	 *            The client
 	 */
 	public ProcessManagerImpl(Client client) {
 		this.client = client;
@@ -114,7 +108,8 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	}
 
 	@Override
-	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader) {
+	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientUploader uploader) {
 		uploadThreads.remove(uploader.getUploadNumber());
 		setChanged();
 		notifyObservers("The file " + fileName + " from " + fileDirectory + " is uploaded to the server into "
@@ -122,7 +117,8 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	}
 
 	@Override
-	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader) {
+	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientDownloader downloader) {
 		Thread downloadThread = downloadThreads.get(downloader.getDownloadNumber());
 		downloadThread.interrupt();
 		downloadThreads.remove(downloader.getDownloadNumber());
@@ -146,21 +142,23 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	}
 
 	@Override
-	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader) {
+	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientUploader uploader) {
 		uploadThreads.remove(uploader.getUploadNumber());
 		setChanged();
-		notifyObservers("The file " + fileName + " from " + fileDirectory + " was incorrectly uploaded to the server into "
-				+ newDirectory + " as " + newFileName);
+		notifyObservers("The file " + fileName + " from " + fileDirectory
+				+ " was incorrectly uploaded to the server into " + newDirectory + " as " + newFileName);
 	}
 
 	@Override
-	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader) {
+	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientDownloader downloader) {
 		Thread downloadThread = downloadThreads.get(downloader.getDownloadNumber());
 		downloadThread.interrupt();
 		downloadThreads.remove(downloader.getDownloadNumber());
 		setChanged();
-		notifyObservers("The file " + fileName + " from " + fileDirectory + " was incorrectly downloaded to the server into "
-				+ newDirectory + " as " + newFileName);
+		notifyObservers("The file " + fileName + " from " + fileDirectory
+				+ " was incorrectly downloaded to the server into " + newDirectory + " as " + newFileName);
 	}
 
 	@Override

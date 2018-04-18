@@ -49,25 +49,27 @@ public class PacketTest {
 		header = new HeaderImpl(sequenceNumber, acknowledgementNumber, flags, types, downloadNumber);
 		packet = new PacketImpl(header, data);
 	}
-	
-	/** 
+
+	/**
 	 * Tests that the correct header is returned.
 	 */
 	@Test
 	public void testGetHeader() {
 		assertEquals(header, packet.getHeader());
 	}
-	
-	/** 
+
+	/**
 	 * Tests that the correct data is returned.
 	 */
 	@Test
 	public void testGetData() {
 		assertEquals(data, packet.getData());
 	}
-	
+
 	@Test
 	public void testGetBytes() {
-		assertArrayEquals(ByteBuffer.allocate(header.getLength() + data.length).put(header.getBytes()).put(data).array(), packet.getBytes());
+		assertArrayEquals(
+				ByteBuffer.allocate(header.getLength() + data.length).put(header.getBytes()).put(data).array(),
+				packet.getBytes());
 	}
 }

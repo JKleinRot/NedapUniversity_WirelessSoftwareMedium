@@ -1,5 +1,10 @@
 package packet.header;
 
+/**
+ * The flags a packet can have.
+ * 
+ * @author janine.kleinrot
+ */
 public enum Flags {
 
 	UNDEFINED(new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000000 }), UPLOAD(
@@ -30,7 +35,7 @@ public enum Flags {
 	private byte[] bytes;
 
 	/**
-	 * Creates a new Flags.
+	 * Creates a new flags.
 	 * 
 	 * @param bytes
 	 *            The bytes of the flags

@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
  * @author janine.kleinrot
  */
 public class FlagsTest {
-	
-	/** 
-	 * Tests that all the values are a Flag. 
+
+	/**
+	 * Tests that all the values are a Flag.
 	 */
 	@Test
 	public void testPossibleValues() {
@@ -32,25 +32,25 @@ public class FlagsTest {
 		assertNotNull(Flags.valueOf("DOWNLOAD_LAST"));
 		assertNotNull(Flags.valueOf("DOWNLOAD_DATAINTEGRITY"));
 	}
-	
+
 	/**
 	 * Tests the byte values of the flags.
 	 */
 	@Test
 	public void testByteValueOfFlags() {
-		assertArrayEquals(new byte[] {0, 0, 0, 0}, Flags.UNDEFINED.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 1}, Flags.UPLOAD.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 2}, Flags.DOWNLOAD.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 4}, Flags.STATISTICS.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 8}, Flags.FILEREQUEST.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 1, 1}, Flags.UPLOAD_MORETOCOME.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 2, 1}, Flags.UPLOAD_LAST.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 4, 1}, Flags.UPLOAD_DATAINTEGRITY.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 1, 2}, Flags.DOWNLOAD_MORETOCOME.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 2, 2}, Flags.DOWNLOAD_LAST.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 4, 2}, Flags.DOWNLOAD_DATAINTEGRITY.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 0 }, Flags.UNDEFINED.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 1 }, Flags.UPLOAD.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 2 }, Flags.DOWNLOAD.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 4 }, Flags.STATISTICS.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 8 }, Flags.FILEREQUEST.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 1, 1 }, Flags.UPLOAD_MORETOCOME.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 2, 1 }, Flags.UPLOAD_LAST.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 4, 1 }, Flags.UPLOAD_DATAINTEGRITY.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 1, 2 }, Flags.DOWNLOAD_MORETOCOME.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 2, 2 }, Flags.DOWNLOAD_LAST.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 4, 2 }, Flags.DOWNLOAD_DATAINTEGRITY.getBytes());
 	}
-	
+
 	/**
 	 * Tests the int values of the flags.
 	 */

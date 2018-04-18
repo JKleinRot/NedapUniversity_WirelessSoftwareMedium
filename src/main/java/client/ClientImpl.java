@@ -61,8 +61,8 @@ public class ClientImpl implements Client {
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a ClientImpl. Initializes a datagram socket. Creates instances of the
-	 * client actors and passes those as arguments in the ClientTUI.
+	 * Creates a client that can send and received UDP packets. It starts a TUI for
+	 * inputs of the user.
 	 */
 	public ClientImpl() {
 		try {
@@ -76,7 +76,6 @@ public class ClientImpl implements Client {
 		clientTUI = new ClientTUIImpl(processManager);
 		Thread clientTUIThread = new Thread(clientTUI);
 		clientTUIThread.start();
-
 	}
 
 	@Override
@@ -113,23 +112,8 @@ public class ClientImpl implements Client {
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.send(packetToSend);
-			// System.out.println("ClientImpl packet send: " +
-			// Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
-			// System.out.println("PacketSize = " + thePacketToSend.getLength() + "
-			// SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
-			// System.out.println("Send: " + new String(packetToSend.getData(), 0,
-			// packetToSend.getLength()) + " to "
-			// + packetToSend.getAddress());
-			// System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
-			// System.out.println("ClientImpl packet received: " +
-			// Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
-			// System.out.println("Length: " + receivedPacket.getLength());
-			// System.out.println("Received: " + new String(receivedPacket.getData(), 0,
-			// receivedPacket.getLength())
-			// + " from " + receivedPacket.getAddress());
-			// System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			receivedPacket = sendOnePacket(thePacketToSend);
@@ -148,23 +132,8 @@ public class ClientImpl implements Client {
 		int retransmissionCount = 0;
 		try {
 			socket.send(packetToSend);
-			// System.out.println("ClientImpl packet send: " +
-			// Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
-			// System.out.println("PacketSize = " + thePacketToSend.getLength() + "
-			// SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
-			// System.out.println("Send: " + new String(packetToSend.getData(), 0,
-			// packetToSend.getLength()) + " to "
-			// + packetToSend.getAddress());
-			// System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
-			// System.out.println("ClientImpl packet received: " +
-			// Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
-			// System.out.println("Length: " + receivedPacket.getLength());
-			// System.out.println("Received: " + new String(receivedPacket.getData(), 0,
-			// receivedPacket.getLength())
-			// + " from " + receivedPacket.getAddress());
-			// System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			retransmissionCount++;
@@ -184,33 +153,18 @@ public class ClientImpl implements Client {
 		DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 		try {
 			socket.send(packetToSend);
-			// System.out.println("PacketSize = " + thePacketToSend.getLength() + "
-			// SequenceNumber = " + thePacketToSend.getHeader().getSequenceNumber());
-			// System.out.println("Send: " + new String(packetToSend.getData(), 0,
-			// packetToSend.getLength()) + " to "
-			// + packetToSend.getAddress());
-			// System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 			if (retransmissionCount == 0) {
 				successfulTransmissionCount++;
-				// System.out.println("Successful transmission count = " +
-				// successfulTransmissionCount);
 			}
-			// System.out.println("Length: " + receivedPacket.getLength());
-			// System.out.println("Received: " + new String(receivedPacket.getData(), 0,
-			// receivedPacket.getLength())
-			// + " from " + receivedPacket.getAddress());
-			// System.out.println(Arrays.toString(receivedPacket.getData()));
 		} catch (SocketTimeoutException e) {
 			System.out.println("ERROR: No response within time");
 			if (retransmissionCount < decreasePacketSizeThreshold) {
 				retransmissionCount++;
 				successfulTransmissionCount = 0;
-				// System.out.println("Retransmission count = " + retransmissionCount);
 				receivedPacket = sendOnePacket(thePacketToSend, uploader);
 			} else {
-				// System.out.println("Decrease packet size");
 				uploader.decreasePacketSize(thePacketToSend);
 			}
 		} catch (IOException e) {
@@ -220,13 +174,17 @@ public class ClientImpl implements Client {
 		retransmissionCount = 0;
 		if (successfulTransmissionCount >= increasePacketSizeThreshold) {
 			uploader.increasePacketSize();
-			// System.out.println("Increase packet size. Successful transmission count = " +
-			// successfulTransmissionCount);
 			successfulTransmissionCount = 0;
 		}
 		return receivedPacket;
 	}
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            Not used
+	 */
 	public static void main(String args[]) {
 		System.out.println("Client active");
 		Client client = new ClientImpl();

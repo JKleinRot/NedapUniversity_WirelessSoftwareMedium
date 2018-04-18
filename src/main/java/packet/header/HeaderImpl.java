@@ -40,7 +40,7 @@ public class HeaderImpl implements Header {
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a HeaderImpl with the provided arguments.
+	 * Creates a header.
 	 * 
 	 * @param sequenceNumber
 	 *            The sequence number

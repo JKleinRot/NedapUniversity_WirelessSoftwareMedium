@@ -35,7 +35,7 @@ public class HeaderTest {
 
 	/** The download number */
 	private int downloadNumber;
-	
+
 	/** The length of the header */
 	private int length;
 
@@ -59,7 +59,7 @@ public class HeaderTest {
 		byte[] headerBytes = header.getBytes();
 		assertArrayEquals(expectedHeaderBytes, headerBytes);
 	}
-	
+
 	/**
 	 * Tests getting the sequence number.
 	 */
@@ -67,7 +67,7 @@ public class HeaderTest {
 	public void testGetSequenceNumber() {
 		assertEquals(sequenceNumber, header.getSequenceNumber());
 	}
-	
+
 	/**
 	 * Tests getting the acknowledgement number.
 	 */
@@ -75,7 +75,7 @@ public class HeaderTest {
 	public void testGetAcknowledgementNumber() {
 		assertEquals(acknowledgementNumber, header.getAcknowledgementNumber());
 	}
-	
+
 	/**
 	 * Tests getting the flags.
 	 */
@@ -83,7 +83,7 @@ public class HeaderTest {
 	public void testGetFlags() {
 		assertEquals(flags, header.getFlags());
 	}
-	
+
 	/**
 	 * Tests getting the types.
 	 */
@@ -91,7 +91,7 @@ public class HeaderTest {
 	public void testGetTypes() {
 		assertEquals(types, header.getTypes());
 	}
-	
+
 	/**
 	 * Tests getting the acknowledgement number.
 	 */
@@ -99,7 +99,7 @@ public class HeaderTest {
 	public void testGetDownloadNumber() {
 		assertEquals(downloadNumber, header.getDownloadNumber());
 	}
-	
+
 	/**
 	 * Tests getting the length of the header.
 	 */

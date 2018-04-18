@@ -16,7 +16,7 @@ public class FileRequesterImpl implements FileRequester {
 
 	/** The client */
 	private Client client;
-	
+
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
 
@@ -41,7 +41,7 @@ public class FileRequesterImpl implements FileRequester {
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a file requesters
+	 * Creates a file requester.
 	 * 
 	 * @param client
 	 *            The client
@@ -54,7 +54,8 @@ public class FileRequesterImpl implements FileRequester {
 	public String handleFilesRequest(String directory) {
 		Packet packet = createRequest(directory);
 		DatagramPacket datagramPacketReceived = client.sendOnePacket(packet);
-		Packet packetReceived = recreatePacket(Arrays.copyOfRange(datagramPacketReceived.getData(), 0, datagramPacketReceived.getLength()));
+		Packet packetReceived = recreatePacket(
+				Arrays.copyOfRange(datagramPacketReceived.getData(), 0, datagramPacketReceived.getLength()));
 		String filesAndDirectories = new String(packetReceived.getData());
 		return filesAndDirectories;
 	}
@@ -72,7 +73,7 @@ public class FileRequesterImpl implements FileRequester {
 		Packet packet = new PacketImpl(header, data);
 		return packet;
 	}
-	
+
 	/**
 	 * Recreates the packet with header and data from the byte array.
 	 * 
@@ -158,5 +159,4 @@ public class FileRequesterImpl implements FileRequester {
 		}
 		return types;
 	}
-
 }

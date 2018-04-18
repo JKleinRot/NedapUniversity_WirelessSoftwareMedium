@@ -75,7 +75,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a new client downloader to download a file from the server.
+	 * Creates a client downloader to download a file from the server.
 	 * 
 	 * @param client
 	 *            The client
@@ -119,18 +119,8 @@ public class ClientDownloaderImpl implements ClientDownloader {
 				if (packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
 					nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
 					clientStatistics.updatePartSent(packet.getData().length);
-					// System.out.println("Send another packet");
-					// System.out.println("Received packet size = " + packet.getLength());
-					// System.out.println("Sequence number received = " +
-					// packet.getHeader().getSequenceNumber());
 					Packet ack = createAck(packet);
-					// System.out.println("ClientDownloader packet send: " +
-					// Arrays.toString(ack.getHeader().getBytes()));
-					// System.out.println("Ack number send = " +
-					// ack.getHeader().getAcknowledgementNumber());
 					packet = sendAck(ack);
-					// System.out.println("ClientDownloader packet received: " +
-					// Arrays.toString(packet.getHeader().getBytes()));
 				}
 			}
 		}
@@ -140,8 +130,6 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		} else {
 			notifyProcessManagerDownloadIncorrect(fileName, fileDirectory, newDirectory, newFileName);
 		}
-		
-		
 	}
 
 	/**
@@ -320,7 +308,8 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	}
 
 	/**
-	 * Sends the ack to the received packet and returns the received packet.
+	 * Sends the ack to the previous received packet and returns the received
+	 * packet.
 	 * 
 	 * @param ack
 	 *            The ack
@@ -350,7 +339,20 @@ public class ClientDownloaderImpl implements ClientDownloader {
 			String newFileName) {
 		processManager.downloadComplete(fileName, fileDirectory, newDirectory, newFileName, this);
 	}
-	
+
+	/**
+	 * Notifies the process manager that the current download is incorrectly
+	 * completed.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 * @param fileDirectory
+	 *            The file directory
+	 * @param newDirectory
+	 *            The new directory
+	 * @param newFileName
+	 *            The new file name
+	 */
 	private void notifyProcessManagerDownloadIncorrect(String fileName, String fileDirectory, String newDirectory,
 			String newFileName) {
 		processManager.downloadIncorrect(fileName, fileDirectory, newDirectory, newFileName, this);

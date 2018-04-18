@@ -24,23 +24,23 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 
 	/** The downloader */
 	private ClientDownloader downloader;
-	
+
 	/** The message digest */
 	private MessageDigest messageDigest;
-	
+
 	/** The checksum */
 	private byte[] checksum;
-	
+
 	/** Whether the file is correctly transfered */
 	private boolean isFileCorrect;
-	
+
 	/** The file */
 	private File file;
 
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a new FileAssemblerImpl for the provided file name and directory.
+	 * Creates a new file assembler for the provided file name and directory.
 	 * 
 	 * @param fileName
 	 *            The file name
@@ -74,7 +74,7 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 			outputStream = new FileOutputStream(fileDirectory + fileName);
 			new DigestOutputStream(outputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("No such algorithm");	
+			System.out.println("No such algorithm");
 		} catch (FileNotFoundException e) {
 			System.out.println("ERROR: No such directory");
 			downloader.notifyFileNotFound();
@@ -116,7 +116,7 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 			isFileCorrect = true;
 		}
 	}
-	
+
 	@Override
 	public boolean isFileCorrect() {
 		return isFileCorrect;

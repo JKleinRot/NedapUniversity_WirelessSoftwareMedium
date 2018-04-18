@@ -24,7 +24,7 @@ public interface Client {
 	public DatagramPacket connect(DatagramPacket packetToSend);
 
 	/**
-	 * Sends one packet and returns the response received
+	 * Sends one packet infinitely until response received
 	 * 
 	 * @param packetToSend
 	 *            The packet to send
@@ -34,7 +34,8 @@ public interface Client {
 
 	/**
 	 * Sends one packet and returns the response received. Is able to tell the
-	 * downloader the amount of retransmissions needed.
+	 * downloader the amount of retransmissions needed. A maximum of five
+	 * retransmissions is set.
 	 * 
 	 * @param packetToSend
 	 *            The packet to send
@@ -47,7 +48,7 @@ public interface Client {
 	/**
 	 * Sends one packet and returns the response received. Is able to tell the
 	 * uploader to change the size of the packets according to the amount of
-	 * retransmissions.
+	 * retransmissions. A maximum of five retransmissions is set.
 	 * 
 	 * @param packetToSend
 	 *            The packet to send

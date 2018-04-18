@@ -1,5 +1,10 @@
 package packet.header;
 
+/**
+ * The types a packet can have.
+ * 
+ * @author janine.kleinrot
+ */
 public enum Types {
 
 	UNDEFINED(new byte[] { 0b00000000, 0b00000000, 0b00000000, 0b00000000 }), DATA(
@@ -25,7 +30,7 @@ public enum Types {
 	private byte[] bytes;
 
 	/**
-	 * Creates a new Types.
+	 * Creates a new types.
 	 * 
 	 * @param bytes
 	 *            The bytes of the types

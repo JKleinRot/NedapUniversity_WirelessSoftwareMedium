@@ -27,7 +27,7 @@ public class ClientFileDisassemblerTest {
 
 	/** The file disassembler for a longer file */
 	private ClientFileDisassembler fileDisassemblerLong;
-	
+
 	/** The file disassembler for a really long file */
 	private ClientFileDisassembler fileDisassemblerReallyLong;
 
@@ -185,7 +185,7 @@ public class ClientFileDisassemblerTest {
 		assertEquals(packetLength, packet.getLength());
 		assertEquals(longPacketLength, longPacket.getLength());
 	}
-	
+
 	/**
 	 * Tests that between the default and maximum packet size the packet size is
 	 * increased with a factor 1.5.
@@ -213,20 +213,20 @@ public class ClientFileDisassemblerTest {
 		assertEquals(packetLength, packet.getLength());
 		assertEquals(longPacketLength, longPacket.getLength());
 	}
-	
+
 	/**
 	 * Tests that the packet is split in more packets of 64 bytes.
 	 */
 	@Test
 	public void testDecreasePacketSize() {
 		int shortPacketLength = 64;
-		
+
 		Packet packet = fileDisassemblerLong.getNextPacket();
 		fileDisassemblerLong.decreasePacketSize(packet);
 		Packet normalPacket = fileDisassemblerLong.getNextPacket();
 		fileDisassemblerLong.increasePacketSize();
 		Packet normalPacketIncreasedLength = fileDisassemblerLong.getNextPacket();
-		
+
 		assertEquals(shortPacketLength, normalPacket.getLength());
 		assertEquals(shortPacketLength * 2, normalPacketIncreasedLength.getLength());
 	}

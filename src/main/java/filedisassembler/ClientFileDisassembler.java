@@ -37,7 +37,7 @@ public interface ClientFileDisassembler {
 
 	/**
 	 * Increases the packet size by doubling it if the packet size is below the
-	 * default size. Above the default size the packet size is multiplied by 1.5
+	 * default size. Above the default size the packet size is multiplied by 1.5.
 	 */
 	public void increasePacketSize();
 

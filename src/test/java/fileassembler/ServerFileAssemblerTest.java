@@ -141,7 +141,7 @@ public class ServerFileAssemblerTest {
 		fileAssemblerLong.addPacket(secondPacket);
 		fileAssemblerLong.addPacket(thirdPacket);
 		fileAssemblerLong.addPacket(lastPacketLong);
-		
+
 		assertTrue(fileAssemblerLong.isFileCorrect());
 	}
 }

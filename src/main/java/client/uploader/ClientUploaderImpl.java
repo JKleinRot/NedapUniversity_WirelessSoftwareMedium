@@ -72,14 +72,14 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 
 	/** The download number offset in the header */
 	private static final int downloadNumberOffset = 16;
-	
+
 	/** Whether the upload is running */
 	private volatile boolean isRunning;
 
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a DataUploaderImpl.
+	 * Creates a data uploader to upload files to the server.
 	 * 
 	 * @param client
 	 *            The client
@@ -103,7 +103,6 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		createFileDisassembler(fileDirectory + fileName);
 		if (!isFileFound) {
 			System.out.println("Upload file does not exist");
-			// notifyProcessManagerFileNotFound();
 			return;
 		}
 		clientStatistics = new StatisticsImpl(fileDirectory + fileName);
@@ -239,10 +238,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	}
 
 	/**
-	 * Sends the packets to the server via the client.
-	 * 
-	 * @param file
-	 *            The file to send
+	 * Sends the packets to the server.
 	 */
 	private void sendData() {
 		clientStatistics.setStartTime(LocalDateTime.now());
@@ -265,7 +261,8 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		byte[] data = fileDisassembler.getChecksum();
 		Packet packet = new PacketImpl(header, data);
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet, this);
-		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
+		Packet receivedPacket = recreatePacket(
+				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
 		System.out.println(Arrays.toString(receivedPacket.getBytes()));
 		if (new String(receivedPacket.getData()).equals("Correct")) {
 			System.out.println("Correct");
@@ -302,7 +299,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	}
 
 	/**
-	 * Notifies the process manager that the upload is incorrect
+	 * Notifies the process manager that the upload is incorrect.
 	 * 
 	 * @param fileName
 	 *            The file name
@@ -353,7 +350,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	public void pause() {
 		isRunning = false;
 	}
-	
+
 	@Override
 	public void resume() {
 		isRunning = true;

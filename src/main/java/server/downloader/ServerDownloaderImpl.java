@@ -192,7 +192,8 @@ public class ServerDownloaderImpl implements ServerDownloader {
 					packet.getHeader().getDownloadNumber());
 			ack = new PacketImpl(header, new byte[0]);
 		} else {
-			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.UPLOAD, Types.DATAINTEGRITY, packet.getHeader().getDownloadNumber());
+			Header header = new HeaderImpl(0, packet.getHeader().getSequenceNumber(), Flags.UPLOAD, Types.DATAINTEGRITY,
+					packet.getHeader().getDownloadNumber());
 			byte[] data;
 			if (fileAssembler.isFileCorrect()) {
 				data = ("Correct").getBytes();
@@ -211,5 +212,4 @@ public class ServerDownloaderImpl implements ServerDownloader {
 	public void notifyFileNotFound() {
 		isFileFound = false;
 	}
-
 }

@@ -21,7 +21,7 @@ import packet.header.Types;
 
 public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 
-	/** The data uplader */
+	/** The data uploader */
 	private ClientUploader dataUploader;
 
 	/** The packet size */
@@ -59,10 +59,10 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 
 	/** The total data size */
 	private int totalDataSize;
-	
+
 	/** The checksum */
 	private byte[] checksum;
-	
+
 	/** The message digest */
 	private MessageDigest messageDigest;
 
@@ -73,6 +73,10 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	 * 
 	 * @param filename
 	 *            The file name
+	 * @param dataUploader
+	 *            The uplaoder
+	 * @param downloadNumber
+	 *            The download number
 	 */
 	public ClientFileDisassemblerImpl(String fileName, ClientUploader dataUploader, int downloadNumber) {
 		this.dataUploader = dataUploader;
@@ -104,11 +108,10 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 			inputStream = new FileInputStream(fileName);
 			new DigestInputStream(inputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("No such algorithm");	
+			System.out.println("No such algorithm");
 		} catch (FileNotFoundException e) {
 			notifyDataUploaderFileNotFound();
 		}
-//		checksum = messageDigest.digest();
 	}
 
 	/**
@@ -170,7 +173,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		} else if (previousPacket != null && data.length != dataSize) {
 			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.UPLOAD_LAST,
 					Types.DATA, downloadNumber);
-		} 
+		}
 		return header;
 	}
 

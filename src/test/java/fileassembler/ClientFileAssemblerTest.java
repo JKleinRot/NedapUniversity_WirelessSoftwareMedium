@@ -137,7 +137,7 @@ public class ClientFileAssemblerTest {
 		fileAssemblerLong.addPacket(secondPacket);
 		fileAssemblerLong.addPacket(thirdPacket);
 		fileAssemblerLong.addPacket(lastPacketLong);
-		
+
 		assertTrue(fileAssemblerLong.isFileCorrect());
 	}
 }

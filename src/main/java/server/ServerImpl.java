@@ -43,7 +43,7 @@ public class ServerImpl implements Server {
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a ServerImpl. Initializes a datagram socket.
+	 * Creates a server that initializes a datagram socket.
 	 * 
 	 * @param portNumber
 	 *            The port number of the UDP connection
@@ -67,8 +67,6 @@ public class ServerImpl implements Server {
 			final DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 			try {
 				socket.receive(receivedPacket);
-//				System.out.println("ServerImpl packet received: "
-//						+ Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
 				if (new String(receivedPacket.getData(), 0, 5).equals("Hello")) {
 					handleConnectionMessage(receivedPacket);
 				} else if (receivedPacket.getData()[11] == 1) {
@@ -84,8 +82,6 @@ public class ServerImpl implements Server {
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
 							receivedPacket.getAddress(), receivedPacket.getPort());
 					socket.send(packetToSend);
-//					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength())
-//							+ " to " + packetToSend.getAddress());
 				}
 			} catch (IOException e) {
 				System.out.println("ERROR: Connection lost");
@@ -126,7 +122,6 @@ public class ServerImpl implements Server {
 		Packet thePacketToSend = dataDownloaders
 				.get(ByteBuffer.wrap(Arrays.copyOfRange(receivedPacket.getData(), 16, 20)).getInt())
 				.processPacket(receivedPacket.getData(), receivedPacket.getLength());
-		// System.out.println("Upload");
 		dataToSend = new byte[thePacketToSend.getLength()];
 		dataToSend = thePacketToSend.getBytes();
 		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
@@ -154,8 +149,6 @@ public class ServerImpl implements Server {
 		dataToSend = thePacketToSend.getBytes();
 		DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length, receivedPacket.getAddress(),
 				receivedPacket.getPort());
-		// System.out.println("ServerImpl packet send: " +
-		// Arrays.toString(Arrays.copyOfRange(packetToSend.getData(), 0, 20)));
 		socket.send(packetToSend);
 	}
 
@@ -174,6 +167,12 @@ public class ServerImpl implements Server {
 		socket.send(packetToSend);
 	}
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            Not used
+	 */
 	public static void main(String args[]) {
 		System.out.println("Server active");
 		int portNumber = 9876;

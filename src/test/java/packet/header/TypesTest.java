@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
  */
 public class TypesTest {
 
-	/** 
-	 * Tests that all the values are a Flag. 
+	/**
+	 * Tests that all the values are a Flag.
 	 */
 	@Test
 	public void testPossibleValues() {
@@ -31,24 +31,24 @@ public class TypesTest {
 		assertNotNull(Types.valueOf("LASTACK"));
 		assertNotNull(Types.valueOf("FILENOTFOUND"));
 	}
-	
+
 	/**
 	 * Tests the byte values of the types.
 	 */
 	@Test
 	public void testByteValueOfTypes() {
-		assertArrayEquals(new byte[] {0, 0, 0, 0}, Types.UNDEFINED.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 1}, Types.DATA.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 2}, Types.FILENAME.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 4}, Types.UPLOADCHARACTERISTICS.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 8}, Types.STATISTICS.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 16}, Types.DATAINTEGRITY.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 32}, Types.ACK.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 64}, Types.DOWNLOADCHARACTERISTICS.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, -128}, Types.LASTACK.getBytes());
-		assertArrayEquals(new byte[] {0, 0, 0, 3}, Types.FILENOTFOUND.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 0 }, Types.UNDEFINED.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 1 }, Types.DATA.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 2 }, Types.FILENAME.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 4 }, Types.UPLOADCHARACTERISTICS.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 8 }, Types.STATISTICS.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 16 }, Types.DATAINTEGRITY.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 32 }, Types.ACK.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 64 }, Types.DOWNLOADCHARACTERISTICS.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, -128 }, Types.LASTACK.getBytes());
+		assertArrayEquals(new byte[] { 0, 0, 0, 3 }, Types.FILENOTFOUND.getBytes());
 	}
-	
+
 	/**
 	 * Tests the int values of the types.
 	 */

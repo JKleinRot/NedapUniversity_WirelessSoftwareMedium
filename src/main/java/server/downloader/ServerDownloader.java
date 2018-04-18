@@ -2,6 +2,11 @@ package server.downloader;
 
 import packet.Packet;
 
+/**
+ * Downloads data from the client to the server.
+ * 
+ * @author janine.kleinrot
+ */
 public interface ServerDownloader {
 
 	/**

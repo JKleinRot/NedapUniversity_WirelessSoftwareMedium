@@ -70,10 +70,10 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 
 	/** The data size found by using File.length */
 	private int fileLengthKnownBeforeSending;
-	
+
 	/** The checksum */
 	private byte[] checksum;
-	
+
 	/** The message digest */
 	private MessageDigest messageDigest;
 
@@ -84,6 +84,10 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	 * 
 	 * @param filename
 	 *            The file name
+	 * @param dataUploader
+	 *            The uploader
+	 * @param downloadNumber
+	 *            The download number
 	 */
 	public ServerFileDisassemblerImpl(String fileName, ServerUploader dataUploader, int downloadNumber) {
 		this.dataUploader = dataUploader;
@@ -118,7 +122,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 			inputStream = new FileInputStream(fileName);
 			new DigestInputStream(inputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("No such algorithm");	
+			System.out.println("No such algorithm");
 		} catch (FileNotFoundException e) {
 			notifyDataUploaderFileNotFound();
 		}
@@ -183,7 +187,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		} else if (previousPacket != null && data.length != dataSize) {
 			header = new HeaderImpl(previousPacket.getHeader().getSequenceNumber() + 1, 0, Flags.DOWNLOAD_LAST,
 					Types.DATA, downloadNumber);
-		} 
+		}
 		return header;
 	}
 
@@ -252,5 +256,4 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		return checksum;
 	}
 
-	
 }

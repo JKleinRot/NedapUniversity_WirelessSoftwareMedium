@@ -3,7 +3,7 @@ package client.uploader;
 import packet.Packet;
 
 /**
- * Uploads the data onto the file system.
+ * Uploads the file from the client to the server.
  * 
  * @author janine.kleinrot
  */
@@ -39,8 +39,8 @@ public interface ClientUploader {
 	public void decreasePacketSize(Packet packet);
 
 	/**
-	 * Increases the packet size by doubling it if five packets in a row were
-	 * transmitted successfully.
+	 * Increases the packet size if five packets in a row were transmitted
+	 * successfully.
 	 */
 	public void increasePacketSize();
 
@@ -65,7 +65,7 @@ public interface ClientUploader {
 	 * @return the upload number
 	 */
 	public Object getUploadNumber();
-	
+
 	/**
 	 * Pauses the upload.
 	 */

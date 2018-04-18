@@ -59,8 +59,11 @@ public interface ProcessManager {
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
+	 * @param uploader
+	 *            The uploader
 	 */
-	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader);
+	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientUploader uploader);
 
 	/**
 	 * Notifies the client that the download is complete.
@@ -73,8 +76,11 @@ public interface ProcessManager {
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
+	 * @param downloader
+	 *            The downloader
 	 */
-	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader);
+	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientDownloader downloader);
 
 	/**
 	 * Returns the statistics of all downloads and uploads performed.
@@ -94,8 +100,11 @@ public interface ProcessManager {
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
+	 * @param uploader
+	 *            The uploader
 	 */
-	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader);
+	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientUploader uploader);
 
 	/**
 	 * Notifies the client that the download is incorrect.
@@ -108,8 +117,11 @@ public interface ProcessManager {
 	 *            The new directory
 	 * @param newFileName
 	 *            The new file name
+	 * @param downloader
+	 *            The downloader
 	 */
-	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader);
+	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName,
+			ClientDownloader downloader);
 
 	/**
 	 * Handles the request for the files in a directory on the server
@@ -124,7 +136,7 @@ public interface ProcessManager {
 	 * Pauses the current transfer.
 	 */
 	public void pause();
-	
+
 	/**
 	 * Resumes the paused transfer.
 	 */

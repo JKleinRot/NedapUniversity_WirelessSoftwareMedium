@@ -16,7 +16,7 @@ public class FileFinderImpl implements FileFinder {
 
 	/** The request sequence number */
 	private static final int requestSequenceNumber = 10;
-	
+
 	/** The length of the header */
 	private static final int headerLength = 20;
 
@@ -38,7 +38,7 @@ public class FileFinderImpl implements FileFinder {
 	/**
 	 * -----Constructor-----
 	 * 
-	 * Creates a file finder
+	 * Creates a file finder.
 	 */
 	public FileFinderImpl() {
 
@@ -170,8 +170,14 @@ public class FileFinderImpl implements FileFinder {
 			return "Empty directory";
 		}
 	}
-	
 
+	/**
+	 * Creates the packet containing the files and directories.
+	 * 
+	 * @param filesAndDirectories
+	 *            The files and directories
+	 * @return the packet
+	 */
 	private Packet createFilesAndDirectoriesPacket(String filesAndDirectories) {
 		Header header = new HeaderImpl(0, requestSequenceNumber, Flags.FILEREQUEST, Types.UNDEFINED, 0);
 		byte[] data = filesAndDirectories.getBytes();

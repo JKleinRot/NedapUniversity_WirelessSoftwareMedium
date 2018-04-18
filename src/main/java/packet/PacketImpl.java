@@ -19,7 +19,9 @@ public class PacketImpl implements Packet {
 	private static final int dataPosition = 20;
 
 	/**
-	 * Creates a PacketImpl with a header and data.
+	 * -----Constructor-----
+	 * 
+	 * Creates a packet with a header and data.
 	 * 
 	 * @param header
 	 *            The header
@@ -55,5 +57,4 @@ public class PacketImpl implements Packet {
 		buffer.put(data);
 		return buffer.array();
 	}
-
 }

@@ -7,7 +7,7 @@ import packet.Packet;
 public interface FileFinder {
 
 	/**
-	 * Finds the files and directories in the directory
+	 * Finds the files and directories in the directory.
 	 * 
 	 * @param receivedPacket
 	 *            The received packet

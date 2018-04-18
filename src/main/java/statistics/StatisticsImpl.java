@@ -21,6 +21,14 @@ public class StatisticsImpl implements Statistics {
 	/** The total amount of bytes in the file */
 	private long totalBytes;
 
+	/**
+	 * -----Constructor-----
+	 * 
+	 * Creates a statistics monitor.
+	 * 
+	 * @param fileName
+	 *            The file name
+	 */
 	public StatisticsImpl(String fileName) {
 		File file = new File(fileName);
 		totalBytes = file.length();
@@ -98,5 +106,4 @@ public class StatisticsImpl implements Statistics {
 		System.out.println(data);
 		totalBytes = Integer.parseInt(words[1]);
 	}
-
 }

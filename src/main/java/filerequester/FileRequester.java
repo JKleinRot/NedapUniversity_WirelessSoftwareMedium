@@ -3,7 +3,7 @@ package filerequester;
 public interface FileRequester {
 
 	/**
-	 * Requests the files and directories in the directory
+	 * Requests the files and directories in the directory.
 	 * 
 	 * @param directory
 	 *            The directory

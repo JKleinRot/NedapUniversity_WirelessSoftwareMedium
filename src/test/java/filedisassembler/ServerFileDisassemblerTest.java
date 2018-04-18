@@ -29,7 +29,7 @@ public class ServerFileDisassemblerTest {
 
 	/** The file disassembler for a longer file */
 	private ServerFileDisassembler fileDisassemblerLong;
-	
+
 	/** The file disassembler for a really long file */
 	private ServerFileDisassembler fileDisassemblerReallyLong;
 
@@ -215,7 +215,7 @@ public class ServerFileDisassemblerTest {
 		assertEquals(packetLength, packet.getLength());
 		assertEquals(longPacketLength, longPacket.getLength());
 	}
-	
+
 	/**
 	 * Tests that between the default and maximum packet size the packet size is
 	 * increased with a factor 1.5.
@@ -243,7 +243,7 @@ public class ServerFileDisassemblerTest {
 		assertEquals(packetLength, packet.getLength());
 		assertEquals(longPacketLength, longPacket.getLength());
 	}
-	
+
 	/**
 	 * Tests that the packet is split in more packets of 64 bytes.
 	 */
@@ -251,7 +251,7 @@ public class ServerFileDisassemblerTest {
 	public void testDecreasePacketSize() {
 		int shortPacketLength = 64;
 		int expectedSequenceNumberAShortPacket = 106;
-		
+
 		Packet packet = fileDisassemblerLong.getNextPacket();
 		fileDisassemblerLong.decreasePacketSize(packet);
 		Packet shortPacket = fileDisassemblerLong.getNextPacketDecreasedSize();
@@ -283,7 +283,7 @@ public class ServerFileDisassemblerTest {
 		fileDisassemblerLong.getNextPacket();
 		fileDisassemblerLong.increasePacketSize();
 		Packet normalPacketIncreasedLength = fileDisassemblerLong.getNextPacket();
-		
+
 		assertEquals(shortPacketLength, shortPacket.getLength());
 		assertEquals(packet.getHeader().getSequenceNumber(), shortPacket.getHeader().getSequenceNumber());
 		assertEquals(expectedSequenceNumberAShortPacket, aShortPacket.getHeader().getSequenceNumber());

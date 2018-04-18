@@ -47,7 +47,7 @@ public interface ClientDownloader {
 	 * Notifies the client that the file is not found on the server.
 	 */
 	public void notifyFileNotFound();
-	
+
 	/**
 	 * Pauses the download.
 	 */
