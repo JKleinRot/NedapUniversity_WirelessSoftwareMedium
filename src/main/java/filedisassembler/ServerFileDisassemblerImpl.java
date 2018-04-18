@@ -66,7 +66,7 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	private static final int minimalPacketSize = 64;
 
 	/** The maximum packet size */
-	private static final int maximalPacketSize = 32768;
+	private static final int maximalPacketSize = 60000;
 
 	/** The data size found by using File.length */
 	private int fileLengthKnownBeforeSending;

@@ -46,7 +46,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	private static final int minimalPacketSize = 64;
 
 	/** The maximum packet size */
-	private static final int maximalPacketSize = 32768;
+	private static final int maximalPacketSize = 60000;
 
 	/** The previous sent packet */
 	private Packet previousPacket;

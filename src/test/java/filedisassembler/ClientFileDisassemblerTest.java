@@ -192,8 +192,11 @@ public class ClientFileDisassemblerTest {
 	 */
 	@Test
 	public void testIncreasePacketSizeOnMaximum() {
-		int packetLength = 32768;
-		int longPacketLength = 32768;
+		int packetLength = 60000;
+		int longPacketLength = 60000;
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
+		fileDisassemblerReallyLong.increasePacketSize();
 		fileDisassemblerReallyLong.increasePacketSize();
 		fileDisassemblerReallyLong.increasePacketSize();
 		fileDisassemblerReallyLong.increasePacketSize();
