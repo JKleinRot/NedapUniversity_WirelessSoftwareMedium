@@ -114,23 +114,24 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		}
 		Packet packet = sendAckToDownloadCharacteristics();
 		clientStatistics.setStartTime(LocalDateTime.now());
-		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)
-				&& packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
+		while (!packet.getHeader().getTypes().equals(Types.DATAINTEGRITY)) {
 			if (isRunning) {
-				nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
-				clientStatistics.updatePartSent(packet.getData().length);
-				// System.out.println("Send another packet");
-				// System.out.println("Received packet size = " + packet.getLength());
-				// System.out.println("Sequence number received = " +
-				// packet.getHeader().getSequenceNumber());
-				Packet ack = createAck(packet);
-				// System.out.println("ClientDownloader packet send: " +
-				// Arrays.toString(ack.getHeader().getBytes()));
-				// System.out.println("Ack number send = " +
-				// ack.getHeader().getAcknowledgementNumber());
-				packet = sendAck(ack);
-				// System.out.println("ClientDownloader packet received: " +
-				// Arrays.toString(packet.getHeader().getBytes()));
+				if (packet.getHeader().getSequenceNumber() == nextSequenceNumberExpected) {
+					nextSequenceNumberExpected = packet.getHeader().getSequenceNumber() + 1;
+					clientStatistics.updatePartSent(packet.getData().length);
+					// System.out.println("Send another packet");
+					// System.out.println("Received packet size = " + packet.getLength());
+					// System.out.println("Sequence number received = " +
+					// packet.getHeader().getSequenceNumber());
+					Packet ack = createAck(packet);
+					// System.out.println("ClientDownloader packet send: " +
+					// Arrays.toString(ack.getHeader().getBytes()));
+					// System.out.println("Ack number send = " +
+					// ack.getHeader().getAcknowledgementNumber());
+					packet = sendAck(ack);
+					// System.out.println("ClientDownloader packet received: " +
+					// Arrays.toString(packet.getHeader().getBytes()));
+				}
 			}
 		}
 		clientStatistics.setEndTime(LocalDateTime.now());
@@ -194,7 +195,11 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
-		fileAssembler.addPacket(receivedPacket);
+		if (receivedPacket.getHeader().getTypes() == Types.DATA) {
+			fileAssembler.addPacket(receivedPacket);
+		} else {
+			receivedPacket = sendAckToDownloadCharacteristics();
+		}
 		return receivedPacket;
 	}
 
@@ -343,12 +348,12 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	 */
 	private void notifyProcessManagerDownloadComplete(String fileName, String fileDirectory, String newDirectory,
 			String newFileName) {
-		processManager.downloadComplete(fileName, fileDirectory, newDirectory, newFileName);
+		processManager.downloadComplete(fileName, fileDirectory, newDirectory, newFileName, this);
 	}
 	
 	private void notifyProcessManagerDownloadIncorrect(String fileName, String fileDirectory, String newDirectory,
 			String newFileName) {
-		processManager.downloadIncorrect(fileName, fileDirectory, newDirectory, newFileName);
+		processManager.downloadIncorrect(fileName, fileDirectory, newDirectory, newFileName, this);
 	}
 
 	@Override

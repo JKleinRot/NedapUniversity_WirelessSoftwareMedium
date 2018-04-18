@@ -56,7 +56,7 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 		this.downloader = downloader;
 		createFileOutputStream(fileDirectory, fileName);
 		file = new File(fileDirectory + fileName);
-		lastSequenceNumber = 0;
+		lastSequenceNumber = 99;
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 	@Override
 	public void addPacket(Packet packet) {
 		if (packet.getHeader().getTypes() != Types.DATAINTEGRITY) {
-			if (packet.getHeader().getSequenceNumber() != lastSequenceNumber) {
+			if (packet.getHeader().getSequenceNumber() == lastSequenceNumber + 1) {
 				if (packet.getData().length != 0) {
 					try {
 						outputStream.write(packet.getData());

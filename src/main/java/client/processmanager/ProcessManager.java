@@ -60,7 +60,7 @@ public interface ProcessManager {
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName);
+	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader);
 
 	/**
 	 * Notifies the client that the download is complete.
@@ -74,7 +74,7 @@ public interface ProcessManager {
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName);
+	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader);
 
 	/**
 	 * Returns the statistics of all downloads and uploads performed.
@@ -95,7 +95,7 @@ public interface ProcessManager {
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName);
+	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader);
 
 	/**
 	 * Notifies the client that the download is incorrect.
@@ -109,7 +109,7 @@ public interface ProcessManager {
 	 * @param newFileName
 	 *            The new file name
 	 */
-	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName);
+	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader);
 
 	/**
 	 * Handles the request for the files in a directory on the server

@@ -114,14 +114,18 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	}
 
 	@Override
-	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+	public void uploadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader) {
+		uploadThreads.remove(uploader.getUploadNumber());
 		setChanged();
 		notifyObservers("The file " + fileName + " from " + fileDirectory + " is uploaded to the server into "
 				+ newDirectory + " as " + newFileName);
 	}
 
 	@Override
-	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+	public void downloadComplete(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader) {
+		Thread downloadThread = downloadThreads.get(downloader.getDownloadNumber());
+		downloadThread.interrupt();
+		downloadThreads.remove(downloader.getDownloadNumber());
 		setChanged();
 		notifyObservers("The file " + fileName + " from " + fileDirectory + " is downloaded from the server into "
 				+ newDirectory + " as " + newFileName);
@@ -142,14 +146,18 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 	}
 
 	@Override
-	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+	public void uploadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientUploader uploader) {
+		uploadThreads.remove(uploader.getUploadNumber());
 		setChanged();
 		notifyObservers("The file " + fileName + " from " + fileDirectory + " was incorrectly uploaded to the server into "
 				+ newDirectory + " as " + newFileName);
 	}
 
 	@Override
-	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName) {
+	public void downloadIncorrect(String fileName, String fileDirectory, String newDirectory, String newFileName, ClientDownloader downloader) {
+		Thread downloadThread = downloadThreads.get(downloader.getDownloadNumber());
+		downloadThread.interrupt();
+		downloadThreads.remove(downloader.getDownloadNumber());
 		setChanged();
 		notifyObservers("The file " + fileName + " from " + fileDirectory + " was incorrectly downloaded to the server into "
 				+ newDirectory + " as " + newFileName);

@@ -77,7 +77,7 @@ public class ServerUploaderImpl implements ServerUploader {
 	 * Creates a server uploader.
 	 */
 	public ServerUploaderImpl() {
-		previousAcknowledgementNumber = 0;
+		previousAcknowledgementNumber = 98;
 		retransmissionCount = 0;
 		successfulTransmissionCount = 0;
 		isSendingPacketsAfterDecreasingSize = false;
@@ -103,10 +103,12 @@ public class ServerUploaderImpl implements ServerUploader {
 					 System.out.println("Send " + Arrays.toString(packetToSend.getHeader().getBytes()));
 				} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)) {
 					int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
-					if (currentAcknowledgementNumber != previousAcknowledgementNumber) {
+					System.out.println("Current ack " + currentAcknowledgementNumber);
+					if (currentAcknowledgementNumber == previousAcknowledgementNumber + 1) {
 						previousAcknowledgementNumber = currentAcknowledgementNumber;
 						packetToSend = fileDisassembler.getNextPacket();
-						// System.out.println("Ack: " + currentAcknowledgementNumber);
+						System.out.println(Arrays.toString(packetToSend.getHeader().getBytes()));
+						 System.out.println("Ack: " + currentAcknowledgementNumber);
 						if (retransmissionCount == 0) {
 							successfulTransmissionCount++;
 							// System.out.println("Successful transmission count = " +

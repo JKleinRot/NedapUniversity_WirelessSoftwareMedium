@@ -298,7 +298,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 */
 	private void notifyProcessManagerUploadComplete(String fileName, String fileDirectory, String newDirectory,
 			String newFileName) {
-		processManager.uploadComplete(fileName, fileDirectory, newDirectory, newFileName);
+		processManager.uploadComplete(fileName, fileDirectory, newDirectory, newFileName, this);
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	 */
 	private void notifyProcessManagerUploadIncorrect(String fileName, String fileDirectory, String newDirectory,
 			String newFileName) {
-		processManager.uploadIncorrect(fileName, fileDirectory, newDirectory, newFileName);
+		processManager.uploadIncorrect(fileName, fileDirectory, newDirectory, newFileName, this);
 	}
 
 	@Override
