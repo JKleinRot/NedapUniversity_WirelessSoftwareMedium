@@ -184,7 +184,8 @@ public class ProcessManagerImpl extends Observable implements ProcessManager {
 		if (uploaders.size() != 0) {
 			ClientUploader uploader = uploaders.get(uploaders.size() - 1);
 			uploader.resume();
-		} else if (downloaders.size() != 0) {
+		} 
+		if (downloaders.size() != 0) {
 			ClientDownloader downloader = downloaders.get(downloaders.size() - 1);
 			downloader.resume();
 		}

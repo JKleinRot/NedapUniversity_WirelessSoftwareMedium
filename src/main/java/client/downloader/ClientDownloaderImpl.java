@@ -163,7 +163,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
-		if (receivedPacket.getHeader().getTypes() != Types.ACK) {
+		if (receivedPacket.getHeader().getTypes() != Types.ACK || receivedPacket.getHeader().getDownloadNumber() != downloadNumber) {
 			receivedPacket = sendDownloadCharacteristicsPacket(newDirectory, newFileName);
 		}
 		return receivedPacket;
