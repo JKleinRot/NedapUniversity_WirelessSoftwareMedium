@@ -57,6 +57,9 @@ public class FileRequesterImpl implements FileRequester {
 		Packet packetReceived = recreatePacket(
 				Arrays.copyOfRange(datagramPacketReceived.getData(), 0, datagramPacketReceived.getLength()));
 		String filesAndDirectories = new String(packetReceived.getData());
+		if (packetReceived.getHeader().getFlags() != Flags.FILEREQUEST) {
+			filesAndDirectories = handleFilesRequest(directory);
+		}
 		return filesAndDirectories;
 	}
 

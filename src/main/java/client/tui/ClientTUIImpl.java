@@ -223,6 +223,7 @@ public class ClientTUIImpl implements ClientTUI {
 				if (!isWorking && !isFileRequest) {
 					input = readInput(
 							"Of what directory do you want to see the subdirectories and files? Please enter \"files\" followed by the desired directory (for the top directory enter \" / \")");
+					isFileRequest = true;
 				} else if (isWorking) {
 					System.out.println(
 							"Cannot request files while uploading or downloading a file. Please wait until the download or upload is finished");
@@ -245,6 +246,12 @@ public class ClientTUIImpl implements ClientTUI {
 									+ "To stop the client at any time use (exit), the current transfer will be aborted and incomplete files may be saved.\n"
 									+ "Please enter the word between bracket to perform the action");
 					setAllBooleansFalse();
+				} else {
+					input = readInput(
+							"Do you want to upload (upload), download (download), request files (files) or request statistics (statistics)?\n"
+									+ "To pause and resume a download or upload use (pause) and (resume).\n"
+									+ "To stop the client at any time use (exit), the current transfer will be aborted and incomplete files may be saved.\n"
+									+ "Please enter the word between bracket to perform the action");
 				}
 			} else if (words.length == 1 && words[0].equals("pause")) {
 				if (isWorking && !isPaused) {
