@@ -2,6 +2,8 @@ package fileassembler;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
 import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,12 +90,17 @@ public class ClientFileAssemblerTest {
 		dataDownloader = mocks.createMock(ClientDownloader.class);
 		newFileName = "TestResult.txt";
 		newFileNameLong = "TestLongResult.txt";
-		fileDirectory = "/Users/janine.kleinrot/Documents/NedapUniversity/Module1_SoftwareSystems/Software/Eclipse_Workspace/NedapUniversity_WirelessStorageMedium/";
 		downloadNumber = 1;
 		oldFileName = "Test.txt";
+		File file = new File(oldFileName);
+		oldFileName = file.getAbsolutePath();
+		File absoluteFile = file.getAbsoluteFile();
+		fileDirectory = absoluteFile.getParent() + "/";
 		oldFileNameLong = "TestLong.txt";
-		fileDisassembler = new ServerFileDisassemblerImpl(fileDirectory + oldFileName, dataUploader, downloadNumber);
-		fileDisassemblerLong = new ServerFileDisassemblerImpl(fileDirectory + oldFileNameLong, dataUploader, downloadNumber);
+		file = new File(oldFileNameLong);
+		oldFileNameLong = file.getAbsolutePath();
+		fileDisassembler = new ServerFileDisassemblerImpl(oldFileName, dataUploader, downloadNumber);
+		fileDisassemblerLong = new ServerFileDisassemblerImpl(oldFileNameLong, dataUploader, downloadNumber);
 		packet = fileDisassembler.getNextPacket();
 		firstPacket = fileDisassemblerLong.getNextPacket();
 		secondPacket = fileDisassemblerLong.getNextPacket();

@@ -2,6 +2,12 @@ package fileassembler;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,18 +90,24 @@ public class ServerFileAssemblerTest {
 	private Packet lastPacketLong;
 
 	@BeforeEach
-	public void setup() {
+	public void setup() throws URISyntaxException {
 		mocks = new EasyMockSupport();
 		dataUploader = mocks.createMock(ClientUploader.class);
 		dataDownloader = mocks.createMock(ServerDownloader.class);
 		newFileName = "TestResult.txt";
 		newFileNameLong = "TestLongResult.txt";
-		fileDirectory = "/Users/janine.kleinrot/Documents/NedapUniversity/Module1_SoftwareSystems/Software/Eclipse_Workspace/NedapUniversity_WirelessStorageMedium/";
 		downloadNumber = 1;
 		oldFileName = "Test.txt";
 		oldFileNameLong = "TestLong.txt";
-		fileDisassembler = new ClientFileDisassemblerImpl(fileDirectory + oldFileName, dataUploader, downloadNumber);
-		fileDisassemblerLong = new ClientFileDisassemblerImpl(fileDirectory + oldFileNameLong, dataUploader, downloadNumber);
+		File file = new File(oldFileName);
+		oldFileName = file.getAbsolutePath();
+		File absoluteFile = file.getAbsoluteFile();
+		fileDirectory = absoluteFile.getParent() + "/";
+		System.out.println(fileDirectory);
+		file = new File(oldFileNameLong);
+		oldFileNameLong = file.getAbsolutePath();
+		fileDisassembler = new ClientFileDisassemblerImpl(oldFileName, dataUploader, downloadNumber);
+		fileDisassemblerLong = new ClientFileDisassemblerImpl(oldFileNameLong, dataUploader, downloadNumber);
 		packet = fileDisassembler.getNextPacket();
 		firstPacket = fileDisassemblerLong.getNextPacket();
 		secondPacket = fileDisassemblerLong.getNextPacket();
