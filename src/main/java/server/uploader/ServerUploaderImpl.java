@@ -220,6 +220,8 @@ public class ServerUploaderImpl implements ServerUploader {
 			types = Types.DATA;
 		} else if (value == 2) {
 			types = Types.FILENAME;
+		} else if (value == 3) {
+			types = Types.FILENOTFOUND;
 		} else if (value == 4) {
 			types = Types.UPLOADCHARACTERISTICS;
 		} else if (value == 8) {
