@@ -8,8 +8,6 @@ import java.util.Arrays;
 
 import client.Client;
 import client.processmanager.ProcessManager;
-import client.statistics.ClientStatistics;
-import client.statistics.ClientStatisticsImpl;
 import fileassembler.ClientFileAssembler;
 import fileassembler.ClientFileAssemblerImpl;
 import packet.Packet;
@@ -18,6 +16,8 @@ import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
+import statistics.Statistics;
+import statistics.StatisticsImpl;
 
 public class ClientDownloaderImpl implements ClientDownloader {
 
@@ -61,7 +61,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 	private int nextSequenceNumberExpected;
 
 	/** The client statistics */
-	private ClientStatistics clientStatistics;
+	private Statistics clientStatistics;
 
 	/** The string representation of the uploader */
 	private String characteristics;
@@ -102,7 +102,7 @@ public class ClientDownloaderImpl implements ClientDownloader {
 			notifyProcessManagerFileNotFound();
 			return;
 		}
-		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
+		clientStatistics = new StatisticsImpl(fileDirectory + fileName);
 		Packet ackDownloadCharacteristics = sendDownloadCharacteristicsPacket(fileDirectory, fileName);
 		if (new String(ackDownloadCharacteristics.getData()).equals("File not found")) {
 			notifyProcessManagerFileNotFound();

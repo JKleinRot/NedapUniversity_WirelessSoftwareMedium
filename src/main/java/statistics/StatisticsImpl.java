@@ -1,10 +1,10 @@
-package client.statistics;
+package statistics;
 
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class ClientStatisticsImpl implements ClientStatistics {
+public class StatisticsImpl implements Statistics {
 
 	/** The retransmission count */
 	private int retransmissionCount;
@@ -21,7 +21,7 @@ public class ClientStatisticsImpl implements ClientStatistics {
 	/** The total amount of bytes in the file */
 	private long totalBytes;
 
-	public ClientStatisticsImpl(String fileName) {
+	public StatisticsImpl(String fileName) {
 		File file = new File(fileName);
 		totalBytes = file.length();
 		retransmissionCount = 0;

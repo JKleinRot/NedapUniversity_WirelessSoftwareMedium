@@ -9,8 +9,6 @@ import java.util.Observable;
 
 import client.Client;
 import client.processmanager.ProcessManager;
-import client.statistics.ClientStatistics;
-import client.statistics.ClientStatisticsImpl;
 import filedisassembler.ClientFileDisassembler;
 import filedisassembler.ClientFileDisassemblerImpl;
 import packet.Packet;
@@ -19,6 +17,8 @@ import packet.header.Flags;
 import packet.header.Header;
 import packet.header.HeaderImpl;
 import packet.header.Types;
+import statistics.Statistics;
+import statistics.StatisticsImpl;
 
 public class ClientUploaderImpl extends Observable implements ClientUploader {
 
@@ -44,7 +44,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 	private Packet previousPacket;
 
 	/** The client statistics */
-	private ClientStatistics clientStatistics;
+	private Statistics clientStatistics;
 
 	/** The string representation of the uploader */
 	private String characteristics;
@@ -106,7 +106,7 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 			// notifyProcessManagerFileNotFound();
 			return;
 		}
-		clientStatistics = new ClientStatisticsImpl(fileDirectory + fileName);
+		clientStatistics = new StatisticsImpl(fileDirectory + fileName);
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		if (!isFileFound) {
 			System.out.println("Where to upload does not exist");

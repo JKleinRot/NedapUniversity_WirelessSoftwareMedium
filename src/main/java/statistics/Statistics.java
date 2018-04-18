@@ -1,4 +1,4 @@
-package client.statistics;
+package statistics;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * @author janine.kleinrot
  */
 
-public interface ClientStatistics {
+public interface Statistics {
 
 	/**
 	 * Updates the retransmission count.
