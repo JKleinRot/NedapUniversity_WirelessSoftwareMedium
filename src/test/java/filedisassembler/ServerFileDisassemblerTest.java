@@ -120,12 +120,12 @@ public class ServerFileDisassemblerTest {
 		byte[] expectedDataThirdPacket = (" find the Raspbery Pi on a local network without knowing its IP address.\r"
 				+ "You client should be able to show statistics about download speeds, packet loss, retransmissions, etc.\r"
 				+ "Bonus: Mesh network support. Download a file from a Raspberry Pi out of range of the WiFi from your laptop. Connect with an intermediate Raspberry Pi, which can see both the other Pi and your laptop. (Hint: It is possible to simulate a Raspberry Pi out of range by blacklisting a Pi from your computer)\r"
-				+ "Bonus: Encrypted file transfer. Prove this by transferring a text file and creating a Wireshark dump.")
+				+ "Bonus: Encrypted file transfer. Prove this by transferring a text file and creating a Wireshark dump.\n")
 						.getBytes();
 		Packet expectedFirstPacket = new PacketImpl(expectedHeaderFirstPacket, expectedDataFirstPacket);
 		Packet expectedSecondPacket = new PacketImpl(expectedHeaderSecondPacket, expectedDataSecondPacket);
 		Packet expectedThirdPacket = new PacketImpl(expectedHeaderThirdPacket, expectedDataThirdPacket);
-		int expectedTotalDataSize = 2588;
+		int expectedTotalDataSize = 2589;
 
 		Packet firstPacket = fileDisassemblerLong.getNextPacket();
 
