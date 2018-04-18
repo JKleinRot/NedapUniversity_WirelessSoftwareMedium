@@ -102,13 +102,11 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 				+ "\n";
 		createFileDisassembler(fileDirectory + fileName);
 		if (!isFileFound) {
-			System.out.println("Upload file does not exist");
 			return;
 		}
 		clientStatistics = new StatisticsImpl(fileDirectory + fileName);
 		sendUploadCharacteristicsPacket(newDirectory, newFileName);
 		if (!isFileFound) {
-			System.out.println("Where to upload does not exist");
 			notifyProcessManagerFileNotFound();
 			return;
 		}
@@ -263,12 +261,9 @@ public class ClientUploaderImpl extends Observable implements ClientUploader {
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet, this);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
-		System.out.println(Arrays.toString(receivedPacket.getBytes()));
 		if (new String(receivedPacket.getData()).equals("Correct")) {
-			System.out.println("Correct");
 			isFileCorrect = true;
 		} else if (new String(receivedPacket.getData()).equals("Incorrect")) {
-			System.out.println("Incorrect");
 			isFileCorrect = false;
 		} else {
 			sendDataIntegrityPacket();

@@ -68,7 +68,6 @@ public class ClientImpl implements Client {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
-			System.out.println("ERROR: Could not setup datagram socket");
 		}
 		retransmissionCount = 0;
 		successfulTransmissionCount = 0;
@@ -85,21 +84,14 @@ public class ClientImpl implements Client {
 		try {
 			socket.setBroadcast(true);
 			socket.send(packetToSend);
-			System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength()) + " to "
-					+ packetToSend.getAddress());
-			System.out.println(Arrays.toString(packetToSend.getData()));
 			socket.setBroadcast(false);
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 			address = receivedPacket.getAddress();
 			portNumber = receivedPacket.getPort();
-			System.out.println("Received: " + new String(receivedPacket.getData(), 0, receivedPacket.getLength())
-					+ " from " + receivedPacket.getAddress());
 		} catch (SocketTimeoutException e) {
-			System.out.println("ERROR: No response within time");
 			connect(packetToSend);
 		} catch (IOException e) {
-			System.out.println("ERROR: Connection lost");
 		}
 		return receivedPacket;
 	}
@@ -115,10 +107,8 @@ public class ClientImpl implements Client {
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 		} catch (SocketTimeoutException e) {
-			System.out.println("ERROR: No response within time");
 			receivedPacket = sendOnePacket(thePacketToSend);
 		} catch (IOException e) {
-			System.out.println("ERROR: Connection lost");
 		}
 		return receivedPacket;
 	}
@@ -135,11 +125,9 @@ public class ClientImpl implements Client {
 			socket.setSoTimeout(timeoutDuration);
 			socket.receive(receivedPacket);
 		} catch (SocketTimeoutException e) {
-			System.out.println("ERROR: No response within time");
 			retransmissionCount++;
 			receivedPacket = sendOnePacket(thePacketToSend);
 		} catch (IOException e) {
-			System.out.println("ERROR: Connection lost");
 		}
 		downloader.updateStatistics(retransmissionCount);
 		return receivedPacket;
@@ -159,7 +147,6 @@ public class ClientImpl implements Client {
 				successfulTransmissionCount++;
 			}
 		} catch (SocketTimeoutException e) {
-			System.out.println("ERROR: No response within time");
 			if (retransmissionCount < decreasePacketSizeThreshold) {
 				retransmissionCount++;
 				successfulTransmissionCount = 0;
@@ -168,7 +155,6 @@ public class ClientImpl implements Client {
 				uploader.decreasePacketSize(thePacketToSend);
 			}
 		} catch (IOException e) {
-			System.out.println("ERROR: Connection lost");
 		}
 		uploader.updateStatistics(retransmissionCount);
 		retransmissionCount = 0;
@@ -186,14 +172,12 @@ public class ClientImpl implements Client {
 	 *            Not used
 	 */
 	public static void main(String args[]) {
-		System.out.println("Client active");
 		Client client = new ClientImpl();
 		String message = new String("Hello, I want to connect to a wireless storage medium");
 		InetAddress address = null;
 		try {
 			address = InetAddress.getByName("192.168.1.255");
 		} catch (UnknownHostException e) {
-			System.out.println("ERROR: Unknown IP address");
 		}
 		DatagramPacket packetToSend = new DatagramPacket(message.getBytes(), message.length(), address, 9876);
 		client.connect(packetToSend);

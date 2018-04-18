@@ -52,7 +52,6 @@ public class ServerImpl implements Server {
 		try {
 			socket = new DatagramSocket(portNumber);
 		} catch (SocketException e) {
-			System.out.println("ERROR: Could not setup datagram socket on port " + portNumber);
 		}
 		isRunning = true;
 		dataDownloaders = new HashMap<>();
@@ -84,7 +83,6 @@ public class ServerImpl implements Server {
 					socket.send(packetToSend);
 				}
 			} catch (IOException e) {
-				System.out.println("ERROR: Connection lost");
 			}
 		}
 	}
@@ -174,7 +172,6 @@ public class ServerImpl implements Server {
 	 *            Not used
 	 */
 	public static void main(String args[]) {
-		System.out.println("Server active");
 		int portNumber = 9876;
 		Server server = new ServerImpl(portNumber);
 		server.run();

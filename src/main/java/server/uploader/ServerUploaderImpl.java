@@ -88,21 +88,16 @@ public class ServerUploaderImpl implements ServerUploader {
 	public Packet processPacket(byte[] packet, int length) {
 		Packet receivedPacket = recreatePacket(Arrays.copyOfRange(packet, 0, length));
 		Packet packetToSend;
-		System.out.println("Received " + Arrays.toString(receivedPacket.getHeader().getBytes()));
 		if (receivedPacket.getHeader().getTypes() != Types.DATAINTEGRITY) {
 			if (!isSendingPacketsAfterDecreasingSize) {
 				if (receivedPacket.getHeader().getTypes().equals(Types.DOWNLOADCHARACTERISTICS)) {
 					createFileDisassembler(receivedPacket);
 					packetToSend = createDownloadCharacteristicsAck(receivedPacket);
-					System.out.println("Send " + Arrays.toString(packetToSend.getHeader().getBytes()));
 				} else if (receivedPacket.getHeader().getTypes().equals(Types.ACK)) {
 					int currentAcknowledgementNumber = receivedPacket.getHeader().getAcknowledgementNumber();
-					System.out.println("Current ack " + currentAcknowledgementNumber);
 					if (currentAcknowledgementNumber == previousAcknowledgementNumber + 1) {
 						previousAcknowledgementNumber = currentAcknowledgementNumber;
 						packetToSend = fileDisassembler.getNextPacket();
-						System.out.println(Arrays.toString(packetToSend.getHeader().getBytes()));
-						System.out.println("Ack: " + currentAcknowledgementNumber);
 						if (retransmissionCount == 0) {
 							successfulTransmissionCount++;
 						}
@@ -272,7 +267,6 @@ public class ServerUploaderImpl implements ServerUploader {
 
 	@Override
 	public void notifyServerFileNotFound() {
-		System.out.println("ERROR: File not found");
 		isFileFound = false;
 	}
 

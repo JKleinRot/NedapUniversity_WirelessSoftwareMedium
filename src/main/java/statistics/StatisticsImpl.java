@@ -103,7 +103,6 @@ public class StatisticsImpl implements Statistics {
 	public void setTotalDataSize(byte[] packet) {
 		String data = new String(packet);
 		String[] words = data.split(" ");
-		System.out.println(data);
 		totalBytes = Integer.parseInt(words[1]);
 	}
 }

@@ -160,7 +160,6 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		byte[] data = ("Directory " + newDirectory + " FileName " + newFileName + " DownloadNumber " + downloadNumber)
 				.getBytes();
 		Packet packet = new PacketImpl(header, data);
-		System.out.println("Send " + Arrays.toString(packet.getHeader().getBytes()));
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));

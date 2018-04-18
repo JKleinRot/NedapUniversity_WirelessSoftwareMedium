@@ -108,7 +108,6 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 			inputStream = new FileInputStream(fileName);
 			new DigestInputStream(inputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("No such algorithm");
 		} catch (FileNotFoundException e) {
 			notifyDataUploaderFileNotFound();
 		}
@@ -142,7 +141,6 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 		try {
 			readDataSize = inputStream.read(dataBuffer);
 		} catch (IOException e) {
-			System.out.println("ERROR: File could not be read");
 		}
 		byte[] data;
 		if (readDataSize != -1) {
@@ -195,7 +193,6 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 			packets.add(packetPart);
 			previousPacket = packetPart;
 		}
-		System.out.println("Amount of packets = " + packets.size());
 		return packets;
 	}
 
@@ -214,7 +211,6 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 	@Override
 	public byte[] getChecksum() {
 		checksum = messageDigest.digest();
-		System.out.println(Arrays.toString(checksum));
 		return checksum;
 	}
 }

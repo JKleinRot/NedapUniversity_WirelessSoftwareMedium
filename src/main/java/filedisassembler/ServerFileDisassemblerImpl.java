@@ -122,7 +122,6 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 			inputStream = new FileInputStream(fileName);
 			new DigestInputStream(inputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("No such algorithm");
 		} catch (FileNotFoundException e) {
 			notifyDataUploaderFileNotFound();
 		}
@@ -156,7 +155,6 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		try {
 			readDataSize = inputStream.read(dataBuffer);
 		} catch (IOException e) {
-			System.out.println("ERROR: File could not be read");
 		}
 		byte[] data;
 		if (readDataSize != -1) {
@@ -207,8 +205,6 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 		packetsDecreasedSize = new ArrayList<>();
 		packetSize = minimalPacketSize;
 		setDataSize();
-		System.out.println("Data size = " + dataSize);
-		System.out.println("Data length = " + packet.getData().length);
 		byte[] data = packet.getData();
 		for (int i = 0; i < data.length / dataSize; i++) {
 			byte[] dataPart = Arrays.copyOfRange(data, i * dataSize, (i + 1) * dataSize);
@@ -217,7 +213,6 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 			packetsDecreasedSize.add(packetPart);
 			previousPacket = packetPart;
 		}
-		System.out.println("Amount of packets = " + packetsDecreasedSize.size());
 	}
 
 	@Override
@@ -236,10 +231,8 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	public Packet getNextPacketDecreasedSize() {
 		Packet packet = packetsDecreasedSize.get(nextPacketDecreasedSize);
 		nextPacketDecreasedSize++;
-		System.out.println("next small packet = " + nextPacketDecreasedSize);
 		if (nextPacketDecreasedSize == packetsDecreasedSize.size()) {
 			dataUploader.setIsSendingPacketsAfterDecreasingSize(false);
-			System.out.println("Back to false");
 		}
 		return packet;
 	}
@@ -252,7 +245,6 @@ public class ServerFileDisassemblerImpl implements ServerFileDisassembler {
 	@Override
 	public byte[] getChecksum() {
 		checksum = messageDigest.digest();
-		System.out.println(Arrays.toString(checksum));
 		return checksum;
 	}
 

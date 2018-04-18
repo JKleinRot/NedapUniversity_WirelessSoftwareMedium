@@ -74,9 +74,7 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 			outputStream = new FileOutputStream(fileDirectory + fileName);
 			new DigestOutputStream(outputStream, messageDigest);
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("No such algorithm");
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: No such directory");
 			downloader.notifyFileNotFound();
 		}
 	}
@@ -90,7 +88,6 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 						outputStream.write(packet.getData());
 						messageDigest.update(packet.getData());
 					} catch (IOException e) {
-						System.out.println("ERROR: File could not be written");
 					}
 					lastSequenceNumber = packet.getHeader().getSequenceNumber();
 				}
@@ -108,7 +105,6 @@ public class ClientFileAssemblerImpl implements ClientFileAssembler {
 	 */
 	private void checkForDataIntegrity(Packet packet) {
 		checksum = messageDigest.digest();
-		System.out.println(Arrays.toString(checksum));
 		if (!Arrays.equals(packet.getData(), checksum)) {
 			isFileCorrect = false;
 			file.delete();

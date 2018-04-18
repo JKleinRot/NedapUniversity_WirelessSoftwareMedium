@@ -100,7 +100,6 @@ public class ServerFileAssemblerTest {
 		oldFileName = file.getAbsolutePath();
 		File absoluteFile = file.getAbsoluteFile();
 		fileDirectory = absoluteFile.getParent() + "/";
-		System.out.println(fileDirectory);
 		file = new File(oldFileNameLong);
 		oldFileNameLong = file.getAbsolutePath();
 		fileDisassembler = new ClientFileDisassemblerImpl(oldFileName, dataUploader, downloadNumber);
