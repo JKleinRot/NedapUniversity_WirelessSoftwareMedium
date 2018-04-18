@@ -67,8 +67,8 @@ public class ServerImpl implements Server {
 			final DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 			try {
 				socket.receive(receivedPacket);
-				System.out.println("ServerImpl packet received: "
-						+ Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
+//				System.out.println("ServerImpl packet received: "
+//						+ Arrays.toString(Arrays.copyOfRange(receivedPacket.getData(), 0, 20)));
 				if (new String(receivedPacket.getData(), 0, 5).equals("Hello")) {
 					handleConnectionMessage(receivedPacket);
 				} else if (receivedPacket.getData()[11] == 1) {
@@ -84,8 +84,8 @@ public class ServerImpl implements Server {
 					DatagramPacket packetToSend = new DatagramPacket(dataToSend, dataToSend.length,
 							receivedPacket.getAddress(), receivedPacket.getPort());
 					socket.send(packetToSend);
-					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength())
-							+ " to " + packetToSend.getAddress());
+//					System.out.println("Send: " + new String(packetToSend.getData(), 0, packetToSend.getLength())
+//							+ " to " + packetToSend.getAddress());
 				}
 			} catch (IOException e) {
 				System.out.println("ERROR: Connection lost");

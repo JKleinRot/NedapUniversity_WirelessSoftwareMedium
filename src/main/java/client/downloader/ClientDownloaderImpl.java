@@ -175,7 +175,9 @@ public class ClientDownloaderImpl implements ClientDownloader {
 		DatagramPacket receivedDatagramPacket = client.sendOnePacket(packet);
 		Packet receivedPacket = recreatePacket(
 				Arrays.copyOfRange(receivedDatagramPacket.getData(), 0, receivedDatagramPacket.getLength()));
-		// fileAssembler.addPacket(receivedPacket);
+		if (receivedPacket.getHeader().getTypes() != Types.ACK) {
+			receivedPacket = sendDownloadCharacteristicsPacket(newDirectory, newFileName);
+		}
 		return receivedPacket;
 	}
 

@@ -192,6 +192,7 @@ public class ClientFileDisassemblerImpl implements ClientFileDisassembler {
 			packets.add(packetPart);
 			previousPacket = packetPart;
 		}
+		System.out.println("Amount of packets = " + packets.size());
 		return packets;
 	}
 
