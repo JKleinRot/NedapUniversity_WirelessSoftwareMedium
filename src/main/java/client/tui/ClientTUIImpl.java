@@ -220,7 +220,7 @@ public class ClientTUIImpl implements ClientTUI {
 								+ "To stop the client at any time use (exit), the current transfer will be aborted and incomplete files may be saved.\n"
 								+ "Please enter the word between bracket to perform the action");
 			} else if (words.length == 1 && words[0].equals("files")) {
-				if (!isWorking && !isFileRequest) {
+				if (!isWorking && !isFileRequest && !isDownloadRequest && !isUploadRequest) {
 					input = readInput(
 							"Of what directory do you want to see the subdirectories and files? Please enter \"files\" followed by the desired directory (for the top directory enter \" / \")");
 					isFileRequest = true;
@@ -232,7 +232,7 @@ public class ClientTUIImpl implements ClientTUI {
 									+ "To pause and resume a download or upload use (pause) and (resume).\n"
 									+ "To stop the client at any time use (exit), the current transfer will be aborted and incomplete files may be saved.\n"
 									+ "Please enter the word between bracket to perform the action");
-				} else if (isFileRequest) {
+				} else {
 					input = readInput(
 							"Please enter the desired parameters or enter \"abort\" to stop the current action");
 				}
