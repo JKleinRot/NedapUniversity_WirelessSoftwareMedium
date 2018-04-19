@@ -20,6 +20,9 @@ public class StatisticsImpl implements Statistics {
 
 	/** The total amount of bytes in the file */
 	private long totalBytes;
+	
+	/** The amount of packets */
+	private int packetCount;
 
 	/**
 	 * -----Constructor-----
@@ -34,6 +37,7 @@ public class StatisticsImpl implements Statistics {
 		totalBytes = file.length();
 		retransmissionCount = 0;
 		bytesSent = 0;
+		packetCount = 0;
 	}
 
 	@Override
@@ -53,6 +57,7 @@ public class StatisticsImpl implements Statistics {
 
 	@Override
 	public void updatePartSent(int lastPacketSize) {
+		packetCount++;
 		bytesSent = bytesSent + lastPacketSize;
 	}
 
@@ -86,14 +91,19 @@ public class StatisticsImpl implements Statistics {
 				speed = bytesSent;
 			}
 			int percentageComplete = 100;
+			long percentageRetransmissions = (retransmissionCount * 100) / packetCount;
 			if (duration != 0) {
 				statistics = bytesSent + " of " + totalBytes + " bytes are sent in " + duration + " seconds\n"
 						+ "The average upload speed is " + speed + " bytes/second\n" + retransmissionCount
-						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
+						+ " retransmissions occurred\n" + percentageRetransmissions
+						+ " % of the packets sent were retransmissions\n" + "The progress is " + percentageComplete
+						+ " %\n";
 			} else {
 				statistics = bytesSent + " of " + totalBytes + " bytes are sent in less than a second\n"
 						+ "The average upload speed is higher than " + speed + " bytes/seconds\n" + retransmissionCount
-						+ " retransmissions occurred\n" + "The progress is " + percentageComplete + " %\n";
+						+ " retransmissions occurred\n" + percentageRetransmissions
+						+ " % of the packets sent were retransmissions\n" + "The progress is " + percentageComplete
+						+ " %\n";
 			}
 		}
 		return statistics;
